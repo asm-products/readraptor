@@ -1,11 +1,23 @@
 # Long Wave
 
-## API for notifications
+**API for notifications**
 
-This is a product being built by the Assembly community. You can help push this idea forward by visiting [https://assemblymade.com/whatupdave-long-wave](https://assemblymade.com/whatupdave-long-wave).
+## Usage
 
-### How Assembly Works
+Start up the server:
 
-Assembly products are like open-source and made with contributions from the community. Assembly handles the boring stuff like hosting, support, financing, legal, etc. Once the product launches we collect the revenue and split the profits amongst the contributors.
+    go run long_wave.go
 
-Visit [https://assemblymade.com](https://assemblymade.com) to learn more.
+Make an example tracking pixel request:
+
+    curl http://localhost:3000/whatupdave/1001/72.gif
+    
+    
+## Contributing
+
+1. Sign up at Assembly ([https://assemblymade.com](https://assemblymade.com))
+2. Create a Task for the work ([https://assemblymade.com/long-wave](https://assemblymade.com/long-wave))
+3. Create your feature branch (`git checkout -b my-new-feature`)
+4. Commit your changes, you can reference the task number (`git commit -am 'Add some feature for #123'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create new Pull Request
