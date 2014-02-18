@@ -2,11 +2,31 @@
 
 **API for read receipts**
 
-## Usage
+## Setup
 
-Start up the server:
+Make sure Postgres is installed. Create a local development database:
 
-    go run long_wave.go
+    psql -c "create database lw_development"
+
+Install goose for running migrations:
+
+    go get bitbucket.org/liamstask/goose/cmd/goose
+
+Copy sample env file:
+
+    cp .env.sample .env
+
+Install forego (or use foreman):
+
+    go get github.com/ddollar/forego
+
+Run migrations:
+
+    forego run goose up
+
+Start up the server (or use something like gin to auto-reload):
+
+    forego run
 
 ### Create an Account
 
