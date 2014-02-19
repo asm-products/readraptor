@@ -1,7 +1,7 @@
 package main
 
 import (
-    "github.com/asm-products/long-wave/fake"
+    "github.com/asm-products/readraptor/fake"
     "github.com/codegangsta/martini"
     "github.com/coopernurse/gorp"
     _ "github.com/lib/pq"

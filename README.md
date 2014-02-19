@@ -1,4 +1,4 @@
-# Long Wave
+# Read Raptor
 
 **API for read receipts**
 
@@ -150,7 +150,7 @@ Now you know that `user_1` has 1 new comment and `user_2` hasn't seen the thread
 
 ### User callbacks
 
-Now, let's say you want to email users about content updates. Long wave let's you wait a minute and then only email the users that didn't see the content.
+Now, let's say you want to email users about content updates. Read Raptor let's you wait a minute and then only email the users that didn't see the content.
 
 Register some content:
 
@@ -223,7 +223,7 @@ Response:
       }
     }
 
-Long View will send you both notifications unless the user sees that piece of content at some point along the way.
+Read Raptor will send you both notifications unless the user sees that piece of content at some point along the way.
 
 ### Running the tests
 
@@ -238,7 +238,7 @@ Run the tests:
 ## Contributing
 
 1. Sign up at Assembly ([https://assemblymade.com](https://assemblymade.com))
-2. Create a Task for the work ([https://assemblymade.com/whatupdave-long-wave](https://assemblymade.com/whatupdave-long-wave))
+2. Create a Task for the work ([https://assemblymade.com/readraptor](https://assemblymade.com/readraptor))
 3. Create your feature branch (`git checkout -b my-new-feature`)
 4. Commit your changes, you can reference the task number (`git commit -am 'Add some feature for #123'`)
 5. Push to the branch (`git push origin my-new-feature`)

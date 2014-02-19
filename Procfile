@@ -1,1 +1,2 @@
-web: long-wave
+web: readraptor
+worker: rrworker
