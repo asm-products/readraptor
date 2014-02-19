@@ -225,6 +225,16 @@ Response:
 
 Long View will send you both notifications unless the user sees that piece of content at some point along the way.
 
+### Running the tests
+
+Make sure the test database exists:
+
+    psql -c "create database lw_test"
+
+Run the tests:
+
+    go test
+
 ## Contributing
 
 1. Sign up at Assembly ([https://assemblymade.com](https://assemblymade.com))

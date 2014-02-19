@@ -1,6 +1,8 @@
 package main
 
 type Account struct {
-    Username string `json:"username"`
-    ApiKey string `json:"apiKey"`
+    Id       int64  `db:"id"`
+    Created  int64  `db:"created_at"`
+    Username string `db:"username"`
+    ApiKey   string `db:"api_key"`
 }
