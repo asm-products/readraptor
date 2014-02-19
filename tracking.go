@@ -2,15 +2,15 @@ package main
 
 import (
     "crypto/sha1"
-    "database/sql"
     "fmt"
     "github.com/codegangsta/martini"
+    "github.com/coopernurse/gorp"
     _ "github.com/lib/pq"
     "github.com/technoweenie/grohl"
     "net/http"
 )
 
-func GetTracking(db *sql.DB, params martini.Params, w http.ResponseWriter, r *http.Request) {
+func GetTracking(dbmap *gorp.DbMap, params martini.Params, w http.ResponseWriter, r *http.Request) {
     grohl.Log(grohl.Data{
         "username": params["username"],
         "content":  params["content_id"],
@@ -19,7 +19,7 @@ func GetTracking(db *sql.DB, params martini.Params, w http.ResponseWriter, r *ht
     })
 
     var apiKey string
-    err := db.QueryRow(`SELECT api_key FROM accounts WHERE username = $1`, params["username"]).Scan(&apiKey)
+    err := dbmap.SelectOne(&apiKey, `SELECT api_key FROM accounts WHERE username = $1`, params["username"])
     if err != nil {
         panic(err)
     }
