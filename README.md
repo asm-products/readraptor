@@ -43,7 +43,7 @@ Start up the server (or use something like gin to auto-reload):
 
 ### Generating tracking urls
 
-Generate the url in the format: `/t/:username/:content_id/:user_id/:signature.gif`. The signature is a `sha1` hash of the `api_key` + args in the same order.
+Generate the url in the format: `/t/:username/:content_item_id/:user_id/:signature.gif`. The signature is a `sha1` hash of the `api_key` + args in the same order.
 
     # bash example
     export LW_API_KEY=api_3c12d9556813
@@ -82,7 +82,7 @@ Mark first user as seen by requesting the tracking pixel. :
 
 Now get the list of users who have not seen the content:
 
-    curl -u $LW_USERNAME: $LW_URL/content_items/post_1
+    curl -u $LW_API_KEY: $LW_URL/content_items/post_1
 
 Response:
 
@@ -100,7 +100,7 @@ Want to know if a thread is unread or how many comments are new? Sure thang!
 Register your thread:
 
     curl -X POST $LW_URL/content_items \
-         -u $LW_USERNAME: \
+         -u $LW_API_KEY: \
          -d '{
            "key": "thread_1",
            "unseen": ["user_1", "user_2"]
@@ -122,7 +122,7 @@ User 1 sees the thread:
 Now register an update:
 
     curl -X POST $LW_URL/content_items \
-         -u $LW_USERNAME: \
+         -u $LW_API_KEY: \
          -d '{
            "parent": "thread_1",
            "key": "comment_1",
@@ -131,7 +131,7 @@ Now register an update:
 
 Request the content item:
 
-    curl -u $LW_USERNAME: $LW_URL/content_items/thread_1
+    curl -u $LW_API_KEY: $LW_URL/content_items/thread_1
 
 Response:
 
@@ -155,7 +155,7 @@ Now, let's say you want to email users about content updates. Read Raptor let's 
 Register some content:
 
     curl -X POST $LW_URL/content \
-         -u $LW_USERNAME: \
+         -u $LW_API_KEY: \
          -d '{
            "key": "content_1",
            "unseen": ["user_1", "user_2", "user_3"],
@@ -201,7 +201,7 @@ You'll receive a callback per user that hasn't seen some content:
 What if you want to send a push notification and also include the update in a daily digest? No problemo! You can register a callback for 1 minute, then 24 hours.
 
     curl -X POST $LW_URL/content \
-         -u $LW_USERNAME: \
+         -u $LW_API_KEY: \
          -d '{
            "key": "content_1",
            "unseen": ["user_1"],
