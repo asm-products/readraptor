@@ -24,6 +24,7 @@ func setupMartini() *martini.Martini {
 	r.Post("/accounts", PostAccounts)
 	r.Get("/t/:username/:content_item_id/:user_id/:signature.gif", GetTrackReadReceipts)
 	r.Get("/content_items/:content_item_id", AuthAccount, GetContentItems)
+	r.Post("/content_items", AuthAccount, PostContentItems)
 
 	// go-workers stats
 	workers.Configure(map[string]string{
