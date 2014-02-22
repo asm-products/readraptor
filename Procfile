@@ -1,2 +1,2 @@
-web: readraptor
+web: rrweb
 worker: rrworker

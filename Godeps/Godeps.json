@@ -2,7 +2,7 @@
 	"ImportPath": "github.com/asm-products/readraptor",
 	"GoVersion": "go1.2",
 	"Packages": [
-		"./lib"
+		"./..."
 	],
 	"Deps": [
 		{
