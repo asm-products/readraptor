@@ -33,6 +33,6 @@ func FindAccountByUsername(dbmap *gorp.DbMap, username string) (*Account, error)
 func genApiKey(username string) string {
 	key := os.Getenv("API_GEN_SECRET")
 	hasher := sha1.New()
-	hasher.Write([]byte(key + username))
+	hasher.Write([]byte(key + username + fmt.Sprintf("%d", time.Now().UnixNano())))
 	return fmt.Sprintf("%x", hasher.Sum(nil))
 }

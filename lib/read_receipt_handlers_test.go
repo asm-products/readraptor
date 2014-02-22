@@ -37,9 +37,9 @@ func Test_Tracking(t *testing.T) {
 	req := &http.Request{}
 	req.URL, _ = url.Parse("/t")
 	rw := fake.New(t)
-	GetTrackReadReceipts(dbmap, params, rw, req)
+	GetTrackReadReceipts("..")(dbmap, params, rw, req)
 
-	gif, _ := ioutil.ReadFile("public/tracking.gif")
+	gif, _ := ioutil.ReadFile("../public/tracking.gif")
 	rw.Assert(200, gif)
 }
 
@@ -52,7 +52,7 @@ func expect(t *testing.T, a interface{}, b interface{}) {
 func initTestDb(t *testing.T) *gorp.DbMap {
 	// connect to db using standard Go database/sql API
 	// use whatever database/sql driver you wish
-	dbmap := InitDb("postgres://localhost/lw_test?sslmode=disable")
+	InitDb("postgres://localhost/rr_test?sslmode=disable")
 
 	err := dbmap.CreateTablesIfNotExists()
 	checkErr(t, err, "Create tables failed")

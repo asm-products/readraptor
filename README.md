@@ -6,7 +6,7 @@
 
 Make sure Postgres is installed. Create a local development database:
 
-    psql -c "create database lw_development"
+    psql -c "create database rr_development"
 
 Install goose for running migrations:
 
@@ -229,7 +229,7 @@ Read Raptor will send you both notifications unless the user sees that piece of 
 
 Make sure the test database exists:
 
-    psql -c "create database lw_test"
+    psql -c "create database rr_test"
 
 Run the tests:
 

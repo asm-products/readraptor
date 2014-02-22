@@ -8,11 +8,11 @@ import (
 	"github.com/whatupdave/gokiq"
 )
 
-func setupMartini() *martini.Martini {
+func setupMartini(root string) *martini.Martini {
 	m := martini.New()
 
 	// database
-	db := InitDb(os.Getenv("DATABASE_URL"))
+	InitDb(os.Getenv("DATABASE_URL"))
 
 	// middleware
 	m.Use(ReqLogger())
@@ -21,7 +21,7 @@ func setupMartini() *martini.Martini {
 	// routes
 	r := martini.NewRouter()
 	r.Post("/accounts", PostAccounts)
-	r.Get("/t/:username/:content_item_id/:user_id/:signature.gif", GetTrackReadReceipts)
+	r.Get("/t/:username/:content_item_id/:user_id/:signature.gif", GetTrackReadReceipts(root))
 	r.Get("/content_items/:content_item_id", AuthAccount, GetContentItems)
 	r.Post("/content_items", AuthAccount, PostContentItems)
 
@@ -33,7 +33,7 @@ func setupMartini() *martini.Martini {
 	r.Get("/workers/stats", workers.Stats)
 
 	// Inject database
-	m.Map(db)
+	m.Map(dbmap)
 
 	// Inject gokiq client
 	gokiq.Client.RedisNamespace = "rr"
@@ -46,7 +46,7 @@ func setupMartini() *martini.Martini {
 	return m
 }
 
-func RunWeb() {
-	m := setupMartini()
+func RunWeb(root string) {
+	m := setupMartini(root)
 	m.Run()
 }

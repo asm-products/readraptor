@@ -9,6 +9,7 @@ import (
 
 	"github.com/codegangsta/martini"
 	"github.com/coopernurse/gorp"
+	"github.com/technoweenie/grohl"
 )
 
 func PostAccounts(dbmap *gorp.DbMap, req *http.Request) (string, int) {
@@ -48,4 +49,6 @@ func AuthAccount(dbmap *gorp.DbMap, rw http.ResponseWriter, req *http.Request, c
 	}
 
 	c.Map(&account)
+
+	grohl.AddContext("account", account.Id)
 }

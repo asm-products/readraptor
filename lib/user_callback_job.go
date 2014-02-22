@@ -1,6 +1,9 @@
 package readraptor
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
 	"time"
 
 	"github.com/technoweenie/grohl"
@@ -12,11 +15,47 @@ type UserCallbackJob struct {
 	Url      string
 }
 
+type UserCallback struct {
+	User     string   `json:"user"`
+	Expected []string `json:"expected"`
+}
+
 func (j *UserCallbackJob) Perform() error {
+	keys, err := UnreadContentItemKeys(dbmap, j.ReaderId)
+	if err != nil {
+		panic(err)
+	}
+
+	distinctId, err := dbmap.SelectStr("select distinct_id from readers where id = $1;", j.ReaderId)
+	if err != nil {
+		panic(err)
+	}
+
+	callback := UserCallback{
+		User:     distinctId,
+		Expected: keys,
+	}
+
+	var buf bytes.Buffer
+
+	enc := json.NewEncoder(&buf)
+	err = enc.Encode(&callback)
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := http.Post(j.Url, "application/json", &buf)
+	if err != nil {
+		panic(err)
+	}
+
 	grohl.Log(grohl.Data{
 		"callback": j.Url,
 		"reader":   j.ReaderId,
+		"expected": keys,
+		"status":   resp.Status,
 	})
+
 	return nil
 }
 

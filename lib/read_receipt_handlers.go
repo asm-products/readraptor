@@ -10,19 +10,21 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetTrackReadReceipts(dbmap *gorp.DbMap, params martini.Params, w http.ResponseWriter, r *http.Request) {
-	if ensureSignatureMatch(dbmap, params, w, r) {
-		account, err := FindAccountByUsername(dbmap, params["username"])
-		if err != nil {
-			panic(err)
-		}
+func GetTrackReadReceipts(root string) func(*gorp.DbMap, martini.Params, http.ResponseWriter, *http.Request) {
+	return func(dbmap *gorp.DbMap, params martini.Params, w http.ResponseWriter, r *http.Request) {
+		if ensureSignatureMatch(dbmap, params, w, r) {
+			account, err := FindAccountByUsername(dbmap, params["username"])
+			if err != nil {
+				panic(err)
+			}
 
-		err = TrackReadReceipt(dbmap, account, params["content_item_id"], params["user_id"])
-		if err != nil {
-			panic(err)
-		}
+			err = TrackReadReceipt(dbmap, account, params["content_item_id"], params["user_id"])
+			if err != nil {
+				panic(err)
+			}
 
-		http.ServeFile(w, r, "public/tracking.gif")
+			http.ServeFile(w, r, root + "/public/tracking.gif")
+		}
 	}
 }
 
