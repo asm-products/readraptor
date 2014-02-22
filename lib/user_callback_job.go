@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/technoweenie/grohl"
-	"github.com/whatupdave/gokiq"
+	"github.com/cupcake/gokiq"
 )
 
 type UserCallbackJob struct {

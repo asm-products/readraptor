@@ -6,7 +6,7 @@ import (
 
 	"github.com/codegangsta/martini"
 	"github.com/coopernurse/gorp"
-	"github.com/whatupdave/gokiq"
+	"github.com/cupcake/gokiq"
 )
 
 type ContentItemParams struct {

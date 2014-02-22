@@ -5,7 +5,7 @@ import (
 	"time"
 
 	rr "github.com/asm-products/readraptor/lib"
-	"github.com/whatupdave/gokiq"
+	"github.com/cupcake/gokiq"
 )
 
 func main() {

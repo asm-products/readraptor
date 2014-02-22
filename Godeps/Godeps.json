@@ -1,0 +1,48 @@
+{
+	"ImportPath": "github.com/asm-products/readraptor",
+	"GoVersion": "go1.2",
+	"Packages": [
+		"./lib"
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/bitly/go-simplejson",
+			"Comment": "v0.4.3-12-g408ce0b",
+			"Rev": "408ce0b284fa7ad36e3856fcde50022e885474b2"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/inject",
+			"Rev": "9aea7a2fa5b79ef7fc00f63a575e72df33b4e886"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/martini",
+			"Comment": "v0.1-101-g06dc3e9",
+			"Rev": "06dc3e9688c52f273f9cd8cd833e08b50e49b677"
+		},
+		{
+			"ImportPath": "github.com/coopernurse/gorp",
+			"Comment": "v1.4",
+			"Rev": "08e1d8ca19c74cb69e01ff7a8f332a2e46448c47"
+		},
+		{
+			"ImportPath": "github.com/cupcake/gokiq",
+			"Rev": "ee83fc2d36e42a60665a1181206bacddcd5fd329"
+		},
+		{
+			"ImportPath": "github.com/garyburd/redigo/redis",
+			"Rev": "ed54f4ed86a815cf09870e4bd1a10a2ee39a4308"
+		},
+		{
+			"ImportPath": "github.com/jrallison/go-workers",
+			"Rev": "c1568434fc032d0b6a9df91e35bb7b9e89cec4a6"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Rev": "6577a6a8a8b66cc558ebe37f51ca07833bfa433b"
+		},
+		{
+			"ImportPath": "github.com/technoweenie/grohl",
+			"Rev": "91868e10032390c992d419d10b17cc8bfdc35808"
+		}
+	]
+}

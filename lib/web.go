@@ -5,7 +5,7 @@ import (
 
 	"github.com/codegangsta/martini"
 	workers "github.com/jrallison/go-workers"
-	"github.com/whatupdave/gokiq"
+	"github.com/cupcake/gokiq"
 )
 
 func setupMartini(root string) *martini.Martini {
