@@ -23,7 +23,9 @@ func PostAccounts(dbmap *gorp.DbMap, req *http.Request) (string, int) {
 		panic(err)
 	}
 
-	json, err := json.Marshal(account)
+	json, err := json.Marshal(map[string]interface{}{
+		"account": account,
+	})
 	if err != nil {
 		panic(err)
 	}

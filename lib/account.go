@@ -10,10 +10,10 @@ import (
 )
 
 type Account struct {
-	Id       int64     `db:"id"`
-	Created  time.Time `db:"created_at"`
-	Username string    `db:"username"`
-	ApiKey   string    `db:"api_key"`
+	Id       int64     `db:"id"         json:"id"`
+	Created  time.Time `db:"created_at" json:"created"`
+	Username string    `db:"username"   json:"username"`
+	ApiKey   string    `db:"api_key"    json:"apiKey"`
 }
 
 func NewAccount(username string) *Account {
