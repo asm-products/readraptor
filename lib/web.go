@@ -4,8 +4,9 @@ import (
 	"os"
 
 	"github.com/codegangsta/martini"
-	workers "github.com/jrallison/go-workers"
 	"github.com/cupcake/gokiq"
+	"github.com/garyburd/redigo/redis"
+	workers "github.com/jrallison/go-workers"
 )
 
 func setupMartini(root string) *martini.Martini {
@@ -37,6 +38,7 @@ func setupMartini(root string) *martini.Martini {
 
 	// Inject gokiq client
 	gokiq.Client.RedisNamespace = "rr"
+	gokiq.Workers.RedisPool = redis.NewPool(RedisConnect(os.Getenv("REDIS_URL")), 1)
 	gokiq.Client.Register(&UserCallbackJob{}, "default", 5)
 
 	m.Map(gokiq.Client)
