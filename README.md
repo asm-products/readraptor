@@ -63,7 +63,7 @@ Let's say your site gets a new post and you want to notify 3 users. First regist
          -u $LW_API_KEY: \
          -d '{
            "key": "post_1",
-           "unseen": ["user_1", "user_2", "user_3"]
+           "expected": ["user_1", "user_2", "user_3"]
          }'
 
 Response:
@@ -71,7 +71,7 @@ Response:
     {
       "content_item": {
         "key": "post_1",
-        "unseen": ["user_1", "user_2", "user_3"]
+        "expected": ["user_1", "user_2", "user_3"]
       }
     }
 
@@ -89,7 +89,7 @@ Response:
     {
       "content_item": {
         "key": "post_1",
-        "unseen": ["user_2", "user_3"]
+        "expected": ["user_2", "user_3"]
       }
     }
 
@@ -103,7 +103,7 @@ Register your thread:
          -u $LW_API_KEY: \
          -d '{
            "key": "thread_1",
-           "unseen": ["user_1", "user_2"]
+           "expected": ["user_1", "user_2"]
          }'
 
 Response:
@@ -111,7 +111,7 @@ Response:
     {
       "content_item": {
         "key": "thread_1",
-        "unseen": ["user_1", "user_2"]
+        "expected": ["user_1", "user_2"]
       }
     }
 
@@ -126,7 +126,7 @@ Now register an update:
          -d '{
            "parent": "thread_1",
            "key": "comment_1",
-           "unseen": ["user_1", "user_2"]
+           "expected": ["user_1", "user_2"]
          }'
 
 Request the content item:
@@ -138,10 +138,10 @@ Response:
     {
       "content_item": {
         "key": "thread_1",
-        "unseen": ["user_2"],
+        "expected": ["user_2"],
         "children": [{
           "key": "comment_1",
-          "unseen": ["user_1", "user_2"]
+          "expected": ["user_1", "user_2"]
         }]
       }
     }
@@ -154,11 +154,11 @@ Now, let's say you want to email users about content updates. Read Raptor let's 
 
 Register some content:
 
-    curl -X POST $LW_URL/content \
+    curl -X POST $LW_URL/content_items \
          -u $LW_API_KEY: \
          -d '{
            "key": "content_1",
-           "unseen": ["user_1", "user_2", "user_3"],
+           "expected": ["user_1", "user_2", "user_3"],
            "callbacks": [{
              "seconds": 60,
              "url": "http://requestb.in/u3igzqu3"
@@ -170,7 +170,7 @@ Response:
     {
       "content_item": {
         "key": "content_1",
-        "unseen": ["user_1", "user_2", "user_3"]
+        "expected": ["user_1", "user_2", "user_3"]
       }
     }
 
@@ -184,7 +184,7 @@ You'll receive a callback per user that hasn't seen some content:
     {
       "callback" {
         "user": "user_1",
-        "unseen": ["content_1"]
+        "expected": ["content_1"]
       }
     }
 
@@ -192,7 +192,7 @@ You'll receive a callback per user that hasn't seen some content:
     {
       "callback" {
         "user": "user_3",
-        "unseen": ["content_1"]
+        "expected": ["content_1"]
       }
     }
 
@@ -200,11 +200,11 @@ You'll receive a callback per user that hasn't seen some content:
 
 What if you want to send a push notification and also include the update in a daily digest? No problemo! You can register a callback for 1 minute, then 24 hours.
 
-    curl -X POST $LW_URL/content \
+    curl -X POST $LW_URL/content_items \
          -u $LW_API_KEY: \
          -d '{
            "key": "content_1",
-           "unseen": ["user_1"],
+           "expected": ["user_1"],
            "callbacks": [{
              "seconds": 60,
              "url": "http://requestb.in/u3igzqu3"
@@ -219,7 +219,7 @@ Response:
     {
       "content_item": {
         "key": "content_1",
-        "unseen": ["user_1"]
+        "expected": ["user_1"]
       }
     }
 

@@ -1,4 +1,4 @@
-package main
+package readraptor
 
 import (
 	"crypto/sha1"

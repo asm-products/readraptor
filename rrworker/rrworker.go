@@ -1,15 +1,18 @@
 package main
 
 import (
-	workers "github.com/jrallison/go-workers"
+	"time"
+
+	"github.com/whatupdave/gokiq"
+	"github.com/asm-products/readraptor/lib"
 )
 
 func main() {
-	workers.Configure(map[string]string{
-		"server":  "localhost:6379",
-		"pool":    "30",
-		"process": "1",
-	})
+	gokiq.Workers.PollInterval = 1 * time.Second
+	gokiq.Workers.RedisNamespace = "rr"
+	gokiq.Workers.WorkerCount = 200
 
-	workers.Run()
+	gokiq.Workers.Register(&readraptor.UserCallbackJob{})
+
+	gokiq.Workers.Run()
 }

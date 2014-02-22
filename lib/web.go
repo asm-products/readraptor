@@ -1,13 +1,12 @@
-package main
+package readraptor
 
 import (
 	"os"
 
 	"github.com/codegangsta/martini"
 	workers "github.com/jrallison/go-workers"
+	"github.com/whatupdave/gokiq"
 )
-
-var m *martini.Martini
 
 func setupMartini() *martini.Martini {
 	m := martini.New()
@@ -36,12 +35,18 @@ func setupMartini() *martini.Martini {
 	// Inject database
 	m.Map(db)
 
+	// Inject gokiq client
+	gokiq.Client.RedisNamespace = "rr"
+	gokiq.Client.Register(&UserCallbackJob{}, "default", 5)
+
+	m.Map(gokiq.Client)
+
 	m.Action(r.Handle)
 
 	return m
 }
 
-func main() {
+func RunWeb() {
 	m := setupMartini()
 	m.Run()
 }

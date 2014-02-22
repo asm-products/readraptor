@@ -1,4 +1,4 @@
-package main
+package readraptor
 
 import (
 	"time"
@@ -8,18 +8,18 @@ import (
 
 type ContentItem struct {
 	Id        int64     `db:"id"         json:"id"`
-	AccountId int64     `db:"account_id" json:"accountId"`
+	AccountId int64     `db:"account_id" json:"-"`
 	Created   time.Time `db:"created_at" json:"created"`
 	Key       string    `db:"key"        json:"key"`
 
-	Seen   []string `json:"seen"`
-	Unseen []string `json:"unseen"`
+	Seen     []string `json:"seen,omitempty"`
+	Expected []string `json:"expected,omitempty"`
 }
 
-func FindContentItem(dbmap *gorp.DbMap, id int64) (*ContentItem, error) {
+func FindContentItemWithReadReceipts(dbmap *gorp.DbMap, id int64) (*ContentItem, error) {
 	var ci ContentItem
 	err := dbmap.SelectOne(&ci, "select * from content_items where id = $1", id)
-    ci.AddReadReceipts(dbmap)
+	ci.AddReadReceipts(dbmap)
 
 	return &ci, err
 }
@@ -39,18 +39,35 @@ func (c *ContentItem) AddReadReceipts(dbmap *gorp.DbMap) {
 	}
 	c.Seen = seen
 
-	var unseen []string
-	_, err = dbmap.Select(&unseen, `
+	var expected []string
+	_, err = dbmap.Select(&expected, `
         select readers.distinct_id as seen
         from content_items
            inner join expected_readers on expected_readers.content_item_id = content_items.id
            inner join readers on expected_readers.reader_id = readers.id
         where content_items.id = $1
-        except all ` + selectReaders, c.Id)
+        except all `+selectReaders, c.Id)
 	if err != nil {
 		panic(err)
 	}
-	c.Unseen = unseen
+	c.Expected = expected
+}
+
+func AddReaders(dbmap *gorp.DbMap, accountId, cid int64, expected []string) (rids []int64, err error) {
+	for _, expectedReader := range expected {
+		var rid int64
+		rid, err = InsertReader(dbmap, accountId, expectedReader)
+		if err != nil {
+			return
+		}
+		rids = append(rids, rid)
+
+		_, err = InsertExpectedReader(dbmap, cid, rid)
+		if err != nil {
+			return
+		}
+	}
+	return
 }
 
 func InsertContentItem(dbmap *gorp.DbMap, accountId int64, key string) (int64, error) {
