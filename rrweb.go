@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -16,7 +15,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(dir)
 
 	rr.RunWeb(dir)
 }

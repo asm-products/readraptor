@@ -7,6 +7,7 @@ import (
 	"github.com/cupcake/gokiq"
 	"github.com/garyburd/redigo/redis"
 	workers "github.com/jrallison/go-workers"
+	"github.com/martini-contrib/render"
 )
 
 func setupMartini(root string) *martini.Martini {
@@ -18,9 +19,14 @@ func setupMartini(root string) *martini.Martini {
 	// middleware
 	m.Use(ReqLogger())
 	m.Use(martini.Recovery())
+	m.Use(martini.Static("public", martini.StaticOptions{Prefix: "public"}))
+	m.Use(render.Renderer())
 
 	// routes
 	r := martini.NewRouter()
+	r.Get("/", func(r render.Render) {
+		r.HTML(200, "index", nil)
+	})
 	r.Post("/accounts", PostAccounts)
 	r.Get("/t/:username/:content_item_id/:user_id/:signature.gif", GetTrackReadReceipts(root))
 	r.Get("/content_items/:content_item_id", AuthAccount, GetContentItems)
