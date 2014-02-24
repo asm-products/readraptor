@@ -19,7 +19,10 @@ func setupMartini(root string) *martini.Martini {
 	// middleware
 	m.Use(ReqLogger())
 	m.Use(martini.Recovery())
-	m.Use(martini.Static("public", martini.StaticOptions{Prefix: "public"}))
+	m.Use(martini.Static("public", martini.StaticOptions{
+		Prefix:      "public",
+		SkipLogging: true,
+	}))
 	m.Use(render.Renderer())
 
 	// routes

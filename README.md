@@ -145,7 +145,7 @@ Now you know that `user_1` has 1 new comment and `user_2` hasn't seen the thread
 
 ### User callbacks
 
-Now, let's say you want to email users about content updates. Read Raptor let's you wait a minute and then only email the users that didn't see the content.
+Now, let's say you want to email users about content updates. Read Raptor let's you wait a minute and then only email the users that didn't see the content. The delay argument accepts strings such as "2h45m" or "1m", see http://golang.org/pkg/time/#ParseDuration for more.
 
 Register some content:
 
@@ -155,7 +155,7 @@ Register some content:
            "key": "content_1",
            "expected": ["user_1", "user_2", "user_3"],
            "callbacks": [{
-             "seconds": 60,
+             "delay": "60s",
              "url": "http://requestb.in/u3igzqu3"
            }]
          }'
@@ -191,20 +191,22 @@ You'll receive a callback per user that hasn't seen some content:
       }
     }
 
-### Example: Push Notification + Daily Digest
+### Example: Immediate email + Daily Digest
 
-What if you want to send a push notification and also include the update in a daily digest? No problemo! You can register a callback for 1 minute, then 24 hours.
+What if some users want immediate emails and others want daily digests? No problemo! You can register a callback for 1 minute, then 24 hours and specify the expected users in each.
 
     curl -X POST $RR_URL/content_items \
          -u $RR_API_KEY: \
          -d '{
            "key": "content_1",
-           "expected": ["user_1"],
+           "expected": ["immediate_user", "digest_user"],
            "callbacks": [{
-             "seconds": 60,
+             "delay": "1m",
+             "expected": ["immediate_user"],
              "url": "http://requestb.in/u3igzqu3"
            }, {
-             "hours": 24,
+             "delay": "24h",
+             "expected": ["digest_user"],
              "url": "http://requestb.in/u3igzqu3"
            }]
          }'
@@ -218,7 +220,7 @@ Response:
       }
     }
 
-Read Raptor will send you both notifications unless the user sees that piece of content at some point along the way.
+Read Raptor will send you both webhooks unless the users see that piece of content at some point along the way.
 
 ## Local Setup
 
@@ -255,7 +257,7 @@ Make sure the test database exists:
 
 Run the tests:
 
-    go test
+    go test ./...
 
 ## Contributing
 

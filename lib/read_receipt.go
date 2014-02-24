@@ -56,9 +56,9 @@ func InsertReadReceipt(dbmap *gorp.DbMap, contentId, readerId int64) (int64, err
 	return iid.(int64), err
 }
 
-func UnreadContentItemKeys(dbmap *gorp.DbMap, readerId int64) (keys []string, err error) {
+func UnreadContentItems(dbmap *gorp.DbMap, readerId int64) (keys []ContentItem, err error) {
 	_, err = dbmap.Select(&keys, `
-        select key from
+        select content_items.* from
             (select content_item_id from expected_readers where reader_id = $1
                 except all
              select content_item_id from read_receipts where reader_id = $1) unread_content_items

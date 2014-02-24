@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/technoweenie/grohl"
 	"github.com/cupcake/gokiq"
+	"github.com/technoweenie/grohl"
 )
 
 type UserCallbackJob struct {
@@ -21,7 +21,7 @@ type UserCallback struct {
 }
 
 func (j *UserCallbackJob) Perform() error {
-	keys, err := UnreadContentItemKeys(dbmap, j.ReaderId)
+	citems, err := UnreadContentItems(dbmap, j.ReaderId)
 	if err != nil {
 		panic(err)
 	}
@@ -31,13 +31,17 @@ func (j *UserCallbackJob) Perform() error {
 		panic(err)
 	}
 
+	keys := make([]string, 0)
+	for _, ci := range citems {
+		keys = append(keys, ci.Key)
+	}
+
 	callback := UserCallback{
 		User:     distinctId,
 		Expected: keys,
 	}
 
 	var buf bytes.Buffer
-
 	enc := json.NewEncoder(&buf)
 	err = enc.Encode(&callback)
 	if err != nil {
@@ -47,6 +51,14 @@ func (j *UserCallbackJob) Perform() error {
 	resp, err := http.Post(j.Url, "application/json", &buf)
 	if err != nil {
 		panic(err)
+	}
+
+	// Mark content items as read
+	for _, ci := range citems {
+		_, err := InsertReadReceipt(dbmap, ci.Id, j.ReaderId)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	grohl.Log(grohl.Data{
@@ -59,25 +71,21 @@ func (j *UserCallbackJob) Perform() error {
 	return nil
 }
 
-func ScheduleCallbacks(client *gokiq.ClientConfig, readerIds []int64, callbacks []CallbackParams) {
-	for _, callback := range callbacks {
-		for _, rid := range readerIds {
-			at := time.Now().Add(time.Duration(callback.Seconds) * time.Second)
+func ScheduleCallbacks(client *gokiq.ClientConfig, readerIds []int64, at time.Time, url string) {
+	config := gokiq.JobConfig{
+		At: at,
+	}
 
-			config := gokiq.JobConfig{
-				At: at,
-			}
+	for _, rid := range readerIds {
+		client.QueueJobConfig(&UserCallbackJob{
+			Url:      url,
+			ReaderId: rid,
+		}, config)
 
-			client.QueueJobConfig(&UserCallbackJob{
-				Url:      callback.Url,
-				ReaderId: rid,
-			}, config)
-
-			grohl.Log(grohl.Data{
-				"schedule_job": at,
-				"url":          callback.Url,
-				"reader":       rid,
-			})
-		}
+		grohl.Log(grohl.Data{
+			"schedule_job": at,
+			"url":          url,
+			"reader":       rid,
+		})
 	}
 }

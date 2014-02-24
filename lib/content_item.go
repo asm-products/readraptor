@@ -53,7 +53,7 @@ func (c *ContentItem) AddReadReceipts(dbmap *gorp.DbMap) {
 	c.Expected = expected
 }
 
-func AddReaders(dbmap *gorp.DbMap, accountId, cid int64, expected []string) (rids []int64, err error) {
+func AddContentReaders(dbmap *gorp.DbMap, accountId, cid int64, expected []string) (rids []int64, err error) {
 	for _, expectedReader := range expected {
 		var rid int64
 		rid, err = InsertReader(dbmap, accountId, expectedReader)
