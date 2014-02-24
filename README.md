@@ -1,36 +1,20 @@
 # Read Raptor
 
-**API for read receipts**
+An API for read receipts.
 
-## Setup
+## Why would I use this on my app?
 
-Make sure Postgres is installed. Create a local development database:
+Read Raptor tracks what your users have and haven't read. First you register pieces of content around your app with who you expect to read it and by when. Then you embed tracking pixels in the content. Finally, Read Raptor will send you webhooks after a specified amount of time letting you know what each user hasn't seen yet. Here's 3 fun things you can do with it:
 
-    psql -c "create database rr_development"
+1. Show which articles are unread for each user
+2. Email your users about new content only if they **haven't** seen it
+3. Send out digest emails with grouped content that each user **hasn't** read
 
-Install goose for running migrations:
-
-    go get bitbucket.org/liamstask/goose/cmd/goose
-
-Copy sample env file:
-
-    cp .env.sample .env
-
-Install forego (or use foreman):
-
-    go get github.com/ddollar/forego
-
-Run migrations:
-
-    forego run goose up
-
-Start up the server (or use something like gin to auto-reload):
-
-    forego run
+## Get Started
 
 ### Create an Account
 
-    curl -X POST $LW_URL/accounts \
+    curl -X POST $RR_URL/accounts \
          -d username=whatupdave
 
     # Response
@@ -45,22 +29,33 @@ Start up the server (or use something like gin to auto-reload):
 
 Generate the url in the format: `/t/:username/:content_item_id/:user_id/:signature.gif`. The signature is a `sha1` hash of the `api_key` + args in the same order.
 
-    # bash example
-    export LW_API_KEY=api_3c12d9556813
-    export LW_USERNAME=whatupdave
-    export LW_URL=http://localhost:5000
+    # Set some environment variables
+    export RR_API_KEY=api_3c12d9556813
+    export RR_USERNAME=whatupdave
+    export RR_URL=http://localhost:5000
 
+
+    # bash example
     function _tracking_url {
-      echo -n "$LW_URL/t/$LW_USERNAME/$1/$2/`echo -n $LW_API_KEY$LW_USERNAME$1$2 | openssl dgst -sha1`.gif"
+      echo -n "$RR_URL/t/$RR_USERNAME/$1/$2/`echo -n $RR_API_KEY$RR_USERNAME$1$2 | openssl dgst -sha1`.gif"
     }
+
+
+    # ruby
+    require 'digest/sha1'
+
+    def tracking_url(content_item_id, user_id)
+      sig = Digest::SHA1.hexdigest "#{ENV['RR_API_KEY']}#{ENV['RR_USERNAME']}#{content_item_id}#{user_id}"
+      "#{ENV['RR_URL']}/t/#{ENV['RR_USERNAME']}/#{content_item_id}/#{user_id}/#{sig}.gif"
+    end
 
 
 ### Basic Scenario
 
 Let's say your site gets a new post and you want to notify 3 users. First register the content item:
 
-    curl -X POST $LW_URL/content_items \
-         -u $LW_API_KEY: \
+    curl -X POST $RR_URL/content_items \
+         -u $RR_API_KEY: \
          -d '{
            "key": "post_1",
            "expected": ["user_1", "user_2", "user_3"]
@@ -82,7 +77,7 @@ Mark first user as seen by requesting the tracking pixel. :
 
 Now get the list of users who have not seen the content:
 
-    curl -u $LW_API_KEY: $LW_URL/content_items/post_1
+    curl -u $RR_API_KEY: $RR_URL/content_items/post_1
 
 Response:
 
@@ -99,8 +94,8 @@ Want to know if a thread is unread or how many comments are new? Sure thang!
 
 Register your thread:
 
-    curl -X POST $LW_URL/content_items \
-         -u $LW_API_KEY: \
+    curl -X POST $RR_URL/content_items \
+         -u $RR_API_KEY: \
          -d '{
            "key": "thread_1",
            "expected": ["user_1", "user_2"]
@@ -121,8 +116,8 @@ User 1 sees the thread:
 
 Now register an update:
 
-    curl -X POST $LW_URL/content_items \
-         -u $LW_API_KEY: \
+    curl -X POST $RR_URL/content_items \
+         -u $RR_API_KEY: \
          -d '{
            "parent": "thread_1",
            "key": "comment_1",
@@ -131,7 +126,7 @@ Now register an update:
 
 Request the content item:
 
-    curl -u $LW_API_KEY: $LW_URL/content_items/thread_1
+    curl -u $RR_API_KEY: $RR_URL/content_items/thread_1
 
 Response:
 
@@ -154,8 +149,8 @@ Now, let's say you want to email users about content updates. Read Raptor let's 
 
 Register some content:
 
-    curl -X POST $LW_URL/content_items \
-         -u $LW_API_KEY: \
+    curl -X POST $RR_URL/content_items \
+         -u $RR_API_KEY: \
          -d '{
            "key": "content_1",
            "expected": ["user_1", "user_2", "user_3"],
@@ -200,8 +195,8 @@ You'll receive a callback per user that hasn't seen some content:
 
 What if you want to send a push notification and also include the update in a daily digest? No problemo! You can register a callback for 1 minute, then 24 hours.
 
-    curl -X POST $LW_URL/content_items \
-         -u $LW_API_KEY: \
+    curl -X POST $RR_URL/content_items \
+         -u $RR_API_KEY: \
          -d '{
            "key": "content_1",
            "expected": ["user_1"],
@@ -224,6 +219,33 @@ Response:
     }
 
 Read Raptor will send you both notifications unless the user sees that piece of content at some point along the way.
+
+## Local Setup
+
+Make sure Postgres is installed. Create a local development database:
+
+    psql -c "create database rr_development"
+
+Install goose for running migrations:
+
+    go get bitbucket.org/liamstask/goose/cmd/goose
+
+Copy sample env file:
+
+    cp .env.sample .env
+
+Install forego (or use foreman):
+
+    go get github.com/ddollar/forego
+
+Run migrations:
+
+    forego run goose up
+
+Start up the server (or use something like gin to auto-reload):
+
+    forego run
+
 
 ### Running the tests
 
