@@ -4,7 +4,9 @@ An API for read receipts.
 
 ## Why would I use this on my app?
 
-Read Raptor tracks what your users have and haven't read. First you register pieces of content around your app with who you expect to read it and by when. Then you embed tracking pixels in the content. Finally, Read Raptor will send you webhooks after a specified amount of time letting you know what each user hasn't seen yet. Here's 3 fun things you can do with it:
+Read Raptor tracks what your users have and haven't read. First, register pieces of content around your app, telling Read Raptor who you expect to read it and by when. Then you embed tracking pixels in the content. Finally, Read Raptor will send you webhooks after a specified delay letting you know what each user hasn't seen yet.
+
+Here's 3 fun things you can do with it:
 
 1. Show which articles are unread for each user
 2. Email your users about new content only if they **haven't** seen it
@@ -27,7 +29,7 @@ Read Raptor tracks what your users have and haven't read. First you register pie
 
 ### Generating tracking urls
 
-Generate the url in the format: `/t/:username/:content_item_id/:user_id/:signature.gif`. The signature is a `sha1` hash of the `api_key` + args in the same order.
+Tracking pixel urls are in the format: `/t/:username/:content_item_id/:user_id/:signature.gif`. The signature is a `sha1` hash of the `api_key` + args in the same order.
 
     # Set some environment variables
     export RR_API_KEY=api_3c12d9556813
@@ -35,13 +37,15 @@ Generate the url in the format: `/t/:username/:content_item_id/:user_id/:signatu
     export RR_URL=http://localhost:5000
 
 
-    # bash example
+**Bash example**
+
     function _tracking_url {
       echo -n "$RR_URL/t/$RR_USERNAME/$1/$2/`echo -n $RR_API_KEY$RR_USERNAME$1$2 | openssl dgst -sha1`.gif"
     }
 
 
-    # ruby
+**Ruby example**
+
     require 'digest/sha1'
 
     def tracking_url(content_item_id, user_id)
@@ -50,9 +54,9 @@ Generate the url in the format: `/t/:username/:content_item_id/:user_id/:signatu
     end
 
 
-### Basic Scenario
+### Show unread articles
 
-Let's say your site gets a new post and you want to notify 3 users. First register the content item:
+Let's say your site gets a new post and you want to notify 3 users about it. First register the content item:
 
     curl -X POST $RR_URL/content_items \
          -u $RR_API_KEY: \
@@ -88,64 +92,11 @@ Response:
       }
     }
 
-### Content updates
+Go ahead and display that content as unread.
 
-Want to know if a thread is unread or how many comments are new? Sure thang!
+### Email users who haven't seen an article
 
-Register your thread:
-
-    curl -X POST $RR_URL/content_items \
-         -u $RR_API_KEY: \
-         -d '{
-           "key": "thread_1",
-           "expected": ["user_1", "user_2"]
-         }'
-
-Response:
-
-    {
-      "content_item": {
-        "key": "thread_1",
-        "expected": ["user_1", "user_2"]
-      }
-    }
-
-User 1 sees the thread:
-
-    curl -I `_tracking_url thread_1 user_1`
-
-Now register an update:
-
-    curl -X POST $RR_URL/content_items \
-         -u $RR_API_KEY: \
-         -d '{
-           "parent": "thread_1",
-           "key": "comment_1",
-           "expected": ["user_1", "user_2"]
-         }'
-
-Request the content item:
-
-    curl -u $RR_API_KEY: $RR_URL/content_items/thread_1
-
-Response:
-
-    {
-      "content_item": {
-        "key": "thread_1",
-        "expected": ["user_2"],
-        "children": [{
-          "key": "comment_1",
-          "expected": ["user_1", "user_2"]
-        }]
-      }
-    }
-
-Now you know that `user_1` has 1 new comment and `user_2` hasn't seen the thread at all.
-
-### User callbacks
-
-Now, let's say you want to email users about content updates. Read Raptor let's you wait a minute and then only email the users that didn't see the content. The delay argument accepts strings such as "2h45m" or "1m", see http://golang.org/pkg/time/#ParseDuration for more.
+You want to email users about a new article, but you love your users so you don't want to email them if they've already seen it. Read Raptor let's you register callbacks that will notify you about content that users haven't seen. The delay argument accepts strings such as "2h45m" or "1m", see http://golang.org/pkg/time/#ParseDuration for more.
 
 Register some content:
 
@@ -191,15 +142,14 @@ You'll receive a callback per user that hasn't seen some content:
       }
     }
 
-### Example: Immediate email + Daily Digest
+### Digest emails
 
-What if some users want immediate emails and others want daily digests? No problemo! You can register a callback for 1 minute, then 24 hours and specify the expected users in each.
+What if some users want immediate emails and others want daily digests? No problemo! You can register a callback for 1 minute, then 24 hours and specify the expected users in each callback.
 
     curl -X POST $RR_URL/content_items \
          -u $RR_API_KEY: \
          -d '{
            "key": "content_1",
-           "expected": ["immediate_user", "digest_user"],
            "callbacks": [{
              "delay": "1m",
              "expected": ["immediate_user"],
