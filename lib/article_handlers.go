@@ -10,7 +10,7 @@ import (
 	"github.com/cupcake/gokiq"
 )
 
-type ContentItemParams struct {
+type ArticleParams struct {
 	Key       string           `json:"key"`
 	Expected  []string         `json:"expected"`
 	Callbacks []CallbackParams `json:"callbacks"`
@@ -22,9 +22,9 @@ type CallbackParams struct {
 	Url      string   `json:"url"`
 }
 
-func GetContentItems(dbmap *gorp.DbMap, params martini.Params) (string, int) {
-	var ci ContentItem
-	err := dbmap.SelectOne(&ci, "select * from content_items where key = $1", params["content_item_id"])
+func GetArticles(dbmap *gorp.DbMap, params martini.Params) (string, int) {
+	var ci Article
+	err := dbmap.SelectOne(&ci, "select * from articles where key = $1", params["article_id"])
 	ci.AddReadReceipts(dbmap)
 
 	if err != nil {
@@ -39,20 +39,20 @@ func GetContentItems(dbmap *gorp.DbMap, params martini.Params) (string, int) {
 	return string(json), http.StatusOK
 }
 
-func PostContentItems(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Request, account *Account) (string, int) {
+func PostArticles(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Request, account *Account) (string, int) {
 	decoder := json.NewDecoder(req.Body)
-	var p ContentItemParams
+	var p ArticleParams
 	err := decoder.Decode(&p)
 	if err != nil {
 		panic(err)
 	}
 
-	cid, err := InsertContentItem(dbmap, account.Id, p.Key)
+	cid, err := InsertArticle(dbmap, account.Id, p.Key)
 	if err != nil {
 		panic(err)
 	}
 
-	rids, err := AddContentReaders(dbmap, account.Id, cid, p.Expected)
+	rids, err := AddArticleReaders(dbmap, account.Id, cid, p.Expected)
 	for _, callback := range p.Callbacks {
 		delay, err := time.ParseDuration(callback.Delay)
 		if err != nil {
@@ -61,7 +61,7 @@ func PostContentItems(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.R
 		at := time.Now().Add(delay)
 
 		if callback.Expected != nil {
-			rids, err = AddContentReaders(dbmap, account.Id, cid, callback.Expected)
+			rids, err = AddArticleReaders(dbmap, account.Id, cid, callback.Expected)
             if err != nil {
                 panic(err)
             }
@@ -69,10 +69,10 @@ func PostContentItems(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.R
 		ScheduleCallbacks(client, rids, at, callback.Url)
 	}
 
-	ci, err := FindContentItemWithReadReceipts(dbmap, cid)
+	ci, err := FindArticleWithReadReceipts(dbmap, cid)
 
 	json, err := json.Marshal(map[string]interface{}{
-		"content_item": ci,
+		"article": ci,
 	})
 	if err != nil {
 		panic(err)

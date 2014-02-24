@@ -18,7 +18,7 @@ func GetTrackReadReceipts(root string) func(*gorp.DbMap, martini.Params, http.Re
 				panic(err)
 			}
 
-			err = TrackReadReceipt(dbmap, account, params["content_item_id"], params["user_id"])
+			err = TrackReadReceipt(dbmap, account, params["article_id"], params["user_id"])
 			if err != nil {
 				panic(err)
 			}
@@ -35,15 +35,15 @@ func ensureSignatureMatch(dbmap *gorp.DbMap, params martini.Params, w http.Respo
 		panic(err)
 	}
 
-	if params["signature"] != signature(apiKey, params["username"], params["content_item_id"], params["user_id"]) {
+	if params["signature"] != signature(apiKey, params["username"], params["article_id"], params["user_id"]) {
 		http.NotFound(w, r)
 		return false
 	}
 	return true
 }
 
-func signature(key, username, contentId, userId string) string {
+func signature(key, username, articleId, userId string) string {
 	hasher := sha1.New()
-	hasher.Write([]byte(key + username + contentId + userId))
+	hasher.Write([]byte(key + username + articleId + userId))
 	return fmt.Sprintf("%x", hasher.Sum(nil))
 }

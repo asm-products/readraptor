@@ -19,7 +19,7 @@ func InitDb(connection string) {
 
 	dbmap = &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 	dbmap.AddTableWithName(Account{}, "accounts").SetKeys(true, "Id")
-	dbmap.AddTableWithName(ContentItem{}, "content_items").SetKeys(true, "Id")
+	dbmap.AddTableWithName(Article{}, "articles").SetKeys(true, "Id")
 	dbmap.AddTableWithName(Reader{}, "readers").SetKeys(true, "Id")
 	dbmap.AddTableWithName(ReadReceipt{}, "read_receipts").SetKeys(true, "Id")
 }

@@ -31,9 +31,9 @@ func setupMartini(root string) *martini.Martini {
 		r.HTML(200, "index", nil)
 	})
 	r.Post("/accounts", PostAccounts)
-	r.Get("/t/:username/:content_item_id/:user_id/:signature.gif", GetTrackReadReceipts(root))
-	r.Get("/content_items/:content_item_id", AuthAccount, GetContentItems)
-	r.Post("/content_items", AuthAccount, PostContentItems)
+	r.Get("/t/:username/:article_id/:user_id/:signature.gif", GetTrackReadReceipts(root))
+	r.Get("/articles/:article_id", AuthAccount, GetArticles)
+	r.Post("/articles", AuthAccount, PostArticles)
 
 	// go-workers stats
 	workers.Configure(map[string]string{

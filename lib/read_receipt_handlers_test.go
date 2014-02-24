@@ -28,10 +28,10 @@ func Test_Tracking(t *testing.T) {
 	checkErr(t, err, "Insert failed")
 
 	params := martini.Params{
-		"username":        "weasley",
-		"content_item_id": "content_1",
-		"user_id":         "user_1",
-		"signature":       signature(account.ApiKey, account.Username, "content_1", "user_1"),
+		"username":   "weasley",
+		"article_id": "article_1",
+		"user_id":    "user_1",
+		"signature":  signature(account.ApiKey, account.Username, "article_1", "user_1"),
 	}
 
 	req := &http.Request{}

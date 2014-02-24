@@ -9,12 +9,12 @@ import (
 type ReadReceipt struct {
 	Id            int64     `db:"id"`
 	Created       time.Time `db:"created_at"`
-	ContentItemId int64     `db:"content_item_id"`
+	ArticleId int64     `db:"article_id"`
 	ReaderId      int64     `db:"reader_id"`
 }
 
 func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) error {
-	cid, err := InsertContentItem(dbmap, account.Id, key)
+	cid, err := InsertArticle(dbmap, account.Id, key)
 	if err != nil {
 		return err
 	}
@@ -32,18 +32,18 @@ func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) e
 	return err
 }
 
-func InsertReadReceipt(dbmap *gorp.DbMap, contentId, readerId int64) (int64, error) {
+func InsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, error) {
 	id, err := dbmap.SelectNullInt(`
         with s as (
-            select id from read_receipts where content_item_id = $1 and reader_id = $2
+            select id from read_receipts where article_id = $1 and reader_id = $2
         ), i as (
-            insert into read_receipts ("content_item_id", "reader_id", "created_at")
+            insert into read_receipts ("article_id", "reader_id", "created_at")
             select $1, $2, $3
             where not exists (select 1 from s)
             returning id
         )
         select id from i union all select id from s;
-    `, contentId,
+    `, articleId,
 		readerId,
 		time.Now(),
 	)
@@ -56,13 +56,13 @@ func InsertReadReceipt(dbmap *gorp.DbMap, contentId, readerId int64) (int64, err
 	return iid.(int64), err
 }
 
-func UnreadContentItems(dbmap *gorp.DbMap, readerId int64) (keys []ContentItem, err error) {
+func UnreadArticles(dbmap *gorp.DbMap, readerId int64) (keys []Article, err error) {
 	_, err = dbmap.Select(&keys, `
-        select content_items.* from
-            (select content_item_id from expected_readers where reader_id = $1
+        select articles.* from
+            (select article_id from expected_readers where reader_id = $1
                 except all
-             select content_item_id from read_receipts where reader_id = $1) unread_content_items
-        inner join content_items on content_items.id = unread_content_items.content_item_id;`, readerId)
+             select article_id from read_receipts where reader_id = $1) unread_articles
+        inner join articles on articles.id = unread_articles.article_id;`, readerId)
 
 	return
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/coopernurse/gorp"
 )
 
-type ContentItem struct {
+type Article struct {
 	Id        int64     `db:"id"         json:"id"`
 	AccountId int64     `db:"account_id" json:"-"`
 	Created   time.Time `db:"created_at" json:"created"`
@@ -16,22 +16,22 @@ type ContentItem struct {
 	Expected []string `json:"expected,omitempty"`
 }
 
-func FindContentItemWithReadReceipts(dbmap *gorp.DbMap, id int64) (*ContentItem, error) {
-	var ci ContentItem
-	err := dbmap.SelectOne(&ci, "select * from content_items where id = $1", id)
-	ci.AddReadReceipts(dbmap)
+func FindArticleWithReadReceipts(dbmap *gorp.DbMap, id int64) (*Article, error) {
+	var a Article
+	err := dbmap.SelectOne(&a, "select * from articles where id = $1", id)
+	a.AddReadReceipts(dbmap)
 
-	return &ci, err
+	return &a, err
 }
 
-func (c *ContentItem) AddReadReceipts(dbmap *gorp.DbMap) {
+func (c *Article) AddReadReceipts(dbmap *gorp.DbMap) {
 	var seen []string
 	selectReaders := `
         select readers.distinct_id as seen
-        from content_items
-           inner join read_receipts on read_receipts.content_item_id = content_items.id
+        from articles
+           inner join read_receipts on read_receipts.article_id = articles.id
            inner join readers on read_receipts.reader_id = readers.id
-        where content_items.id = $1`
+        where articles.id = $1`
 
 	_, err := dbmap.Select(&seen, selectReaders, c.Id)
 	if err != nil {
@@ -42,10 +42,10 @@ func (c *ContentItem) AddReadReceipts(dbmap *gorp.DbMap) {
 	var expected []string
 	_, err = dbmap.Select(&expected, `
         select readers.distinct_id as seen
-        from content_items
-           inner join expected_readers on expected_readers.content_item_id = content_items.id
+        from articles
+           inner join expected_readers on expected_readers.article_id = articles.id
            inner join readers on expected_readers.reader_id = readers.id
-        where content_items.id = $1
+        where articles.id = $1
         except all `+selectReaders, c.Id)
 	if err != nil {
 		panic(err)
@@ -53,7 +53,7 @@ func (c *ContentItem) AddReadReceipts(dbmap *gorp.DbMap) {
 	c.Expected = expected
 }
 
-func AddContentReaders(dbmap *gorp.DbMap, accountId, cid int64, expected []string) (rids []int64, err error) {
+func AddArticleReaders(dbmap *gorp.DbMap, accountId, articleId int64, expected []string) (rids []int64, err error) {
 	for _, expectedReader := range expected {
 		var rid int64
 		rid, err = InsertReader(dbmap, accountId, expectedReader)
@@ -62,7 +62,7 @@ func AddContentReaders(dbmap *gorp.DbMap, accountId, cid int64, expected []strin
 		}
 		rids = append(rids, rid)
 
-		_, err = InsertExpectedReader(dbmap, cid, rid)
+		_, err = InsertExpectedReader(dbmap, articleId, rid)
 		if err != nil {
 			return
 		}
@@ -70,12 +70,12 @@ func AddContentReaders(dbmap *gorp.DbMap, accountId, cid int64, expected []strin
 	return
 }
 
-func InsertContentItem(dbmap *gorp.DbMap, accountId int64, key string) (int64, error) {
+func InsertArticle(dbmap *gorp.DbMap, accountId int64, key string) (int64, error) {
 	id, err := dbmap.SelectNullInt(`
         with s as (
-            select id from content_items where account_id = $1 and key = $2
+            select id from articles where account_id = $1 and key = $2
         ), i as (
-            insert into content_items ("account_id", "key", "created_at")
+            insert into articles ("account_id", "key", "created_at")
             select $1, $2, $3
             where not exists (select 1 from s)
             returning id

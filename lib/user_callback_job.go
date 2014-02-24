@@ -21,7 +21,7 @@ type UserCallback struct {
 }
 
 func (j *UserCallbackJob) Perform() error {
-	citems, err := UnreadContentItems(dbmap, j.ReaderId)
+	articles, err := UnreadArticles(dbmap, j.ReaderId)
 	if err != nil {
 		panic(err)
 	}
@@ -32,8 +32,8 @@ func (j *UserCallbackJob) Perform() error {
 	}
 
 	keys := make([]string, 0)
-	for _, ci := range citems {
-		keys = append(keys, ci.Key)
+	for _, a := range articles {
+		keys = append(keys, a.Key)
 	}
 
 	callback := UserCallback{
@@ -53,8 +53,8 @@ func (j *UserCallbackJob) Perform() error {
 		panic(err)
 	}
 
-	// Mark content items as read
-	for _, ci := range citems {
+	// Mark articles as read
+	for _, ci := range articles {
 		_, err := InsertReadReceipt(dbmap, ci.Id, j.ReaderId)
 		if err != nil {
 			panic(err)
