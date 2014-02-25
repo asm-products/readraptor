@@ -13,11 +13,11 @@ import (
 type ArticleParams struct {
 	Key        string           `json:"key"`
 	Recipients []string         `json:"recipients"`
-	Callbacks  []CallbackParams `json:"callbacks"`
+	Callbacks  []CallbackParams `json:"via"`
 }
 
 type CallbackParams struct {
-	Delay      string   `json:"delay"`
+	At         int64    `json:"at"`
 	Recipients []string `json:"recipients"`
 	Url        string   `json:"url"`
 }
@@ -54,11 +54,7 @@ func PostArticles(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Reque
 
 	rids, err := AddArticleReaders(dbmap, account.Id, cid, p.Recipients)
 	for _, callback := range p.Callbacks {
-		delay, err := time.ParseDuration(callback.Delay)
-		if err != nil {
-			panic(err)
-		}
-		at := time.Now().Add(delay)
+		at := time.Unix(callback.At, 0)
 
 		if callback.Recipients != nil {
 			rids, err = AddArticleReaders(dbmap, account.Id, cid, callback.Recipients)

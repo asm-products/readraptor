@@ -66,7 +66,7 @@ Let's say your site gets a new post and you want to notify 3 users about it. Fir
          -u $RR_API_KEY: \
          -d '{
            "key": "post_1",
-           "pending": ["user_1", "user_2", "user_3"]
+           "recipients": ["user_1", "user_2", "user_3"]
          }'
 
 Response:
@@ -100,7 +100,7 @@ Go ahead and display that content as unread.
 
 ### Example 2: Email users who haven't seen an article
 
-You want to email users about a new article, but you don't want to email them if they've already seen it. Read Raptor let's you register callbacks that will notify you about content that users haven't seen. The delay argument accepts strings such as "2h45m" or "1m", see http://golang.org/pkg/time/#ParseDuration for more.
+You want to email users about a new article, but you don't want to email them if they've already seen it. Read Raptor let's you register callbacks that will notify you about content that users haven't seen.
 
 Register some content:
 
@@ -108,9 +108,10 @@ Register some content:
          -u $RR_API_KEY: \
          -d '{
            "key": "article_1",
-           "pending": ["user_1", "user_2", "user_3"],
-           "callbacks": [{
-             "delay": "60s",
+           "recipients": ["user_1", "user_2", "user_3"],
+           "via": [{
+             "type": "webhook",
+             "at": '"`date -v+1M +%s`"',
              "url": "http://requestb.in/u3igzqu3"
            }]
          }'
@@ -154,12 +155,14 @@ What if some users want immediate emails and others want daily digests? No probl
          -u $RR_API_KEY: \
          -d '{
            "key": "article_1",
-           "callbacks": [{
-             "delay": "1m",
+           "via": [{
+             "type": "webhook",
+             "at": '"`date -v+1M +%s`"',
              "recipients": ["immediate_user"],
              "url": "http://requestb.in/u3igzqu3"
            }, {
-             "delay": "24h",
+             "type": "webhook",
+             "at": '"`date -v+24H +%s`"',
              "recipients": ["digest_user"],
              "url": "http://requestb.in/u3igzqu3"
            }]
