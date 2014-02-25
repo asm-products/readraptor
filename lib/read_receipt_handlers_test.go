@@ -23,15 +23,15 @@ func Test_Tracking(t *testing.T) {
 	err := dbmap.TruncateTables()
 	checkErr(t, err, "TruncateTables failed")
 
-	account := NewAccount("weasley")
+	account := NewAccount("weasley@example.com")
 	err = dbmap.Insert(account)
 	checkErr(t, err, "Insert failed")
 
 	params := martini.Params{
-		"username":   "weasley",
+		"public_key": account.PublicKey,
 		"article_id": "article_1",
 		"user_id":    "user_1",
-		"signature":  signature(account.ApiKey, account.Username, "article_1", "user_1"),
+		"signature":  signature(account.PrivateKey, account.PublicKey, "article_1", "user_1"),
 	}
 
 	req := &http.Request{}

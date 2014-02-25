@@ -13,7 +13,7 @@ type Article struct {
 	Key       string    `db:"key"        json:"key"`
 
 	Delivered []string `json:"delivered,omitempty"`
-	Pending   []string `json:"undelivered,omitempty"`
+	Pending   []string `json:"pending,omitempty"`
 }
 
 func FindArticleWithReadReceipts(dbmap *gorp.DbMap, id int64) (*Article, error) {

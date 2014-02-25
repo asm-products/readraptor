@@ -17,7 +17,7 @@ func PostAccounts(dbmap *gorp.DbMap, req *http.Request) (string, int) {
 		panic(err)
 	}
 
-	account := NewAccount(req.PostForm["username"][0])
+	account := NewAccount(req.PostForm["email"][0])
 	err := dbmap.Insert(account)
 	if err != nil {
 		panic(err)
@@ -42,7 +42,7 @@ func AuthAccount(dbmap *gorp.DbMap, rw http.ResponseWriter, req *http.Request, c
 	apiKey := string(dec[:len(dec)-1])
 
 	var account Account
-	err = dbmap.SelectOne(&account, "select * from accounts where api_key = $1 limit 1", apiKey)
+	err = dbmap.SelectOne(&account, "select * from accounts where private_key = $1 limit 1", apiKey)
 	if err == sql.ErrNoRows {
 		rw.Header().Set("WWW-Authenticate", "Basic realm=\"Authorization Required\"")
 		http.Error(rw, "Not Authorized", http.StatusUnauthorized)

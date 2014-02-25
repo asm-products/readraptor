@@ -22,29 +22,32 @@ Here's 3 fun things she can help you with:
     export RR_URL=http://localhost:5000
 
     curl -X POST $RR_URL/accounts \
-         -d username=whatupdave
+         -d email=whatupdave@example.com
 
     # Response
     {
       "account": {
-        "username": "whatupdave",
-        "api_key": "api_3c12d9556813"
+        "id":1,
+        "created":"2014-02-24T18:36:10.653736897-08:00",
+        "email":"whatupdave@example.com",
+        "publicKey":"bf55ea13d87bc9b79e28974352cbc0fd0caca1d9",
+        "privateKey":"7519a5328f4741d72a6895ff7a4ea9a446e36b17"
       }
     }
 
     # some more env vars
-    export RR_API_KEY=api_3c12d9556813
-    export RR_USERNAME=whatupdave
+    export RR_PUBLIC_KEY=bf55ea13d87bc9b79e28974352cbc0fd0caca1d9
+    export RR_PRIVATE_KEY=7519a5328f4741d72a6895ff7a4ea9a446e36b17
 
 
 ### Generating tracking urls
 
-Tracking pixel urls are in the format: `/t/:username/:article_id/:user_id/:signature.gif`. The signature is a `sha1` hash of the `api_key` + args in the same order.
+Tracking pixel urls are in the format: `/t/:username/:article_id/:user_id/:signature.gif`. The signature is a `sha1` hash of the `private_key` + args in the same order.
 
 **Bash example**
 
     function _tracking_url {
-      echo -n "$RR_URL/t/$RR_USERNAME/$1/$2/`echo -n $RR_API_KEY$RR_USERNAME$1$2 | openssl dgst -sha1`.gif"
+      echo -n "$RR_URL/t/$RR_PUBLIC_KEY/$1/$2/`echo -n $RR_PRIVATE_KEY$RR_PUBLIC_KEY$1$2 | openssl dgst -sha1`.gif"
     }
 
 
@@ -53,8 +56,8 @@ Tracking pixel urls are in the format: `/t/:username/:article_id/:user_id/:signa
     require 'digest/sha1'
 
     def tracking_url(article_id, user_id)
-      sig = Digest::SHA1.hexdigest "#{ENV['RR_API_KEY']}#{ENV['RR_USERNAME']}#{article_id}#{user_id}"
-      "#{ENV['RR_URL']}/t/#{ENV['RR_USERNAME']}/#{article_id}/#{user_id}/#{sig}.gif"
+      sig = Digest::SHA1.hexdigest "#{ENV['RR_PRIVATE_KEY']}#{ENV['RR_PUBLIC_KEY']}#{article_id}#{user_id}"
+      "#{ENV['RR_URL']}/t/#{ENV['RR_PUBLIC_KEY']}/#{article_id}/#{user_id}/#{sig}.gif"
     end
 
 
@@ -63,7 +66,7 @@ Tracking pixel urls are in the format: `/t/:username/:article_id/:user_id/:signa
 Let's say your site gets a new post and you want to notify 3 users about it. First register the content item:
 
     curl -X POST $RR_URL/articles \
-         -u $RR_API_KEY: \
+         -u $RR_PRIVATE_KEY: \
          -d '{
            "key": "post_1",
            "recipients": ["user_1", "user_2", "user_3"]
@@ -85,7 +88,7 @@ Mark first user as seen by requesting the tracking pixel. :
 
 Now get the list of users who have not seen the content:
 
-    curl -u $RR_API_KEY: $RR_URL/articles/post_1
+    curl -u $RR_PRIVATE_KEY: $RR_URL/articles/post_1
 
 Response:
 
@@ -105,7 +108,7 @@ You want to email users about a new article, but you don't want to email them if
 Register some content:
 
     curl -X POST $RR_URL/articles \
-         -u $RR_API_KEY: \
+         -u $RR_PRIVATE_KEY: \
          -d '{
            "key": "article_1",
            "recipients": ["user_1", "user_2", "user_3"],
@@ -152,7 +155,7 @@ You'll receive a callback per user that hasn't seen some content:
 What if some users want immediate emails and others want daily digests? No problemo! You can register a callback for 1 minute, then 24 hours and specify the recipients in each callback.
 
     curl -X POST $RR_URL/articles \
-         -u $RR_API_KEY: \
+         -u $RR_PRIVATE_KEY: \
          -d '{
            "key": "article_1",
            "via": [{

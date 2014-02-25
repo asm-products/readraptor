@@ -31,7 +31,7 @@ func setupMartini(root string) *martini.Martini {
 		r.HTML(200, "index", nil)
 	})
 	r.Post("/accounts", PostAccounts)
-	r.Get("/t/:username/:article_id/:user_id/:signature.gif", GetTrackReadReceipts(root))
+	r.Get("/t/:public_key/:article_id/:user_id/:signature.gif", GetTrackReadReceipts(root))
 	r.Get("/articles/:article_id", AuthAccount, GetArticles)
 	r.Post("/articles", AuthAccount, PostArticles)
 
