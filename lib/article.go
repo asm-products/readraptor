@@ -12,8 +12,8 @@ type Article struct {
 	Created   time.Time `db:"created_at" json:"created"`
 	Key       string    `db:"key"        json:"key"`
 
-	Seen     []string `json:"seen,omitempty"`
-	Expected []string `json:"expected,omitempty"`
+	Delivered []string `json:"delivered,omitempty"`
+	Pending   []string `json:"undelivered,omitempty"`
 }
 
 func FindArticleWithReadReceipts(dbmap *gorp.DbMap, id int64) (*Article, error) {
@@ -25,23 +25,23 @@ func FindArticleWithReadReceipts(dbmap *gorp.DbMap, id int64) (*Article, error) 
 }
 
 func (c *Article) AddReadReceipts(dbmap *gorp.DbMap) {
-	var seen []string
+	var delivered []string
 	selectReaders := `
-        select readers.distinct_id as seen
+        select readers.distinct_id
         from articles
            inner join read_receipts on read_receipts.article_id = articles.id
            inner join readers on read_receipts.reader_id = readers.id
         where articles.id = $1`
 
-	_, err := dbmap.Select(&seen, selectReaders, c.Id)
+	_, err := dbmap.Select(&delivered, selectReaders, c.Id)
 	if err != nil {
 		panic(err)
 	}
-	c.Seen = seen
+	c.Delivered = delivered
 
-	var expected []string
-	_, err = dbmap.Select(&expected, `
-        select readers.distinct_id as seen
+	var pending []string
+	_, err = dbmap.Select(&pending, `
+        select readers.distinct_id
         from articles
            inner join expected_readers on expected_readers.article_id = articles.id
            inner join readers on expected_readers.reader_id = readers.id
@@ -50,7 +50,7 @@ func (c *Article) AddReadReceipts(dbmap *gorp.DbMap) {
 	if err != nil {
 		panic(err)
 	}
-	c.Expected = expected
+	c.Pending = pending
 }
 
 func AddArticleReaders(dbmap *gorp.DbMap, accountId, articleId int64, expected []string) (rids []int64, err error) {

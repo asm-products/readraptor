@@ -11,15 +11,15 @@ import (
 )
 
 type ArticleParams struct {
-	Key       string           `json:"key"`
-	Expected  []string         `json:"expected"`
-	Callbacks []CallbackParams `json:"callbacks"`
+	Key        string           `json:"key"`
+	Recipients []string         `json:"recipients"`
+	Callbacks  []CallbackParams `json:"callbacks"`
 }
 
 type CallbackParams struct {
-	Delay    string   `json:"delay"`
-	Expected []string `json:"expected"`
-	Url      string   `json:"url"`
+	Delay      string   `json:"delay"`
+	Recipients []string `json:"recipients"`
+	Url        string   `json:"url"`
 }
 
 func GetArticles(dbmap *gorp.DbMap, params martini.Params) (string, int) {
@@ -52,7 +52,7 @@ func PostArticles(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Reque
 		panic(err)
 	}
 
-	rids, err := AddArticleReaders(dbmap, account.Id, cid, p.Expected)
+	rids, err := AddArticleReaders(dbmap, account.Id, cid, p.Recipients)
 	for _, callback := range p.Callbacks {
 		delay, err := time.ParseDuration(callback.Delay)
 		if err != nil {
@@ -60,11 +60,11 @@ func PostArticles(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Reque
 		}
 		at := time.Now().Add(delay)
 
-		if callback.Expected != nil {
-			rids, err = AddArticleReaders(dbmap, account.Id, cid, callback.Expected)
-            if err != nil {
-                panic(err)
-            }
+		if callback.Recipients != nil {
+			rids, err = AddArticleReaders(dbmap, account.Id, cid, callback.Recipients)
+			if err != nil {
+				panic(err)
+			}
 		}
 		ScheduleCallbacks(client, rids, at, callback.Url)
 	}

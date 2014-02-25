@@ -16,8 +16,8 @@ type UserCallbackJob struct {
 }
 
 type UserCallback struct {
-	User     string   `json:"user"`
-	Expected []string `json:"expected"`
+	User    string   `json:"user"`
+	Pending []string `json:"pending"`
 }
 
 func (j *UserCallbackJob) Perform() error {
@@ -37,8 +37,8 @@ func (j *UserCallbackJob) Perform() error {
 	}
 
 	callback := UserCallback{
-		User:     distinctId,
-		Expected: keys,
+		User:    distinctId,
+		Pending: keys,
 	}
 
 	var buf bytes.Buffer

@@ -66,7 +66,7 @@ Let's say your site gets a new post and you want to notify 3 users about it. Fir
          -u $RR_API_KEY: \
          -d '{
            "key": "post_1",
-           "expected": ["user_1", "user_2", "user_3"]
+           "pending": ["user_1", "user_2", "user_3"]
          }'
 
 Response:
@@ -74,7 +74,7 @@ Response:
     {
       "article": {
         "key": "post_1",
-        "expected": ["user_1", "user_2", "user_3"]
+        "pending": ["user_1", "user_2", "user_3"]
       }
     }
 
@@ -92,7 +92,7 @@ Response:
     {
       "article": {
         "key": "post_1",
-        "expected": ["user_2", "user_3"]
+        "pending": ["user_2", "user_3"]
       }
     }
 
@@ -108,7 +108,7 @@ Register some content:
          -u $RR_API_KEY: \
          -d '{
            "key": "article_1",
-           "expected": ["user_1", "user_2", "user_3"],
+           "pending": ["user_1", "user_2", "user_3"],
            "callbacks": [{
              "delay": "60s",
              "url": "http://requestb.in/u3igzqu3"
@@ -120,7 +120,7 @@ Response:
     {
       "article": {
         "key": "article_1",
-        "expected": ["user_1", "user_2", "user_3"]
+        "pending": ["user_1", "user_2", "user_3"]
       }
     }
 
@@ -134,7 +134,7 @@ You'll receive a callback per user that hasn't seen some content:
     {
       "callback" {
         "user": "user_1",
-        "expected": ["article_1"]
+        "pending": ["article_1"]
       }
     }
 
@@ -142,13 +142,13 @@ You'll receive a callback per user that hasn't seen some content:
     {
       "callback" {
         "user": "user_3",
-        "expected": ["article_1"]
+        "pending": ["article_1"]
       }
     }
 
 ### Example 3: Digest emails
 
-What if some users want immediate emails and others want daily digests? No problemo! You can register a callback for 1 minute, then 24 hours and specify the expected users in each callback.
+What if some users want immediate emails and others want daily digests? No problemo! You can register a callback for 1 minute, then 24 hours and specify the recipients in each callback.
 
     curl -X POST $RR_URL/articles \
          -u $RR_API_KEY: \
@@ -156,11 +156,11 @@ What if some users want immediate emails and others want daily digests? No probl
            "key": "article_1",
            "callbacks": [{
              "delay": "1m",
-             "expected": ["immediate_user"],
+             "recipients": ["immediate_user"],
              "url": "http://requestb.in/u3igzqu3"
            }, {
              "delay": "24h",
-             "expected": ["digest_user"],
+             "recipients": ["digest_user"],
              "url": "http://requestb.in/u3igzqu3"
            }]
          }'
@@ -170,7 +170,7 @@ Response:
     {
       "article": {
         "key": "article_1",
-        "expected": ["user_1"]
+        "pending": ["immediate_user", "digest_user"]
       }
     }
 
