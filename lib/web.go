@@ -8,6 +8,8 @@ import (
 	"github.com/garyburd/redigo/redis"
 	workers "github.com/jrallison/go-workers"
 	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/sessionauth"
+	"github.com/martini-contrib/sessions"
 )
 
 func setupMartini(root string) *martini.Martini {
@@ -15,6 +17,17 @@ func setupMartini(root string) *martini.Martini {
 
 	// database
 	InitDb(os.Getenv("DATABASE_URL"))
+
+	// Sessions Cookie store
+	store := sessions.NewCookieStore([]byte(os.Getenv("COOKIE_SECRET")))
+	store.Options(sessions.Options{
+		Path:   "/",
+		MaxAge: 60 * 60 * 24 * 30,
+	})
+	m.Use(sessions.Sessions("rr_session", store))
+	m.Use(sessionauth.SessionUser(GuestAccount))
+	sessionauth.RedirectUrl = "/login"
+	sessionauth.RedirectParam = "return"
 
 	// middleware
 	m.Use(ReqLogger())
@@ -32,6 +45,11 @@ func setupMartini(root string) *martini.Martini {
 	})
 
 	r.Post("/accounts", PostAccounts)
+	r.Get("/account", sessionauth.LoginRequired, GetAccount)
+	r.Post("/account/billing", sessionauth.LoginRequired, PostAccountBilling)
+
+	r.Get("/setup", sessionauth.LoginRequired, GetSetup)
+
 	r.Get("/confirm/:confirmation_token", GetConfirmAccount)
 	r.Get("/t/:public_key/:article_id/:user_id/:signature.gif", GetTrackReadReceipts(root))
 	r.Get("/articles/:article_id", AuthAccount, GetArticles)

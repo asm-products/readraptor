@@ -6,18 +6,32 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"reflect"
 	"strings"
 	"time"
 
 	"github.com/codegangsta/martini"
-	"github.com/coopernurse/gorp"
 	"github.com/cupcake/gokiq"
 	pq "github.com/lib/pq"
+	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/sessionauth"
+	"github.com/martini-contrib/sessions"
 	"github.com/technoweenie/grohl"
 )
 
-func PostAccounts(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Request) (string, int) {
+func GetAccount(r render.Render, user sessionauth.User) {
+	data := struct {
+		StripeKey string
+		Account   *Account
+	}{
+		os.Getenv("STRIPE_PUBLISHABLE"),
+		user.(*Account),
+	}
+	r.HTML(200, "account", data)
+}
+
+func PostAccounts(client *gokiq.ClientConfig, req *http.Request) (string, int) {
 	if err := req.ParseForm(); err != nil {
 		panic(err)
 	}
@@ -46,7 +60,24 @@ func PostAccounts(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Reque
 	return string(json), http.StatusCreated
 }
 
-func GetConfirmAccount(dbmap *gorp.DbMap, rw http.ResponseWriter, req *http.Request, params martini.Params) {
+func PostAccountBilling(rw http.ResponseWriter, req *http.Request, user sessionauth.User) {
+	account := user.(*Account)
+
+	if err := req.ParseForm(); err != nil {
+		panic(err)
+	}
+
+	token := req.PostForm["stripeToken"][0]
+
+	err := account.CreateStripeCustomer(token)
+	if err != nil {
+		panic(err)
+	}
+
+	http.Redirect(rw, req, "/setup", http.StatusFound)
+}
+
+func GetConfirmAccount(session sessions.Session, rw http.ResponseWriter, req *http.Request, params martini.Params) {
 	account, err := FindAccountByConfirmationToken(params["confirmation_token"])
 	if err != nil {
 		panic(err)
@@ -61,10 +92,29 @@ func GetConfirmAccount(dbmap *gorp.DbMap, rw http.ResponseWriter, req *http.Requ
 		panic(err)
 	}
 
+	err = sessionauth.AuthenticateSession(session, account)
+	if err != nil {
+		panic(err)
+	}
+
 	http.Redirect(rw, req, "/account", http.StatusFound)
 }
 
-func AuthAccount(dbmap *gorp.DbMap, rw http.ResponseWriter, req *http.Request, c martini.Context) {
+func GetSetup(r render.Render, user sessionauth.User, rw http.ResponseWriter, req *http.Request) {
+	account := user.(*Account)
+	if account.CustomerId == nil {
+		http.Redirect(rw, req, "/account", http.StatusFound)
+	} else {
+		data := struct {
+			Account *Account
+		}{
+			user.(*Account),
+		}
+		r.HTML(200, "setup", data)
+	}
+}
+
+func AuthAccount(rw http.ResponseWriter, req *http.Request, c martini.Context) {
 	splits := strings.Split(req.Header.Get("Authorization"), " ")
 	dec, err := base64.StdEncoding.DecodeString(splits[1])
 	if err != nil {

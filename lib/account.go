@@ -3,10 +3,13 @@ package readraptor
 import (
 	"crypto/sha1"
 	"fmt"
-	"github.com/cupcake/gokiq"
-	"github.com/technoweenie/grohl"
 	"os"
 	"time"
+
+	stripe "github.com/bradrydzewski/go.stripe"
+	"github.com/cupcake/gokiq"
+	"github.com/martini-contrib/sessionauth"
+	"github.com/technoweenie/grohl"
 )
 
 type Account struct {
@@ -19,7 +22,15 @@ type Account struct {
 	// Confirmable
 	ConfirmationToken  *string    `db:"confirmation_token"   json:"-"`
 	ConfirmationSentAt *time.Time `db:"confirmation_sent_at" json:"-"`
-	ConfirmedAt        *string    `db:"confirmed_at"         json:"-"`
+	ConfirmedAt        *time.Time `db:"confirmed_at"         json:"-"`
+
+	// Stripe
+	CustomerId *string `db:"customer_id"  json:"-"`
+	CardType   *string `db:"card_type"    json:"-"`
+	CardLast4  *string `db:"card_last4"   json:"-"`
+
+	// Session
+	authenticated bool `db:"-" json:"-"`
 }
 
 func NewAccount(email string) *Account {
@@ -58,6 +69,53 @@ func (a *Account) SendNewAccountEmail(client *gokiq.ClientConfig) {
 		"queue":   "NewAccountEmailJob",
 		"account": a.Id,
 	})
+}
+
+// Session
+func GuestAccount() sessionauth.User {
+	return &Account{}
+}
+
+func (a *Account) IsAuthenticated() bool {
+	return a.authenticated
+}
+
+func (a *Account) Login() {
+	a.authenticated = true
+}
+
+func (a *Account) Logout() {
+	a.authenticated = true
+}
+
+func (a *Account) UniqueId() interface{} {
+	return a.Id
+}
+
+func (a *Account) GetById(id interface{}) error {
+	return dbmap.SelectOne(a, "select * from accounts where id= $1", id)
+}
+
+// Stripe
+func (a *Account) CreateStripeCustomer(token string) error {
+	stripe.SetKey(os.Getenv("STRIPE_SECRET"))
+
+	params := stripe.CustomerParams{
+		Email: a.Email,
+		Token: token,
+	}
+
+	customer, err := stripe.Customers.Create(&params)
+	if err != nil {
+		return err
+	}
+
+	_, err = dbmap.Exec(
+		`update accounts set customer_id = $2 where id = $1`,
+		a.Id,
+		customer.Id,
+	)
+	return err
 }
 
 func genKey(input string) string {

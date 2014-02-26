@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Read Raptor</title>
+</head>
+<body>
+  <div class="raptor">
+    <a href="https://assemblymade.com/readraptor">
+      <img src="public/logo.jpg" />
+    </a>
+  </div>
+  <h1>Account Settings</h1>
+
+
+  <form action="/account/billing" method="POST">
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="{{.StripeKey}}"
+      data-amount="2000"
+      data-name="Demo Site"
+      data-email="{{.Account.Email}}"
+      data-description="2 widgets ($20.00)"
+      data-image="/128x128.png"
+      data-label="Subscribe"
+      data-panel-label="Subscribe"
+    >
+    </script>
+  </form>
+</body>
+</html>
