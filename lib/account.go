@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/coopernurse/gorp"
+	"github.com/cupcake/gokiq"
+	"github.com/technoweenie/grohl"
 )
 
 type Account struct {
@@ -15,6 +17,11 @@ type Account struct {
 	Email      string    `db:"email"       json:"email"`
 	PublicKey  string    `db:"public_key"  json:"publicKey"`
 	PrivateKey string    `db:"private_key" json:"privateKey"`
+
+	// Confirmable
+	ConfirmationToken  *string    `db:"confirmation_token"   json:"-"`
+	ConfirmationSentAt *time.Time `db:"confirmation_sent_at" json:"-"`
+	ConfirmedAt        *string    `db:"confirmed_at"         json:"-"`
 }
 
 func NewAccount(email string) *Account {
@@ -36,6 +43,17 @@ func FindAccountByPublicKey(dbmap *gorp.DbMap, key string) (*Account, error) {
 	var account Account
 	err := dbmap.SelectOne(&account, "select * from accounts where public_key = $1", key)
 	return &account, err
+}
+
+func (a *Account) SendNewAccountEmail(client *gokiq.ClientConfig) {
+	client.QueueJob(&NewAccountEmailJob{
+		AccountId: a.Id,
+	})
+
+	grohl.Log(grohl.Data{
+		"queue":   "NewAccountEmailJob",
+		"account": a.Id,
+	})
 }
 
 func genKey(input string) string {

@@ -83,9 +83,9 @@ func ScheduleCallbacks(client *gokiq.ClientConfig, readerIds []int64, at time.Ti
 		}, config)
 
 		grohl.Log(grohl.Data{
-			"schedule_job": at,
-			"url":          url,
-			"reader":       rid,
+			"schedule_callback": at,
+			"url":               url,
+			"reader":            rid,
 		})
 	}
 }

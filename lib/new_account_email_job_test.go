@@ -1,6 +1,7 @@
 package readraptor
 
 import (
+	"os"
 	"strings"
 	"testing"
 
@@ -15,6 +16,8 @@ func Test_NewAccountEmailJob(t *testing.T) {
 	// delete any existing rows
 	err := dbmap.TruncateTables()
 	checkErr(t, err, "TruncateTables failed")
+
+	os.Setenv("RR_ROOT", "..")
 
 	account := NewAccount("joe@crabshack.com")
 	err = dbmap.Insert(account)

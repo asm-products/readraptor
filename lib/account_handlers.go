@@ -4,15 +4,19 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"reflect"
 	"strings"
 
 	"github.com/codegangsta/martini"
 	"github.com/coopernurse/gorp"
+	"github.com/cupcake/gokiq"
+	pq "github.com/lib/pq"
 	"github.com/technoweenie/grohl"
 )
 
-func PostAccounts(dbmap *gorp.DbMap, req *http.Request) (string, int) {
+func PostAccounts(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Request) (string, int) {
 	if err := req.ParseForm(); err != nil {
 		panic(err)
 	}
@@ -20,6 +24,12 @@ func PostAccounts(dbmap *gorp.DbMap, req *http.Request) (string, int) {
 	account := NewAccount(req.PostForm["email"][0])
 	err := dbmap.Insert(account)
 	if err != nil {
+		if _, ok := err.(*pq.Error); ok {
+			if strings.Index(err.Error(), `duplicate key value violates unique constraint "accounts_email_key"`) > -1 {
+				return "Email is already taken", http.StatusBadRequest
+			}
+		}
+		fmt.Println(reflect.TypeOf(err), err.Error())
 		panic(err)
 	}
 
@@ -29,6 +39,9 @@ func PostAccounts(dbmap *gorp.DbMap, req *http.Request) (string, int) {
 	if err != nil {
 		panic(err)
 	}
+
+	account.SendNewAccountEmail(client)
+
 	return string(json), http.StatusCreated
 }
 

@@ -2,8 +2,10 @@ package readraptor
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"text/template"
+	"time"
 
 	"github.com/sirsean/go-mailgun/mailgun"
 )
@@ -23,24 +25,35 @@ func (j *NewAccountEmailJob) Perform() error {
 		return err
 	}
 
+	_, err = dbmap.Exec(
+		"update accounts set confirmation_token = $1, confirmation_sent_at = $2",
+		genKey("confirm"+account.Email),
+		time.Now(),
+	)
+	if err != nil {
+		return err
+	}
+
 	if os.Getenv("MAILGUN_API_KEY") != "" {
 		mg := mailgun.NewClient(os.Getenv("MAILGUN_API_KEY"), os.Getenv("MAILGUN_DOMAIN"))
 		_, err := mg.Send(message)
 		if err != nil {
 			return err
 		}
+	} else {
+		fmt.Println(message)
 	}
 
 	return nil
 }
 
 func (j *NewAccountEmailJob) CreateMessage(account *Account) (*mailgun.Message, error) {
-	var buf bytes.Buffer
-	template, err := template.ParseFiles("../templates/new_account_email.tmpl")
+	template, err := template.ParseFiles(os.Getenv("RR_ROOT") + "/templates/new_account_email.tmpl")
 	if err != nil {
 		return nil, err
 	}
 
+	var buf bytes.Buffer
 	err = template.Execute(&buf, account)
 	if err != nil {
 		return nil, err
