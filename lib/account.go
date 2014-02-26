@@ -26,6 +26,12 @@ func NewAccount(email string) *Account {
 	}
 }
 
+func FindAccount(id int64) (*Account, error) {
+	var account Account
+	err := dbmap.SelectOne(&account, "select * from accounts where id = $1", id)
+	return &account, err
+}
+
 func FindAccountByPublicKey(dbmap *gorp.DbMap, key string) (*Account, error) {
 	var account Account
 	err := dbmap.SelectOne(&account, "select * from accounts where public_key = $1", key)
