@@ -2,7 +2,9 @@ package readraptor
 
 import (
 	"database/sql"
+	"log"
 	"net/url"
+	"os"
 
 	"github.com/coopernurse/gorp"
 	"github.com/garyburd/redigo/redis"
@@ -22,6 +24,8 @@ func InitDb(connection string) {
 	dbmap.AddTableWithName(Article{}, "articles").SetKeys(true, "Id")
 	dbmap.AddTableWithName(Reader{}, "readers").SetKeys(true, "Id")
 	dbmap.AddTableWithName(ReadReceipt{}, "read_receipts").SetKeys(true, "Id")
+
+	dbmap.TraceOn("[gorp]", log.New(os.Stdout, "sql:", log.Lmicroseconds))
 }
 
 func RedisConnect(connection string) func() (redis.Conn, error) {

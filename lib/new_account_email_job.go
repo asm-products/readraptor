@@ -20,15 +20,19 @@ func (j *NewAccountEmailJob) Perform() error {
 		return err
 	}
 
+	token := genKey("confirm" + account.Email)
+	account.ConfirmationToken = &token
+
 	message, err := j.CreateMessage(account)
 	if err != nil {
 		return err
 	}
 
 	_, err = dbmap.Exec(
-		"update accounts set confirmation_token = $1, confirmation_sent_at = $2",
-		genKey("confirm"+account.Email),
+		"update accounts set confirmation_token = $1, confirmation_sent_at = $2 where id = $3",
+		token,
 		time.Now(),
+		j.AccountId,
 	)
 	if err != nil {
 		return err

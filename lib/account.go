@@ -3,20 +3,18 @@ package readraptor
 import (
 	"crypto/sha1"
 	"fmt"
-	"os"
-	"time"
-
-	"github.com/coopernurse/gorp"
 	"github.com/cupcake/gokiq"
 	"github.com/technoweenie/grohl"
+	"os"
+	"time"
 )
 
 type Account struct {
 	Id         int64     `db:"id"          json:"id"`
 	Created    time.Time `db:"created_at"  json:"created"`
 	Email      string    `db:"email"       json:"email"`
-	PublicKey  string    `db:"public_key"  json:"publicKey"`
-	PrivateKey string    `db:"private_key" json:"privateKey"`
+	PublicKey  string    `db:"public_key"  json:"-"`
+	PrivateKey string    `db:"private_key" json:"-"`
 
 	// Confirmable
 	ConfirmationToken  *string    `db:"confirmation_token"   json:"-"`
@@ -34,14 +32,20 @@ func NewAccount(email string) *Account {
 }
 
 func FindAccount(id int64) (*Account, error) {
-	var account Account
-	err := dbmap.SelectOne(&account, "select * from accounts where id = $1", id)
-	return &account, err
+	return FindAccountBy("id", id)
 }
 
-func FindAccountByPublicKey(dbmap *gorp.DbMap, key string) (*Account, error) {
+func FindAccountByPublicKey(key string) (*Account, error) {
+	return FindAccountBy("public_key", key)
+}
+
+func FindAccountByConfirmationToken(token string) (*Account, error) {
+	return FindAccountBy("confirmation_token", token)
+}
+
+func FindAccountBy(column string, value interface{}) (*Account, error) {
 	var account Account
-	err := dbmap.SelectOne(&account, "select * from accounts where public_key = $1", key)
+	err := dbmap.SelectOne(&account, "select * from accounts where "+column+" = $1", value)
 	return &account, err
 }
 

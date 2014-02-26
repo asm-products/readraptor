@@ -20,6 +20,8 @@ func Test_NewAccountEmailJob(t *testing.T) {
 	os.Setenv("RR_ROOT", "..")
 
 	account := NewAccount("joe@crabshack.com")
+	token := "confirm1234"
+	account.ConfirmationToken = &token
 	err = dbmap.Insert(account)
 	checkErr(t, err, "Insert failed")
 
@@ -30,7 +32,7 @@ func Test_NewAccountEmailJob(t *testing.T) {
 	message, err := job.CreateMessage(account)
 	checkErr(t, err, "Job failed")
 
-	expectInclude(t, message.Body, account.PublicKey)
+	expectInclude(t, message.Body, "/confirm/confirm1234")
 }
 
 func expectInclude(t *testing.T, a, b string) {

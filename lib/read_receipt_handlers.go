@@ -13,7 +13,7 @@ import (
 func GetTrackReadReceipts(root string) func(*gorp.DbMap, martini.Params, http.ResponseWriter, *http.Request) {
 	return func(dbmap *gorp.DbMap, params martini.Params, w http.ResponseWriter, r *http.Request) {
 		if ensureSignatureMatch(dbmap, params, w, r) {
-			account, err := FindAccountByPublicKey(dbmap, params["public_key"])
+			account, err := FindAccountByPublicKey(params["public_key"])
 			if err != nil {
 				panic(err)
 			}

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/codegangsta/martini"
 	"github.com/coopernurse/gorp"
@@ -43,6 +44,24 @@ func PostAccounts(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Reque
 	account.SendNewAccountEmail(client)
 
 	return string(json), http.StatusCreated
+}
+
+func GetConfirmAccount(dbmap *gorp.DbMap, rw http.ResponseWriter, req *http.Request, params martini.Params) {
+	account, err := FindAccountByConfirmationToken(params["confirmation_token"])
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = dbmap.Exec(
+		"update accounts set confirmed_at = $1 where id = $2",
+		time.Now(),
+		account.Id,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	http.Redirect(rw, req, "/account", http.StatusFound)
 }
 
 func AuthAccount(dbmap *gorp.DbMap, rw http.ResponseWriter, req *http.Request, c martini.Context) {
