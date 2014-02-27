@@ -257,7 +257,7 @@ p:last-of-type {
   -moz-background-clip: content-box;
   background-clip: content-box;
 }
-/* line 38, ../../../../../../../../.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../../usr/local/var/rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .container:after {
   content: "";
   display: table;
@@ -483,26 +483,35 @@ section {
 .feature-set .feature p {
   margin-bottom: 0;
 }
-/* line 32, ../../assets/stylesheets/modules/_features.scss */
+/* line 31, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature:nth-child(1) {
+  -webkit-animation-delay: 200ms;
+  -moz-animation-delay: 200ms;
+  animation-delay: 200ms;
+}
+/* line 35, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature:nth-child(2) {
+  -webkit-animation-delay: 400ms;
+  -moz-animation-delay: 400ms;
+  animation-delay: 400ms;
+}
+/* line 39, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature:nth-child(3) {
+  -webkit-animation-delay: 600ms;
+  -moz-animation-delay: 600ms;
+  animation-delay: 600ms;
+}
+/* line 44, ../../assets/stylesheets/modules/_features.scss */
 .feature-set .feature-notifications {
   background-image: url('/assets/images/feature-notifications.png');
-  -webkit-animation-delay: 0.2s;
-  -moz-animation-delay: 0.2s;
-  animation-delay: 0.2s;
 }
-/* line 37, ../../assets/stylesheets/modules/_features.scss */
+/* line 48, ../../assets/stylesheets/modules/_features.scss */
 .feature-set .feature-digests {
   background-image: url('/assets/images/feature-digests.png');
-  -webkit-animation-delay: 0.4s;
-  -moz-animation-delay: 0.4s;
-  animation-delay: 0.4s;
 }
-/* line 42, ../../assets/stylesheets/modules/_features.scss */
+/* line 52, ../../assets/stylesheets/modules/_features.scss */
 .feature-set .feature-receipts {
   background-image: url('/assets/images/feature-receipts.png');
-  -webkit-animation-delay: 0.6s;
-  -moz-animation-delay: 0.6s;
-  animation-delay: 0.6s;
 }
 
 /* -------------------------------------------------------------------------*/
