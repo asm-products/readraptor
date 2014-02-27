@@ -26,8 +26,6 @@ type Account struct {
 
 	// Stripe
 	CustomerId *string `db:"customer_id"  json:"-"`
-	CardType   *string `db:"card_type"    json:"-"`
-	CardLast4  *string `db:"card_last4"   json:"-"`
 
 	// Session
 	authenticated bool `db:"-" json:"-"`
