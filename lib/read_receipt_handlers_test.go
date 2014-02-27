@@ -37,7 +37,7 @@ func Test_Tracking(t *testing.T) {
 	req := &http.Request{}
 	req.URL, _ = url.Parse("/t")
 	rw := fake.New(t)
-	GetTrackReadReceipts("..")(dbmap, params, rw, req)
+	GetTrackReadReceipts("..")(params, rw, req)
 
 	gif, _ := ioutil.ReadFile("../public/tracking.gif")
 	rw.Assert(200, gif)

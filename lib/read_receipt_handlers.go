@@ -9,7 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetTrackReadReceipts(root string) martini.Handler {
+func GetTrackReadReceipts(root string) func(params martini.Params, w http.ResponseWriter, r *http.Request) {
 	return func(params martini.Params, w http.ResponseWriter, r *http.Request) {
 		if ensureSignatureMatch(params, w, r) {
 			account, err := FindAccountByPublicKey(params["public_key"])
