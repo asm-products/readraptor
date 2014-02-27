@@ -14,6 +14,49 @@ Here's 3 fun things she can help you with:
 2. Email your users about new content only if they **haven't** seen it
 3. Send out digest emails with grouped content that each user **hasn't** read
 
+## Installation
+
+### Local Setup
+
+Make sure Postgres is installed.
+
+    # Create a local development database
+    psql -c "create database rr_development"
+
+    # Install goose for running migrations
+    go get bitbucket.org/liamstask/goose/cmd/goose
+
+    # Copy sample env file
+    cp .env.sample .env
+
+    # Install forego (or use foreman)
+    go get github.com/ddollar/forego
+
+    # Run database migrations
+    forego run goose up
+
+    # Start up the server (or use something like gin to auto-reload)
+    go get ./... && forego run
+
+
+### Editing html/css
+
+We're using `compass` which is a ruby gem to compile sass into css. Make sure ruby is installed then
+
+    gem install compass sass susy
+    compass watch
+
+### Running the tests
+
+Make sure the test database exists:
+
+    psql -c "create database rr_test"
+
+Run the tests:
+
+    go test ./...
+
+
 ## Get Started
 
 ### Create an Account
@@ -181,52 +224,6 @@ Response:
     }
 
 Read Raptor will send you both webhooks unless the users see that piece of content at some point along the way.
-
-## Local Setup
-
-Make sure Postgres is installed. Create a local development database:
-
-    psql -c "create database rr_development"
-
-Install goose for running migrations:
-
-    go get bitbucket.org/liamstask/goose/cmd/goose
-
-Copy sample env file:
-
-    cp .env.sample .env
-
-Install forego (or use foreman):
-
-    go get github.com/ddollar/forego
-
-Run migrations:
-
-    forego run goose up
-
-Start up the server (or use something like gin to auto-reload):
-
-    go get ./... && forego run
-
-
-### Editing html/css
-
-We're using `compass` which is a ruby gem to compile sass into css. Make sure ruby is installed then
-
-    gem install compass
-    gem install sass
-    gem install susy
-    compass watch
-
-### Running the tests
-
-Make sure the test database exists:
-
-    psql -c "create database rr_test"
-
-Run the tests:
-
-    go test ./...
 
 ## Contributing
 
