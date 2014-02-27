@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/codegangsta/martini"
-	"github.com/coopernurse/gorp"
 	"github.com/cupcake/gokiq"
 )
 
@@ -22,7 +21,7 @@ type CallbackParams struct {
 	Url        string   `json:"url"`
 }
 
-func GetArticles(dbmap *gorp.DbMap, params martini.Params) (string, int) {
+func GetArticles(params martini.Params) (string, int) {
 	var ci Article
 	err := dbmap.SelectOne(&ci, "select * from articles where key = $1", params["article_id"])
 	ci.AddReadReceipts(dbmap)
@@ -39,7 +38,7 @@ func GetArticles(dbmap *gorp.DbMap, params martini.Params) (string, int) {
 	return string(json), http.StatusOK
 }
 
-func PostArticles(dbmap *gorp.DbMap, client *gokiq.ClientConfig, req *http.Request, account *Account) (string, int) {
+func PostArticles(client *gokiq.ClientConfig, req *http.Request, account *Account) (string, int) {
 	decoder := json.NewDecoder(req.Body)
 	var p ArticleParams
 	err := decoder.Decode(&p)

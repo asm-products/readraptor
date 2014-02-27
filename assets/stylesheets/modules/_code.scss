@@ -20,7 +20,7 @@
   .gist {
     .gist-file {
       border-bottom: none;
-      
+
       .gist-data {
 
         .line-data {
@@ -38,4 +38,15 @@
   .line-pre {
     color: $gray;
   }
+}
+
+.code-block {
+  font-family: "source-code-pro", Monaco, monospace;
+  font-size: 16px;
+	border-radius:3px;
+	border:1px solid #ddd;
+	background-color:#f8f8ff;
+	overflow:auto;
+	word-wrap:normal;
+  padding: $base;
 }

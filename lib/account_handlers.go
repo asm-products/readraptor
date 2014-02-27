@@ -103,9 +103,11 @@ func GetSetup(r render.Render, user sessionauth.User, rw http.ResponseWriter, re
 		http.Redirect(rw, req, "/account", http.StatusFound)
 	} else {
 		data := struct {
-			Account *Account
+			Account   *Account
+			Signature string
 		}{
 			user.(*Account),
+			signature(account.PrivateKey, account.PublicKey, "article_1", "user_1"),
 		}
 		r.HTML(200, "setup", data)
 	}
@@ -118,10 +120,10 @@ func AuthAccount(rw http.ResponseWriter, req *http.Request, c martini.Context) {
 		panic(err)
 	}
 
-	apiKey := string(dec[:len(dec)-1])
+	privateKey := string(dec[:len(dec)-1])
 
 	var account Account
-	err = dbmap.SelectOne(&account, "select * from accounts where private_key = $1 limit 1", apiKey)
+	err = dbmap.SelectOne(&account, "select * from accounts where private_key = $1 limit 1", privateKey)
 	if err == sql.ErrNoRows {
 		rw.Header().Set("WWW-Authenticate", "Basic realm=\"Authorization Required\"")
 		http.Error(rw, "Not Authorized", http.StatusUnauthorized)

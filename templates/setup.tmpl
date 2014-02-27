@@ -9,22 +9,25 @@
       <h4>Register an article</h4>
 
       <div class='code-sample'>
-        <code data-gist-id="bc4e7f34e0ecc82fadb4" data-gist-hide-line-numbers="true" data-gist-hide-footer="true" data-gist-line="6-11"></code>
+
+<pre class="code-block"><code>curl -X POST https://readraptor.com/articles \
+     -u {{.Account.PrivateKey}}: \
+     -d '{
+       "key": "article_1",
+       "recipients": ["user_1", "user_2"]
+     }'</code></pre>
       </div>
     </div>
 
     <div class="code-feature">
       <h4>Mark article as read</h4>
-      <div class='code-sample'>
-        <code data-gist-id="bc4e7f34e0ecc82fadb4" data-gist-hide-line-numbers="true" data-gist-hide-footer="true" data-gist-line="14"></code>
-      </div>
+      <pre class="code-block"><code>curl -I https://readraptor.com/t/{{.Account.PublicKey}}/article_1/user_1/{{.Signature}}.gif</code></pre>
     </div>
 
     <div class="code-feature">
       <h4>Who hasn't read the article?</h4>
-      <div class='code-sample'>
-        <code data-gist-id="bc4e7f34e0ecc82fadb4" data-gist-hide-line-numbers="true" data-gist-hide-footer="true" data-gist-line="17"></code>
-      </div>
+      <pre class="code-block"><code>curl -u {{.Account.PrivateKey}}: \
+    https://readraptor.com/articles/article_1</code></pre>
     </div>
 
     <div class="code-feature">

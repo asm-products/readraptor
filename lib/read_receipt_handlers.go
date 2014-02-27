@@ -6,13 +6,12 @@ import (
 	"net/http"
 
 	"github.com/codegangsta/martini"
-	"github.com/coopernurse/gorp"
 	_ "github.com/lib/pq"
 )
 
-func GetTrackReadReceipts(root string) func(*gorp.DbMap, martini.Params, http.ResponseWriter, *http.Request) {
-	return func(dbmap *gorp.DbMap, params martini.Params, w http.ResponseWriter, r *http.Request) {
-		if ensureSignatureMatch(dbmap, params, w, r) {
+func GetTrackReadReceipts(root string) martini.Handler {
+	return func(params martini.Params, w http.ResponseWriter, r *http.Request) {
+		if ensureSignatureMatch(params, w, r) {
 			account, err := FindAccountByPublicKey(params["public_key"])
 			if err != nil {
 				panic(err)
@@ -28,14 +27,14 @@ func GetTrackReadReceipts(root string) func(*gorp.DbMap, martini.Params, http.Re
 	}
 }
 
-func ensureSignatureMatch(dbmap *gorp.DbMap, params martini.Params, w http.ResponseWriter, r *http.Request) bool {
-	var apiKey string
-	err := dbmap.SelectOne(&apiKey, `SELECT private_key FROM accounts WHERE public_key = $1`, params["public_key"])
+func ensureSignatureMatch(params martini.Params, w http.ResponseWriter, r *http.Request) bool {
+	var privateKey string
+	err := dbmap.SelectOne(&privateKey, `SELECT private_key FROM accounts WHERE public_key = $1`, params["public_key"])
 	if err != nil {
 		panic(err)
 	}
 
-	if params["signature"] != signature(apiKey, params["public_key"], params["article_id"], params["user_id"]) {
+	if params["signature"] != signature(privateKey, params["public_key"], params["article_id"], params["user_id"]) {
 		http.NotFound(w, r)
 		return false
 	}
