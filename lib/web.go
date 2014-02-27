@@ -69,7 +69,7 @@ func setupMartini(root string) *martini.Martini {
 
 	// Inject gokiq client
 	gokiq.Client.RedisNamespace = "rr"
-	gokiq.Workers.RedisPool = redis.NewPool(RedisConnect(os.Getenv("REDIS_URL")), 1)
+	gokiq.Client.RedisPool = redis.NewPool(RedisConnect(os.Getenv("REDIS_URL")), 1)
 	gokiq.Client.Register(&UserCallbackJob{}, "default", 5)
 	gokiq.Client.Register(&NewAccountEmailJob{}, "default", 5)
 
