@@ -1,0 +1,151 @@
+/*-----------------------------------*\
+
+  Partial: Typography
+
+  Low-level type things. Headings,
+  links, blockquotes, etc.
+
+\*-----------------------------------*/
+
+
+h1, .alpha {
+  margin-bottom: $base;
+
+  font-family: $font-Display;
+  font-size: 54px;
+  font-weight: 700;
+  line-height: 1.25;
+
+  color: $dark-gray;
+
+  @media (max-width: $breakpoint-small) {
+    font-size: $baseline*1.2;
+  }
+}
+
+h2, .beta {
+  margin-bottom: $base * 2;
+
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+h3, .gamma {
+  margin-bottom: $base * 3;
+
+  font-size: 28px;
+  font-weight: 600;
+  line-height: $baseline;
+  line-height: 1.4;
+  text-align: center;
+  // text-transform: uppercase;
+  // letter-spacing: 0.7pt;  
+  
+  color: $lighter-gray;
+  
+  &:after {
+    margin: 0 auto;
+    margin-top: $base * 2;
+    width: 12%;
+    height: 3px;
+    content: "";
+    
+    display: block;
+    
+    background-color: lighten($lighter-gray, 5%);
+  }
+}
+
+h4, .delta {
+  margin-bottom: $base - 5px;
+
+  font-size: 21px;
+  font-weight: 700;
+  line-height: $baseline;
+}
+
+a, [data-href] {
+  text-decoration: underline;
+
+  color: inherit;
+  transition: .2s;
+
+  cursor: pointer;
+
+  &:hover {
+    color: $blue;
+  }
+}
+
+.a--plain {
+  text-decoration: none;
+}
+
+strong, .strong {
+  font-weight: 700;
+}
+
+em, .em {
+  font-style: italic;
+}
+
+hr {
+  border: none;
+  // @include bg-image("tristar", auto $baseline);
+  height: $baseline;
+  margin-bottom: $baseline;
+}
+
+.hr--line {
+  margin-top: -1px;
+  height: 1px;
+
+  background-image: none;
+  background-color: $lighter-gray;
+}
+
+// Remove this for hanging bullets
+ul, ol {
+  padding-left: 1.35em;
+}
+
+  // Restore some normality to our nested lists
+  li > ul, li > ol {
+    margin-bottom: 0;
+  }
+
+dl {
+  dt {
+    font-weight: 700;
+  }
+
+  dd {
+    padding-left: 1.3rem;
+  }
+}
+
+blockquote {
+  font-family: $font-Sans;
+  padding-left: $baseline;
+  border-left: 2px solid $blue;
+  margin-left: -$baseline;
+  color: $gray;
+
+  @media (max-width: $breakpoint-small) {
+    margin-left: 0;
+  }
+
+  em {
+    font-style: normal;
+  }
+}
+
+p {
+  margin-bottom: $base;
+  font-family: $font-Sans;
+  
+  &:last-of-type {
+    margin-bottom: $base * 1.5;
+  }
+}

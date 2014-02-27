@@ -1,0 +1,103 @@
+.billing-group {
+
+  .billing-tier {
+    @include span-columns(3,12);
+
+    text-align: center;
+
+    &:nth-child(4n) {
+      @include omega;
+    }
+
+    header {
+      padding: $base 0;
+
+      background-color: $green;
+
+      color: $white;
+      border-radius: ($radius + 2px) ($radius + 2px) 0 0;
+      
+      h4 {
+        margin-bottom: 0;
+        font-size: 28px;
+
+        .per-month {
+          font-size: 61%;
+          font-weight: 400;
+        }
+      }
+
+      h5 {
+        text-transform: uppercase;
+        letter-spacing: 0.7pt;
+      }
+    }
+
+    p {
+      padding: $base;
+      margin-bottom: 0;
+
+      font-size: 16px;
+
+      border: 2px solid $lightest-gray;
+      border-top: none;
+      border-radius: 0 0 ($radius + 2px) ($radius + 2px);
+    }
+  }
+
+  .billing-tier-free {
+    header {
+      background-color: $free;
+
+      h5 {
+        color: shade($free, 40%);
+      }
+    }
+
+    p {
+      border-color: tint($free, 50%);
+    }
+  }
+
+  .billing-tier-triassic {
+    header {
+      background-color: $triassic;
+
+      h5 {
+        color: shade($triassic, 40%);
+      }
+    }
+
+    p {
+      border-color: tint($triassic, 50%);
+    }
+  }
+
+  .billing-tier-jurassic {
+    header {
+      background-color: $jurassic;
+
+      h5 {
+        color: shade($jurassic, 40%);
+      }
+    }
+
+    p {
+      border-color: tint($jurassic, 50%);
+    }
+  }
+
+  .billing-tier-cretaceous {
+    header {
+      background-color: $cretaceous;
+
+      h5 {
+        color: shade($cretaceous, 40%);
+      }
+    }
+
+    p {
+      border-color: tint($cretaceous, 50%);
+    }
+  }
+}

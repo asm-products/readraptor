@@ -1,0 +1,68 @@
+// Fade in drop
+
+@-webkit-keyframes fadein {
+  0% {
+    -webkit-transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadein {
+  0% {
+    -moz-transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    -moz-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  0% { transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+// Raptor Time!
+
+@-webkit-keyframes deal-with-it {
+  0% {
+    -webkit-transform: translateY(-80px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes deal-with-it {
+  0% {
+    -moz-transform: translateY(-80px);
+    opacity: 0;
+  }
+  100% {
+    -moz-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes deal-with-it {
+  0% { transform: translateY(-80px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

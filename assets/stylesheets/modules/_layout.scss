@@ -1,0 +1,14 @@
+/* -------------------------------------------------------------------------*/
+/* Layout */
+
+.container {
+  @include container;
+  @include susy-grid-background;
+}
+
+section {
+  padding-top: $base * 4;
+  padding-bottom: $base * 4;
+
+  border-bottom: 1px solid $lightest-gray;
+}

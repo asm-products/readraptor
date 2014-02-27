@@ -1,0 +1,46 @@
+/* -------------------------------------------------------------------------*/
+/* Features */
+
+.feature-set {
+
+  .feature {
+    @include span-columns(4,12);
+    @include fade-slide-animation;
+
+    // 80px = icon size
+    padding-top: 80px + $base;
+
+    background-repeat: no-repeat;
+    background-position: top center;
+
+    text-align: center;
+    font-size: 16px;
+    
+    &:nth-child(3n) {
+      @include omega;
+    }
+
+    h4 {
+      color: $dark-gray;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .feature-notifications {
+    @include background-image(image-url("feature-notifications.png"));
+    @include animation-stagger(0.2s);
+  }
+
+  .feature-digests {
+    @include background-image(image-url("feature-digests.png"));
+    @include animation-stagger(0.4s);
+  }
+
+  .feature-receipts {
+    @include background-image(image-url("feature-receipts.png"));
+    @include animation-stagger(0.6s);
+  }
+}

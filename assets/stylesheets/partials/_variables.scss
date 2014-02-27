@@ -1,0 +1,53 @@
+/*-----------------------------------*\
+
+  Partial: Variables
+
+  Includes global variables for
+  colors and unit sizes
+
+\*-----------------------------------*/
+
+// Group: Unit Sizes
+$base: 18px;
+$base-font-size: $base;
+$baseline: 1.6;
+
+
+// Group: Fonts
+$font-Serif: "Tiempos Text", Georgia, serif;
+$font-Sans: "runda", Geneva, Verdana, san-serif;
+$font-Display: $font-Sans;
+$font-Code: "source-code-pro", Monaco, monospace;
+
+
+// Group: Colors
+$white: #fff; // Duh.
+
+$lightest-gray: #eff1f5;
+$lighter-gray: #BDC4CA;
+$light-gray: #7B8994;
+$gray: #47525D;
+$dark-gray: #3D464D;
+
+$subtle-gray: #d8dce0;
+
+$green: #a3be8c;
+$blue: #96b5b4;
+
+$gradient-from: $green;
+$gradient-to: $green; // shade($gradient-from, 20%);
+
+$addendum: desaturate(mix($green, $gradient-to), 10%);
+
+$free: $green;
+$triassic: #ddbd7d;
+$jurassic: #dc937c;
+$cretaceous: #ab7967;
+
+
+// Group: Aesthetics
+$radius: 3px;
+
+// Group: Breakpoints
+$breakpoint-small: 47.5em;
+$breakpoint-regular: 75em;

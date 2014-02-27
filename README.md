@@ -209,6 +209,15 @@ Start up the server (or use something like gin to auto-reload):
     forego run
 
 
+### Editing html/css
+
+We're using `compass` which is a ruby gem to compile sass into css. Make sure ruby is installed then
+
+    gem install compass
+    gem install sass
+    gem install susy
+    compass watch
+
 ### Running the tests
 
 Make sure the test database exists:

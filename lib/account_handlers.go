@@ -136,3 +136,16 @@ func AuthAccount(rw http.ResponseWriter, req *http.Request, c martini.Context) {
 
 	grohl.AddContext("account", account.Id)
 }
+
+func GetSignout(r render.Render, user sessionauth.User, session sessions.Session) {
+	sessionauth.Logout(session, user)
+	r.Redirect("/", http.StatusFound)
+}
+
+func RedirectAuthenticated(path string) martini.Handler {
+	return func(r render.Render, user sessionauth.User, req *http.Request) {
+		if user.IsAuthenticated() {
+			r.Redirect(path, http.StatusFound)
+		}
+	}
+}

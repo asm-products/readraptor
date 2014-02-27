@@ -1,0 +1,697 @@
+/*-----------------------------------*\
+
+  Partial: Variables
+
+  Includes global variables for
+  colors and unit sizes
+
+\*-----------------------------------*/
+/*-----------------------------------*\
+
+  Module: Base
+
+  Anything that can't be abstracted
+  or assigned to another section.
+  Low-level stuff. Typically only body
+  and html styles.
+
+\*-----------------------------------*/
+/* line 14, ../../assets/stylesheets/modules/_base.scss */
+::-moz-selection {
+  background-color: rgba(189, 196, 202, 0.5);
+}
+
+/* line 18, ../../assets/stylesheets/modules/_base.scss */
+::selection {
+  background-color: rgba(189, 196, 202, 0.5);
+}
+
+/* line 22, ../../assets/stylesheets/modules/_base.scss */
+html {
+  font: 18px/1.6 "runda", Geneva, Verdana, san-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: none;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  color: #47525d;
+  background-color: #fff;
+}
+@media (max-width: 47.5em) {
+  /* line 22, ../../assets/stylesheets/modules/_base.scss */
+  html {
+    font-size: 87.5%;
+  }
+}
+
+/* line 38, ../../assets/stylesheets/modules/_base.scss */
+body {
+  overflow-x: hidden;
+}
+
+/*-----------------------------------*\
+
+  Partials: All
+
+  Includes all partials
+
+\*-----------------------------------*/
+/*-----------------------------------*\
+
+  Partial: Mixins
+
+\*-----------------------------------*/
+/*-----------------------------------*\
+
+  Partial: Reset
+
+\*-----------------------------------*/
+/* line 8, ../../assets/stylesheets/partials/_reset.scss */
+*, :before, :after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* line 17, ../../assets/stylesheets/partials/_reset.scss */
+img {
+  max-width: 100%;
+}
+
+/*-----------------------------------*\
+
+  Partial: Typography
+
+  Low-level type things. Headings,
+  links, blockquotes, etc.
+
+\*-----------------------------------*/
+/* line 11, ../../assets/stylesheets/partials/_typography.scss */
+h1, .alpha {
+  margin-bottom: 18px;
+  font-family: "runda", Geneva, Verdana, san-serif;
+  font-size: 54px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #3d464d;
+}
+@media (max-width: 47.5em) {
+  /* line 11, ../../assets/stylesheets/partials/_typography.scss */
+  h1, .alpha {
+    font-size: 1.92;
+  }
+}
+
+/* line 26, ../../assets/stylesheets/partials/_typography.scss */
+h2, .beta {
+  margin-bottom: 36px;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* line 34, ../../assets/stylesheets/partials/_typography.scss */
+h3, .gamma {
+  margin-bottom: 54px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.6;
+  line-height: 1.4;
+  text-align: center;
+  color: #bdc4ca;
+}
+/* line 47, ../../assets/stylesheets/partials/_typography.scss */
+h3:after, .gamma:after {
+  margin: 0 auto;
+  margin-top: 36px;
+  width: 12%;
+  height: 3px;
+  content: "";
+  display: block;
+  background-color: #cbd1d5;
+}
+
+/* line 60, ../../assets/stylesheets/partials/_typography.scss */
+h4, .delta {
+  margin-bottom: 13px;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+/* line 68, ../../assets/stylesheets/partials/_typography.scss */
+a, [data-href] {
+  text-decoration: underline;
+  color: inherit;
+  transition: .2s;
+  cursor: pointer;
+}
+/* line 76, ../../assets/stylesheets/partials/_typography.scss */
+a:hover, [data-href]:hover {
+  color: #96b5b4;
+}
+
+/* line 81, ../../assets/stylesheets/partials/_typography.scss */
+.a--plain {
+  text-decoration: none;
+}
+
+/* line 85, ../../assets/stylesheets/partials/_typography.scss */
+strong, .strong {
+  font-weight: 700;
+}
+
+/* line 89, ../../assets/stylesheets/partials/_typography.scss */
+em, .em {
+  font-style: italic;
+}
+
+/* line 93, ../../assets/stylesheets/partials/_typography.scss */
+hr {
+  border: none;
+  height: 1.6;
+  margin-bottom: 1.6;
+}
+
+/* line 100, ../../assets/stylesheets/partials/_typography.scss */
+.hr--line {
+  margin-top: -1px;
+  height: 1px;
+  background-image: none;
+  background-color: #bdc4ca;
+}
+
+/* line 109, ../../assets/stylesheets/partials/_typography.scss */
+ul, ol {
+  padding-left: 1.35em;
+}
+
+/* line 114, ../../assets/stylesheets/partials/_typography.scss */
+li > ul, li > ol {
+  margin-bottom: 0;
+}
+
+/* line 119, ../../assets/stylesheets/partials/_typography.scss */
+dl dt {
+  font-weight: 700;
+}
+/* line 123, ../../assets/stylesheets/partials/_typography.scss */
+dl dd {
+  padding-left: 1.3rem;
+}
+
+/* line 128, ../../assets/stylesheets/partials/_typography.scss */
+blockquote {
+  font-family: "runda", Geneva, Verdana, san-serif;
+  padding-left: 1.6;
+  border-left: 2px solid #96b5b4;
+  margin-left: -1.6;
+  color: #47525d;
+}
+@media (max-width: 47.5em) {
+  /* line 128, ../../assets/stylesheets/partials/_typography.scss */
+  blockquote {
+    margin-left: 0;
+  }
+}
+/* line 139, ../../assets/stylesheets/partials/_typography.scss */
+blockquote em {
+  font-style: normal;
+}
+
+/* line 144, ../../assets/stylesheets/partials/_typography.scss */
+p {
+  margin-bottom: 18px;
+  font-family: "runda", Geneva, Verdana, san-serif;
+}
+/* line 148, ../../assets/stylesheets/partials/_typography.scss */
+p:last-of-type {
+  margin-bottom: 27px;
+}
+
+/*-----------------------------------*\
+
+  Module: All
+
+  Includes all Modules
+
+\*-----------------------------------*/
+/* -------------------------------------------------------------------------*/
+/* Layout */
+/* line 4, ../../assets/stylesheets/modules/_layout.scss */
+.container {
+  *zoom: 1;
+  max-width: 978px;
+  _width: 978px;
+  padding-left: 45px;
+  padding-right: 45px;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-background-origin: content;
+  -moz-background-origin: content;
+  -ms-background-origin: content-box;
+  -o-background-origin: content-box;
+  background-origin: content-box;
+  -webkit-background-clip: content-box;
+  -moz-background-clip: content-box;
+  background-clip: content-box;
+}
+/* line 38, ../../../../../../../../.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+.container:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* line 9, ../../assets/stylesheets/modules/_layout.scss */
+section {
+  padding-top: 72px;
+  padding-bottom: 72px;
+  border-bottom: 1px solid #eff1f5;
+}
+
+@-webkit-keyframes fadein {
+  /* line 4, ../../assets/stylesheets/modules/_animation.scss */
+  0% {
+    -webkit-transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  /* line 8, ../../assets/stylesheets/modules/_animation.scss */
+  100% {
+    -webkit-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadein {
+  /* line 15, ../../assets/stylesheets/modules/_animation.scss */
+  0% {
+    -moz-transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  /* line 19, ../../assets/stylesheets/modules/_animation.scss */
+  100% {
+    -moz-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  /* line 26, ../../assets/stylesheets/modules/_animation.scss */
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  /* line 29, ../../assets/stylesheets/modules/_animation.scss */
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes deal-with-it {
+  /* line 39, ../../assets/stylesheets/modules/_animation.scss */
+  0% {
+    -webkit-transform: translateY(-80px);
+    opacity: 0;
+  }
+
+  /* line 43, ../../assets/stylesheets/modules/_animation.scss */
+  100% {
+    -webkit-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes deal-with-it {
+  /* line 50, ../../assets/stylesheets/modules/_animation.scss */
+  0% {
+    -moz-transform: translateY(-80px);
+    opacity: 0;
+  }
+
+  /* line 54, ../../assets/stylesheets/modules/_animation.scss */
+  100% {
+    -moz-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes deal-with-it {
+  /* line 61, ../../assets/stylesheets/modules/_animation.scss */
+  0% {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+
+  /* line 64, ../../assets/stylesheets/modules/_animation.scss */
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* line 1, ../../assets/stylesheets/modules/_buttons.scss */
+.btn {
+  display: inline-block;
+  padding: .5em 1em;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid white;
+  border-radius: 4px;
+}
+/* line 12, ../../assets/stylesheets/modules/_buttons.scss */
+.btn:hover {
+  color: #a4b595;
+  background-color: white;
+}
+
+/* -------------------------------------------------------------------------*/
+/* Jumbotron */
+/* line 4, ../../assets/stylesheets/modules/_jumbotron.scss */
+.jumbotron {
+  background: url('/assets/images/jumbotron-bg.png'), -webkit-linear-gradient(-45deg, #a3be8c, #a3be8c);
+  background: url('/assets/images/jumbotron-bg.png'), -moz-linear-gradient(-45deg, #a3be8c, #a3be8c);
+  background: url('/assets/images/jumbotron-bg.png'), -o-linear-gradient(-45deg, #a3be8c, #a3be8c);
+  background: url('/assets/images/jumbotron-bg.png'), linear-gradient(-45deg, #a3be8c, #a3be8c);
+  color: white;
+  position: relative;
+}
+/* line 11, ../../assets/stylesheets/modules/_jumbotron.scss */
+.jumbotron .raptored {
+  background: url('/assets/images/raptor.png');
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  width: 421px;
+  height: 356px;
+  position: absolute;
+  right: -50px;
+  top: 67px;
+  z-index: 10;
+}
+/* line 23, ../../assets/stylesheets/modules/_jumbotron.scss */
+.jumbotron .raptored .deal-with-it {
+  opacity: 0;
+  -webkit-transform: translateY(-80px);
+  -moz-transform: translateY(-80px);
+  transform: translateY(-80px);
+  -webkit-animation: deal-with-it 0.6s 2s 1 forwards ease-in-out;
+  -moz-animation: deal-with-it 0.6s 2s 1 forwards ease-in-out;
+  animation: deal-with-it 0.6s 2s 1 forwards ease-in-out;
+  background: url('/assets/images/deal-with-it.png');
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  width: 128px;
+  height: 20px;
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  z-index: 11;
+}
+/* line 39, ../../assets/stylesheets/modules/_jumbotron.scss */
+.jumbotron hgroup {
+  width: 57.05521%;
+  float: left;
+  margin-right: 3.06748%;
+  display: inline;
+  padding: 72px 0;
+}
+/* line 45, ../../assets/stylesheets/modules/_jumbotron.scss */
+.jumbotron h1,
+.jumbotron h2 {
+  text-align: left;
+  color: inherit;
+}
+/* line 50, ../../assets/stylesheets/modules/_jumbotron.scss */
+.jumbotron .badge {
+  padding: .3em .5em;
+  font-size: 30%;
+  text-transform: uppercase;
+  vertical-align: middle;
+  letter-spacing: 1pt;
+  background-color: rgba(61, 70, 77, 0.5);
+  border-radius: 3px;
+}
+/* line 62, ../../assets/stylesheets/modules/_jumbotron.scss */
+.jumbotron .addendum {
+  padding: 30px 0;
+  font-size: 21px;
+  background-color: rgba(125, 149, 104, 0.5);
+}
+/* line 69, ../../assets/stylesheets/modules/_jumbotron.scss */
+.jumbotron .addendum p {
+  margin-bottom: 0;
+}
+
+/* -------------------------------------------------------------------------*/
+/* Features */
+/* line 6, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature {
+  width: 31.28834%;
+  float: left;
+  margin-right: 3.06748%;
+  display: inline;
+  opacity: 0;
+  -webkit-transform: translateY(-20px);
+  -moz-transform: translateY(-20px);
+  transform: translateY(-20px);
+  -webkit-animation: fadein 0.6s 0.5s 1 forwards ease-in-out;
+  -moz-animation: fadein 0.6s 0.5s 1 forwards ease-in-out;
+  animation: fadein 0.6s 0.5s 1 forwards ease-in-out;
+  padding-top: 98px;
+  background-repeat: no-repeat;
+  background-position: top center;
+  text-align: center;
+  font-size: 16px;
+}
+/* line 19, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature:nth-child(3n) {
+  float: right;
+  margin-right: 0;
+  *margin-left: -30px;
+  display: inline;
+}
+/* line 23, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature h4 {
+  color: #3d464d;
+}
+/* line 27, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature p {
+  margin-bottom: 0;
+}
+/* line 32, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature-notifications {
+  background-image: url('/assets/images/feature-notifications.png');
+  -webkit-animation-delay: 0.2s;
+  -moz-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+/* line 37, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature-digests {
+  background-image: url('/assets/images/feature-digests.png');
+  -webkit-animation-delay: 0.4s;
+  -moz-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+/* line 42, ../../assets/stylesheets/modules/_features.scss */
+.feature-set .feature-receipts {
+  background-image: url('/assets/images/feature-receipts.png');
+  -webkit-animation-delay: 0.6s;
+  -moz-animation-delay: 0.6s;
+  animation-delay: 0.6s;
+}
+
+/* -------------------------------------------------------------------------*/
+/* Code */
+/* line 6, ../../assets/stylesheets/modules/_code.scss */
+.code-set .code-feature {
+  margin-bottom: 54px;
+}
+/* line 9, ../../assets/stylesheets/modules/_code.scss */
+.code-set .code-feature:last-of-type {
+  margin-bottom: 0;
+}
+/* line 13, ../../assets/stylesheets/modules/_code.scss */
+.code-set .code-feature p {
+  column-count: 2;
+}
+
+/* line 21, ../../assets/stylesheets/modules/_code.scss */
+.code-sample .gist .gist-file {
+  border-bottom: none;
+}
+/* line 26, ../../assets/stylesheets/modules/_code.scss */
+.code-sample .gist .gist-file .gist-data .line-data {
+  padding: 12px 18px !important;
+}
+/* line 30, ../../assets/stylesheets/modules/_code.scss */
+.code-sample .gist .gist-file .gist-data .line-pre {
+  font-family: "source-code-pro", Monaco, monospace;
+  font-size: 16px;
+}
+/* line 38, ../../assets/stylesheets/modules/_code.scss */
+.code-sample .line-pre {
+  color: #47525d;
+}
+
+/* line 3, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier {
+  width: 22.69939%;
+  float: left;
+  margin-right: 3.06748%;
+  display: inline;
+  text-align: center;
+}
+/* line 8, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier:nth-child(4n) {
+  float: right;
+  margin-right: 0;
+  *margin-left: -30px;
+  display: inline;
+}
+/* line 12, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier header {
+  padding: 18px 0;
+  background-color: #a3be8c;
+  color: white;
+  border-radius: 5px 5px 0 0;
+}
+/* line 20, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier header h4 {
+  margin-bottom: 0;
+  font-size: 28px;
+}
+/* line 24, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier header h4 .per-month {
+  font-size: 61%;
+  font-weight: 400;
+}
+/* line 30, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier header h5 {
+  text-transform: uppercase;
+  letter-spacing: 0.7pt;
+}
+/* line 36, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier p {
+  padding: 18px;
+  margin-bottom: 0;
+  font-size: 16px;
+  border: 2px solid #eff1f5;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+}
+/* line 49, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-free header {
+  background-color: #a3be8c;
+}
+/* line 52, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-free header h5 {
+  color: #617254;
+}
+/* line 57, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-free p {
+  border-color: #d1dec5;
+}
+/* line 63, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-triassic header {
+  background-color: #ddbd7d;
+}
+/* line 66, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-triassic header h5 {
+  color: #84714b;
+}
+/* line 71, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-triassic p {
+  border-color: #eedebe;
+}
+/* line 77, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-jurassic header {
+  background-color: #dc937c;
+}
+/* line 80, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-jurassic header h5 {
+  color: #84584a;
+}
+/* line 85, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-jurassic p {
+  border-color: #edc9bd;
+}
+/* line 91, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-cretaceous header {
+  background-color: #ab7967;
+}
+/* line 94, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-cretaceous header h5 {
+  color: #66483d;
+}
+/* line 99, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-cretaceous p {
+  border-color: #d5bcb3;
+}
+
+/*===================================*\
+  Sass Authoring Rules
+  --------------------
+
+  Some basic guidelines (that may be broken) for authoring manageable, readable Sass styles:
+
+  .block {
+    // 1. Layout Properties
+    // display, width, padding, margin, vertical-align, box-sizing, etc.
+    // Note: Bracketed expression values - such as calc() or linear-gradient() - must have spaces [e.g. calc( 100% + 2rem )] for Grunt tasks to run properly
+
+    // 2. Typography Properties
+    // font[-size, -weight, etc], line-height, text-align, letter-spacing, white-space, etc.
+
+    // 3. Appearance Properties
+    // color, box-shadow, background, border, text-shadow, opacity, etc.
+
+    // 4. UI Properties
+    // appearance, cursor, pointer-events, etc.
+
+    // Child elements are not always (and shouldn't be) nested in the parent block
+    .block__child {
+
+      // Modifiers are almost always nested in their parent element
+      &.block__child--modifier {
+
+      }
+
+      &:after {
+        // 'content' counts as a layout property
+      }
+
+    }
+  }
+
+  Full Example:
+
+  .block {
+    width: 100%;
+
+    font-size: 1rem;
+    font-weight: 400;
+
+    color: $blue;
+
+    .block__child {
+      display: inline-block;
+
+      &.block__child--modifier {
+        color: $gray;
+      }
+
+      &:after {
+        content: '';
+        padding: 1.5rem;
+
+        cursor: pointer;
+      }
+    }
+  }
+
+\*===================================*/

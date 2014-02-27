@@ -93,7 +93,7 @@ func (a *Account) UniqueId() interface{} {
 }
 
 func (a *Account) GetById(id interface{}) error {
-	return dbmap.SelectOne(a, "select * from accounts where id= $1", id)
+	return dbmap.SelectOne(a, "select * from accounts where id = $1", id)
 }
 
 // Stripe

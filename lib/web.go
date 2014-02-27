@@ -33,16 +33,18 @@ func setupMartini(root string) *martini.Martini {
 	m.Use(ReqLogger())
 	m.Use(martini.Recovery())
 	m.Use(martini.Static("public", martini.StaticOptions{
-		Prefix:      "public",
+		Prefix:      "assets",
 		SkipLogging: true,
 	}))
 	m.Use(render.Renderer())
 
 	// routes
 	r := martini.NewRouter()
-	r.Get("/", func(r render.Render) {
+	r.Get("/", RedirectAuthenticated("/account"), func(r render.Render) {
 		r.HTML(200, "index", nil)
 	})
+
+	r.Get("/signout", sessionauth.LoginRequired, GetSignout)
 
 	r.Post("/accounts", PostAccounts)
 	r.Get("/account", sessionauth.LoginRequired, GetAccount)

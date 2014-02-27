@@ -1,0 +1,72 @@
+// ---------------------------------------------------------------------------
+// Imports
+
+@import "partials/variables";
+@import "modules/base";
+
+@import "partials/all";
+@import "modules/all";
+
+
+/*===================================*\
+  Sass Authoring Rules
+  --------------------
+
+  Some basic guidelines (that may be broken) for authoring manageable, readable Sass styles:
+
+  .block {
+    // 1. Layout Properties
+    // display, width, padding, margin, vertical-align, box-sizing, etc.
+    // Note: Bracketed expression values - such as calc() or linear-gradient() - must have spaces [e.g. calc( 100% + 2rem )] for Grunt tasks to run properly
+
+    // 2. Typography Properties
+    // font[-size, -weight, etc], line-height, text-align, letter-spacing, white-space, etc.
+
+    // 3. Appearance Properties
+    // color, box-shadow, background, border, text-shadow, opacity, etc.
+
+    // 4. UI Properties
+    // appearance, cursor, pointer-events, etc.
+
+    // Child elements are not always (and shouldn't be) nested in the parent block
+    .block__child {
+
+      // Modifiers are almost always nested in their parent element
+      &.block__child--modifier {
+
+      }
+
+      &:after {
+        // 'content' counts as a layout property
+      }
+
+    }
+  }
+
+  Full Example:
+
+  .block {
+    width: 100%;
+
+    font-size: 1rem;
+    font-weight: 400;
+
+    color: $blue;
+
+    .block__child {
+      display: inline-block;
+
+      &.block__child--modifier {
+        color: $gray;
+      }
+
+      &:after {
+        content: '';
+        padding: 1.5rem;
+
+        cursor: pointer;
+      }
+    }
+  }
+
+\*===================================*/

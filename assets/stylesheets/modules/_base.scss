@@ -1,0 +1,40 @@
+/*-----------------------------------*\
+
+  Module: Base
+
+  Anything that can't be abstracted
+  or assigned to another section.
+  Low-level stuff. Typically only body
+  and html styles.
+
+\*-----------------------------------*/
+
+@import "susy";
+
+::-moz-selection {
+  background-color: transparentize($lighter-gray, .5);
+}
+
+::selection {
+  background-color: transparentize($lighter-gray, .5);
+}
+
+html {
+  font: #{$base-font-size}/#{$baseline} $font-Sans;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: none;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+
+  color: $gray;
+  background-color: #fff;
+
+  @media (max-width: $breakpoint-small) {
+    font-size: 87.5%;
+  }
+}
+
+body {
+  overflow-x: hidden;
+}

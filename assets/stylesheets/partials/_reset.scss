@@ -1,0 +1,19 @@
+/*-----------------------------------*\
+
+  Partial: Reset
+
+\*-----------------------------------*/
+
+// Sloppy reset. Applied to everything.
+*, :before, :after {
+  margin: 0;
+  padding: 0;
+  // Layout for dummies
+  box-sizing: border-box;
+  position: relative;
+}
+
+// Blanket ban on oversized images.
+img {
+  max-width: 100%;
+}

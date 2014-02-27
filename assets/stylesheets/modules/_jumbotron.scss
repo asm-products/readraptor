@@ -1,0 +1,73 @@
+/* -------------------------------------------------------------------------*/
+/* Jumbotron */
+
+.jumbotron {
+  @include background(image-url("/assets/images/jumbotron-bg.png"), linear-gradient(-45deg, $gradient-from, $gradient-to));
+
+  color: $white;
+
+  position: relative;
+
+  .raptored {
+    @include background(image-url("/assets/images/raptor.png"));
+    background-position: 0 0;
+    background-repeat: no-repeat;
+
+    width: 421px;
+    height: 356px;
+    position: absolute;
+    right: -50px;
+    top: 67px;
+    z-index: 10;
+
+    .deal-with-it {
+      @include deal-with-it-animation;
+
+      @include background(image-url("/assets/images/deal-with-it.png"));
+      background-position: 0 0;
+      background-repeat: no-repeat;
+
+      width: 128px;
+      height: 20px;
+      position: absolute;
+      left: 20px;
+      top: 10px;
+      z-index: 11;
+    }
+  }
+
+  hgroup {
+    @include span-columns(7,12);
+    padding: ($base * 4) 0;
+  }
+
+  h1,
+  h2 {
+    text-align: left;
+    color: inherit;
+  }
+
+  .badge {
+    padding: .3em .5em;
+
+    font-size: 30%;
+    text-transform: uppercase;
+    vertical-align: middle;
+    letter-spacing: 1pt;
+
+    background-color: rgba($dark-gray, 0.5);
+    border-radius: $radius;
+  }
+
+  .addendum {
+    padding: 30px 0;
+
+    font-size: 21px;
+
+    background-color: rgba(darken($addendum, 15%), 0.5);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+}

@@ -1,0 +1,41 @@
+/* -------------------------------------------------------------------------*/
+/* Code */
+
+.code-set {
+
+  .code-feature {
+    margin-bottom: $base * 3;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    p {
+      column-count: 2;
+    }
+  }
+}
+
+.code-sample {
+  .gist {
+    .gist-file {
+      border-bottom: none;
+      
+      .gist-data {
+
+        .line-data {
+          padding: ($base / 1.5) $base !important;
+        }
+
+        .line-pre {
+          font-family: $font-Code;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .line-pre {
+    color: $gray;
+  }
+}

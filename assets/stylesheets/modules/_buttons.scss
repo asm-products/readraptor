@@ -1,0 +1,17 @@
+.btn {
+  display: inline-block;
+
+  padding: .5em 1em;
+
+  font-weight: 600;
+  text-decoration: none;
+
+  border: 2px solid $white;
+  border-radius: $radius + 1px;
+
+  &:hover {
+    color: $addendum;
+
+    background-color: $white;
+  }
+}
