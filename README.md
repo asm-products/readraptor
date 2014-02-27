@@ -206,7 +206,7 @@ Run migrations:
 
 Start up the server (or use something like gin to auto-reload):
 
-    forego run
+    go get ./... && forego run
 
 
 ### Editing html/css
