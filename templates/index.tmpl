@@ -101,12 +101,100 @@
 
   <div class="code-set container">
 
-    <h3>Get up and running</h3>
-
     <div class="code-feature">
-      <h4>Create an account</h4>
+      <h4>Create your account right now!</h4>
 
       <pre class="code-block"><code>curl -X POST https://readraptor.com/accounts -d email=dave@example.com</code></pre>
+    </div>
+
+  </div>
+</section>
+
+
+<section id="api">
+
+  <div class="code-set container">
+    <h3>API Documentation</h3>
+
+    <div class="code-feature">
+      <h4>Create Article</h4>
+      <pre class="code-block"><code>POST /articles</code></pre>
+      <p>Registering an article allows Read Raptor to track read receipts for expected readers. You can also set up webhooks to receive calls at specified times in the future notifying you of the expected users that <strong>haven't</strong> seen the article</p>
+
+      <p><strong>Parameters</strong></p>
+      <table class="code-params">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>key</code></td>
+            <td><code>string</code></td>
+            <td><strong>Required.</strong> Unique key for this article</td>
+          </tr>
+          <tr>
+            <td><code>recipients</code></td>
+            <td><code>array</code></td>
+            <td>User ids expected to see this article. Eg: <code>["user_id_1", "user_id_2"]</code></td>
+          </tr>
+          <tr>
+            <td><code>via</code></td>
+            <td><code>array</code></td>
+            <td>Delivery methods for read raptor. Described below.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Delivery Method</strong></p>
+      <table class="code-params">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>type</code></td>
+            <td><code>string</code></td>
+            <td>Currently only supported type is <code>webhook</code></td>
+          </tr>
+          <tr>
+            <td><code>at</code></td>
+            <td><code>timestamp</code></td>
+            <td>Unix timestamp when to send notification</td>
+          </tr>
+          <tr>
+            <td><code>url</code></td>
+            <td><code>string</code></td>
+            <td>Webhook url to post to.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-feature">
+      <h4>Get Article</h4>
+      <pre class="code-block"><code>GET /articles/:key</code></pre>
+      <p>Get the article to see pending deliveries.</p>
+      <p><strong>Response</strong></p>
+      <pre class="code-block"><code>{
+  "article": {
+    "key": "article_1",
+    "pending": ["user_1", "user_2"]
+  }
+}</code></pre>
+    </div>
+
+    <div class="code-feature">
+      <h4>Track Read</h4>
+      <pre class="code-block"><code>GET /t/:public_key/:article_key/:user_id/:signature.gif</code></pre>
+      <p>Embed as a in img tag to track reads. The <code>signature</code> is a <code>sha1</code> hash of the <code>private_key</code> + <code>args</code> in the same order</p>
     </div>
 
   </div>

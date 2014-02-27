@@ -550,6 +550,48 @@ section {
   padding: 18px;
 }
 
+/* line 54, ../../assets/stylesheets/modules/_code.scss */
+table.code-params {
+  width: 100%;
+  overflow: auto;
+  display: block;
+  margin: 15px 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+/* line 62, ../../assets/stylesheets/modules/_code.scss */
+table.code-params thead {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* line 71, ../../assets/stylesheets/modules/_code.scss */
+table.code-params th {
+  border: 1px solid #ddd;
+  padding: 6px 13px;
+  font-weight: bold;
+  text-align: center;
+}
+/* line 78, ../../assets/stylesheets/modules/_code.scss */
+table.code-params tbody {
+  vertical-align: middle;
+  border-color: inherit;
+}
+/* line 83, ../../assets/stylesheets/modules/_code.scss */
+table.code-params tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+  vertical-align: inherit;
+}
+/* line 89, ../../assets/stylesheets/modules/_code.scss */
+table.code-params td {
+  border: 1px solid #ddd;
+  padding: 6px 13px;
+}
+
 /* line 3, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier {
   width: 22.69939%;
