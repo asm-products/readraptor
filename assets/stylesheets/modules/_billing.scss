@@ -45,6 +45,10 @@
     border: 2px solid $lightest-gray;
     border-top: none;
     border-radius: 0 0 ($radius + 2px) ($radius + 2px);
+
+    p {
+      margin-bottom: 0;
+    }
   }
 
   .billing-tier-free {

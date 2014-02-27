@@ -587,51 +587,55 @@ section {
   border-top: none;
   border-radius: 0 0 5px 5px;
 }
-/* line 51, ../../assets/stylesheets/modules/_billing.scss */
+/* line 49, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-bottom p {
+  margin-bottom: 0;
+}
+/* line 55, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free header {
   background-color: #a3be8c;
 }
-/* line 54, ../../assets/stylesheets/modules/_billing.scss */
+/* line 58, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free header h5 {
   color: #617254;
 }
-/* line 59, ../../assets/stylesheets/modules/_billing.scss */
+/* line 63, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free p {
   border-color: #d1dec5;
 }
-/* line 65, ../../assets/stylesheets/modules/_billing.scss */
+/* line 69, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic header {
   background-color: #ddbd7d;
 }
-/* line 68, ../../assets/stylesheets/modules/_billing.scss */
+/* line 72, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic header h5 {
   color: #84714b;
 }
-/* line 73, ../../assets/stylesheets/modules/_billing.scss */
+/* line 77, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic p {
   border-color: #eedebe;
 }
-/* line 79, ../../assets/stylesheets/modules/_billing.scss */
+/* line 83, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic header {
   background-color: #dc937c;
 }
-/* line 82, ../../assets/stylesheets/modules/_billing.scss */
+/* line 86, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic header h5 {
   color: #84584a;
 }
-/* line 87, ../../assets/stylesheets/modules/_billing.scss */
+/* line 91, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic p {
   border-color: #edc9bd;
 }
-/* line 93, ../../assets/stylesheets/modules/_billing.scss */
+/* line 97, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous header {
   background-color: #ab7967;
 }
-/* line 96, ../../assets/stylesheets/modules/_billing.scss */
+/* line 100, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous header h5 {
   color: #66483d;
 }
-/* line 101, ../../assets/stylesheets/modules/_billing.scss */
+/* line 105, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous p {
   border-color: #d5bcb3;
 }
