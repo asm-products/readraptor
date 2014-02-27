@@ -1,7 +1,9 @@
 package readraptor
 
 import (
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/codegangsta/martini"
 	"github.com/cupcake/gokiq"
@@ -65,6 +67,8 @@ func setupMartini(root string) *martini.Martini {
 	r.Get("/articles/:article_id", AuthAccount, GetArticles)
 	r.Post("/articles", AuthAccount, PostArticles)
 
+	r.Get("/test", GetTest)
+
 	// go-workers stats
 	workers.Configure(map[string]string{
 		"process": "web",
@@ -91,4 +95,10 @@ func setupMartini(root string) *martini.Martini {
 func RunWeb(root string) {
 	m := setupMartini(root)
 	m.Run()
+}
+
+func GetTest(rw http.ResponseWriter) {
+	rw.Write([]byte("Hi there"))
+	time.Sleep(1 * time.Second)
+	rw.Write([]byte("Welcome"))
 }

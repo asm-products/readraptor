@@ -20,8 +20,8 @@
       </header>
       <div class="billing-tier-bottom">
         <p>
-          <strong>1,000</strong><br /> recipients
-          <form action="/account/billing" method="POST">
+          <strong>1,000</strong><br /> unique monthly recipients
+          <form action="/account/billing" method="POST" class="embedded-form">
             <script
               src="https://checkout.stripe.com/checkout.js" class="stripe-button"
               data-key="{{.StripeKey}}"
@@ -45,8 +45,8 @@
       </header>
       <div class="billing-tier-bottom">
         <p>
-          <strong>10,000</strong><br /> recipients
-          <form action="/account/billing" method="POST">
+          <strong>10,000</strong><br /> unique monthly recipients
+          <form action="/account/billing" method="POST" class="embedded-form">
             <script
               src="https://checkout.stripe.com/checkout.js" class="stripe-button"
               data-key="{{.StripeKey}}"
@@ -70,8 +70,8 @@
       </header>
       <div class="billing-tier-bottom">
         <p>
-          <strong>100,000</strong><br /> recipients
-          <form action="/account/billing" method="POST">
+          <strong>100,000</strong><br /> unique monthly recipients
+          <form action="/account/billing" method="POST" class="embedded-form">
             <script
               src="https://checkout.stripe.com/checkout.js" class="stripe-button"
               data-key="{{.StripeKey}}"
@@ -95,8 +95,8 @@
       </header>
       <div class="billing-tier-bottom">
         <p>
-          <strong>1,000,000</strong><br /> recipients
-          <form action="/account/billing" method="POST">
+          <strong>1,000,000</strong><br /> unique monthly recipients
+          <form action="/account/billing" method="POST" class="embedded-form">
             <script
               src="https://checkout.stripe.com/checkout.js" class="stripe-button"
               data-key="{{.StripeKey}}"
@@ -112,6 +112,9 @@
         </p>
       </div>
     </div>
+
+    <p class="center-gray">Unique monthly recipients are the number of unique users that you can track reads for.</p>
+
 
   </div><!-- .billing-group -->
 

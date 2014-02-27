@@ -652,6 +652,18 @@ section {
   border-color: #d5bcb3;
 }
 
+/* line 111, ../../assets/stylesheets/modules/_billing.scss */
+.center-gray {
+  clear: both;
+  padding-top: 18px;
+  text-align: center;
+}
+
+/* line 117, ../../assets/stylesheets/modules/_billing.scss */
+.embedded-form {
+  padding-top: 18px;
+}
+
 /*===================================*\
   Sass Authoring Rules
   --------------------
