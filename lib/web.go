@@ -8,6 +8,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	workers "github.com/jrallison/go-workers"
 	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/secure"
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
 )
@@ -17,6 +18,11 @@ func setupMartini(root string) *martini.Martini {
 
 	// database
 	InitDb(os.Getenv("DATABASE_URL"))
+
+	// Security
+	m.Use(secure.Secure(secure.Options{
+		SSLRedirect: true,
+	}))
 
 	// Sessions Cookie store
 	store := sessions.NewCookieStore([]byte(os.Getenv("COOKIE_SECRET")))
