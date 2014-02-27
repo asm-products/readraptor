@@ -23,7 +23,6 @@ type Account struct {
 	ConfirmationToken  *string    `db:"confirmation_token"   json:"-"`
 	ConfirmationSentAt *time.Time `db:"confirmation_sent_at" json:"-"`
 	ConfirmedAt        *time.Time `db:"confirmed_at"         json:"-"`
-
 	// Stripe
 	CustomerId *string `db:"customer_id"  json:"-"`
 
@@ -55,6 +54,7 @@ func FindAccountByConfirmationToken(token string) (*Account, error) {
 func FindAccountBy(column string, value interface{}) (*Account, error) {
 	var account Account
 	err := dbmap.SelectOne(&account, "select * from accounts where "+column+" = $1", value)
+	fmt.Println("  Tried", account)
 	return &account, err
 }
 

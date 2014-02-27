@@ -36,7 +36,9 @@ func setupMartini(root string) *martini.Martini {
 		Prefix:      "assets",
 		SkipLogging: true,
 	}))
-	m.Use(render.Renderer())
+	m.Use(render.Renderer(render.Options{
+		Layout: "layout.html",
+	}))
 
 	// routes
 	r := martini.NewRouter()

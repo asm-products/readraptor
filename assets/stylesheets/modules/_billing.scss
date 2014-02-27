@@ -16,7 +16,7 @@
 
       color: $white;
       border-radius: ($radius + 2px) ($radius + 2px) 0 0;
-      
+
       h4 {
         margin-bottom: 0;
         font-size: 28px;
@@ -34,15 +34,17 @@
     }
 
     p {
-      padding: $base;
-      margin-bottom: 0;
-
       font-size: 16px;
-
-      border: 2px solid $lightest-gray;
-      border-top: none;
-      border-radius: 0 0 ($radius + 2px) ($radius + 2px);
     }
+  }
+
+  .billing-tier-bottom {
+    padding: $base;
+    margin-bottom: 0;
+
+    border: 2px solid $lightest-gray;
+    border-top: none;
+    border-radius: 0 0 ($radius + 2px) ($radius + 2px);
   }
 
   .billing-tier-free {

@@ -4,10 +4,8 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
-	"reflect"
 	"strings"
 	"time"
 
@@ -44,7 +42,6 @@ func PostAccounts(client *gokiq.ClientConfig, req *http.Request) (string, int) {
 				return "Email is already taken", http.StatusBadRequest
 			}
 		}
-		fmt.Println(reflect.TypeOf(err), err.Error())
 		panic(err)
 	}
 

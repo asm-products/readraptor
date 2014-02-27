@@ -577,58 +577,61 @@ section {
 }
 /* line 36, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier p {
+  font-size: 16px;
+}
+/* line 41, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group .billing-tier-bottom {
   padding: 18px;
   margin-bottom: 0;
-  font-size: 16px;
   border: 2px solid #eff1f5;
   border-top: none;
   border-radius: 0 0 5px 5px;
 }
-/* line 49, ../../assets/stylesheets/modules/_billing.scss */
+/* line 51, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free header {
   background-color: #a3be8c;
 }
-/* line 52, ../../assets/stylesheets/modules/_billing.scss */
+/* line 54, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free header h5 {
   color: #617254;
 }
-/* line 57, ../../assets/stylesheets/modules/_billing.scss */
+/* line 59, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free p {
   border-color: #d1dec5;
 }
-/* line 63, ../../assets/stylesheets/modules/_billing.scss */
+/* line 65, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic header {
   background-color: #ddbd7d;
 }
-/* line 66, ../../assets/stylesheets/modules/_billing.scss */
+/* line 68, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic header h5 {
   color: #84714b;
 }
-/* line 71, ../../assets/stylesheets/modules/_billing.scss */
+/* line 73, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic p {
   border-color: #eedebe;
 }
-/* line 77, ../../assets/stylesheets/modules/_billing.scss */
+/* line 79, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic header {
   background-color: #dc937c;
 }
-/* line 80, ../../assets/stylesheets/modules/_billing.scss */
+/* line 82, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic header h5 {
   color: #84584a;
 }
-/* line 85, ../../assets/stylesheets/modules/_billing.scss */
+/* line 87, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic p {
   border-color: #edc9bd;
 }
-/* line 91, ../../assets/stylesheets/modules/_billing.scss */
+/* line 93, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous header {
   background-color: #ab7967;
 }
-/* line 94, ../../assets/stylesheets/modules/_billing.scss */
+/* line 96, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous header h5 {
   color: #66483d;
 }
-/* line 99, ../../assets/stylesheets/modules/_billing.scss */
+/* line 101, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous p {
   border-color: #d5bcb3;
 }

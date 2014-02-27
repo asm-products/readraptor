@@ -1,30 +1,120 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Read Raptor</title>
-</head>
-<body>
-  <div class="raptor">
-    <a href="https://assemblymade.com/readraptor">
-      <img src="public/logo.jpg" />
-    </a>
-  </div>
-  <h1>Account Settings</h1>
+<div class="jumbotron">
+  <header class="container">
+    <div class="addendum">
+      <div class="container">
+        <p>We just need to collect your <strong>credit card details</strong> and then you can get started</p>
+      </div>
+    </div>
+  </header>
+</div>
+
+<section id="billing">
+  <h3>Plans</h3>
+
+  <div class="billing-group container">
+
+    <div class="billing-tier billing-tier-free">
+      <header>
+        <h4>$0 <span class="per-month">/mo</span></h4>
+        <h5>Free</h5>
+      </header>
+      <div class="billing-tier-bottom">
+        <p>
+          <strong>1,000</strong><br /> recipients
+          <form action="/account/billing" method="POST">
+            <script
+              src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="{{.StripeKey}}"
+              data-amount="0"
+              data-name="Read Raptor"
+              data-email="{{.Account.Email}}"
+              data-description="Free Plan"
+              data-label="Subscribe"
+              data-panel-label="Subscribe"
+            >
+            </script>
+          </form>
+        </p>
+      </div>
+    </div>
+
+    <div class="billing-tier billing-tier-triassic">
+      <header>
+        <h4>$29 <span class="per-month">/mo</span></h4>
+        <h5>Triassic</h5>
+      </header>
+      <div class="billing-tier-bottom">
+        <p>
+          <strong>10,000</strong><br /> recipients
+          <form action="/account/billing" method="POST">
+            <script
+              src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="{{.StripeKey}}"
+              data-amount="2900"
+              data-name="Read Raptor"
+              data-email="{{.Account.Email}}"
+              data-description="Triassic Plan ($29.00)"
+              data-label="Subscribe"
+              data-panel-label="Subscribe"
+            >
+            </script>
+          </form>
+        </p>
+      </div>
+    </div>
+
+    <div class="billing-tier billing-tier-jurassic">
+      <header>
+        <h4>$79 <span class="per-month">/mo</span></h4>
+        <h5>Jurassic</h5>
+      </header>
+      <div class="billing-tier-bottom">
+        <p>
+          <strong>100,000</strong><br /> recipients
+          <form action="/account/billing" method="POST">
+            <script
+              src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="{{.StripeKey}}"
+              data-amount="7900"
+              data-name="Read Raptor"
+              data-email="{{.Account.Email}}"
+              data-description="Jurassic Plan ($79.00)"
+              data-label="Subscribe"
+              data-panel-label="Subscribe"
+            >
+            </script>
+          </form>
+        </p>
+      </div>
+    </div>
+
+    <div class="billing-tier billing-tier-cretaceous">
+      <header>
+        <h4>$199 <span class="per-month">/mo</span></h4>
+        <h5>Cretaceous</h5>
+      </header>
+      <div class="billing-tier-bottom">
+        <p>
+          <strong>1,000,000</strong><br /> recipients
+          <form action="/account/billing" method="POST">
+            <script
+              src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="{{.StripeKey}}"
+              data-amount="19900"
+              data-name="Read Raptor"
+              data-email="{{.Account.Email}}"
+              data-description="Cretaceous Plan ($199.00)"
+              data-label="Subscribe"
+              data-panel-label="Subscribe"
+            >
+            </script>
+          </form>
+        </p>
+      </div>
+    </div>
+
+  </div><!-- .billing-group -->
+
+</section>
 
 
-  <form action="/account/billing" method="POST">
-    <script
-      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-      data-key="{{.StripeKey}}"
-      data-amount="2000"
-      data-name="Demo Site"
-      data-email="{{.Account.Email}}"
-      data-description="2 widgets ($20.00)"
-      data-image="/128x128.png"
-      data-label="Subscribe"
-      data-panel-label="Subscribe"
-    >
-    </script>
-  </form>
-</body>
-</html>
