@@ -54,7 +54,6 @@ func FindAccountByConfirmationToken(token string) (*Account, error) {
 func FindAccountBy(column string, value interface{}) (*Account, error) {
 	var account Account
 	err := dbmap.SelectOne(&account, "select * from accounts where "+column+" = $1", value)
-	fmt.Println("  Tried", account)
 	return &account, err
 }
 
