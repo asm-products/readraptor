@@ -121,7 +121,7 @@
       <pre class="code-block"><code>POST /articles</code></pre>
       <p>Registering an article allows Read Raptor to track read receipts for expected readers. You can also set up webhooks to receive calls at specified times in the future notifying you of the expected users that <strong>haven't</strong> seen the article</p>
 
-      <p><strong>Parameters</strong></p>
+      <h5>Parameters</h5>
       <table class="code-params">
         <thead>
           <tr>
@@ -149,7 +149,7 @@
         </tbody>
       </table>
 
-      <p><strong>Delivery Method</strong></p>
+      <h5>Delivery Method</h5>
       <table class="code-params">
         <thead>
           <tr>
@@ -182,13 +182,15 @@
       <h4>Get Article</h4>
       <pre class="code-block"><code>GET /articles/:key</code></pre>
       <p>Get the article to see pending deliveries.</p>
-      <p><strong>Response</strong></p>
-      <pre class="code-block"><code>{
-  "article": {
-    "key": "article_1",
-    "pending": ["user_1", "user_2"]
-  }
-}</code></pre>
+      <h5>Response</h5>
+      <p>
+        <pre class="code-block"><code>{
+        "article": {
+          "key": "article_1",
+          "pending": ["user_1", "user_2"]
+        }
+      }</code></pre>
+      </p>
     </div>
 
     <div class="code-feature">
