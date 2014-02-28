@@ -65,7 +65,7 @@ func (j *NewAccountEmailJob) CreateMessage(account *Account) (*mailgun.Message, 
 
 	message := &mailgun.Message{
 		FromName:    "Read Raptor",
-		FromAddress: "rawr@readraptor.com",
+		FromAddress: "admin@readraptor.com",
 		ToAddress:   account.Email,
 		Subject:     "Get started with Read Raptor",
 		Body:        buf.String(),
