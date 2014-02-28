@@ -2,6 +2,10 @@
 
 Read Raptor intelligently notifies your users about new content.
 
+## Community Built
+Read Raptor is a mutual product, built and owned by the people who use it. We're radically transparent and encourage anybody to [get involved and become a partner.](https://assemblymade.com/readraptor/welcome)</p>
+
+
 ## Why would I use this on my app?
 
 Ever noticed how iMessage doesn't message your phone if you've read it on your desktop? Read Raptor can make that happen for your app too.
