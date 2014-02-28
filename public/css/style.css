@@ -565,19 +565,20 @@ table.code-params th {
   color: #bdc4ca;
   font-size: 13px;
   text-transform: uppercase;
+  letter-spacing: 0.4pt;
   border: 1px solid #eff1f5;
 }
-/* line 54, ../../assets/stylesheets/modules/_code.scss */
+/* line 55, ../../assets/stylesheets/modules/_code.scss */
 table.code-params tbody {
   vertical-align: middle;
   border-color: #eff1f5;
 }
-/* line 59, ../../assets/stylesheets/modules/_code.scss */
+/* line 60, ../../assets/stylesheets/modules/_code.scss */
 table.code-params tr {
   border-top: 1px solid #eff1f5;
   vertical-align: inherit;
 }
-/* line 64, ../../assets/stylesheets/modules/_code.scss */
+/* line 65, ../../assets/stylesheets/modules/_code.scss */
 table.code-params td {
   border: 1px solid #eff1f5;
   padding: 6px 13px;
