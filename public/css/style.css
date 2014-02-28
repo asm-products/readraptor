@@ -468,10 +468,10 @@ section {
 
 /* line 1, ../../assets/stylesheets/modules/_call-to-action.scss */
 .cta-module {
-  background: -webkit-linear-gradient(45deg, #8eabab, #697e7d);
-  background: -moz-linear-gradient(45deg, #8eabab, #697e7d);
-  background: -o-linear-gradient(45deg, #8eabab, #697e7d);
-  background: linear-gradient(45deg, #8eabab, #697e7d);
+  background: -webkit-linear-gradient(45deg, #f2e6ce, #eddcba);
+  background: -moz-linear-gradient(45deg, #f2e6ce, #eddcba);
+  background: -o-linear-gradient(45deg, #f2e6ce, #eddcba);
+  background: linear-gradient(45deg, #f2e6ce, #eddcba);
   margin-top: -1px;
   padding-top: 45px;
   padding-bottom: 45px;
@@ -481,14 +481,14 @@ section {
 .cta-module p {
   margin-bottom: 0;
   font-size: 21px;
-  color: white;
+  color: #ab7967;
 }
 /* line 21, ../../assets/stylesheets/modules/_call-to-action.scss */
 .cta-module p:before {
   background: url('/assets/images/asm-logotype.png');
   margin: 0 auto;
   margin-right: 18px;
-  top: 12px;
+  top: 10px;
   float: left;
   width: 52px;
   height: 46px;
