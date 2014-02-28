@@ -524,19 +524,17 @@ section {
 /* Code */
 /* line 6, ../../assets/stylesheets/modules/_code.scss */
 .code-set .code-feature {
-  padding-bottom: 18px;
-  margin-bottom: 54px;
-  border-bottom: 1px solid #eff1f5;
+  margin-bottom: 72px;
 }
-/* line 11, ../../assets/stylesheets/modules/_code.scss */
+/* line 9, ../../assets/stylesheets/modules/_code.scss */
 .code-set .code-feature:last-of-type {
   margin-bottom: 0;
 }
-/* line 15, ../../assets/stylesheets/modules/_code.scss */
+/* line 13, ../../assets/stylesheets/modules/_code.scss */
 .code-set .code-feature h5 {
   color: #96b5b4;
 }
-/* line 19, ../../assets/stylesheets/modules/_code.scss */
+/* line 17, ../../assets/stylesheets/modules/_code.scss */
 .code-set .code-feature .code-block {
   padding: 12px 18px;
   font-family: "source-code-pro", Monaco, monospace;
@@ -549,7 +547,7 @@ section {
   margin-bottom: 18px;
 }
 
-/* line 37, ../../assets/stylesheets/modules/_code.scss */
+/* line 35, ../../assets/stylesheets/modules/_code.scss */
 table.code-params {
   margin-bottom: 36px;
   width: 100%;
@@ -558,7 +556,7 @@ table.code-params {
   border-spacing: 0;
   font-size: 16px;
 }
-/* line 45, ../../assets/stylesheets/modules/_code.scss */
+/* line 43, ../../assets/stylesheets/modules/_code.scss */
 table.code-params th {
   padding: 9px 13px;
   font-weight: bold;
@@ -568,17 +566,17 @@ table.code-params th {
   text-transform: uppercase;
   border: 1px solid #d8dce0;
 }
-/* line 56, ../../assets/stylesheets/modules/_code.scss */
+/* line 54, ../../assets/stylesheets/modules/_code.scss */
 table.code-params tbody {
   vertical-align: middle;
   border-color: #d8dce0;
 }
-/* line 61, ../../assets/stylesheets/modules/_code.scss */
+/* line 59, ../../assets/stylesheets/modules/_code.scss */
 table.code-params tr {
   border-top: 1px solid #d8dce0;
   vertical-align: inherit;
 }
-/* line 66, ../../assets/stylesheets/modules/_code.scss */
+/* line 64, ../../assets/stylesheets/modules/_code.scss */
 table.code-params td {
   border: 1px solid #d8dce0;
   padding: 6px 13px;
