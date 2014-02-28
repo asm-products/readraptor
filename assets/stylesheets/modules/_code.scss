@@ -4,91 +4,67 @@
 .code-set {
 
   .code-feature {
+    padding-bottom: $base;
     margin-bottom: $base * 3;
+    border-bottom: 1px solid $lightest-gray;
 
     &:last-of-type {
       margin-bottom: 0;
     }
 
-    p {
-      column-count: 2;
+    h5 {
+      color: $blue;
+    }
+
+    .code-block {
+      padding: ($base / 1.5) $base;
+
+      font-family: $font-Code;
+      font-size: 16px;
+
+      border-radius: $radius;
+      border: 1px solid $subtle-gray;
+      background-color: lighten($subtle-gray, 10%);
+
+      overflow-x: auto;
+      word-wrap: normal;
+
+      margin-bottom: $base;
     }
   }
-}
-
-.code-sample {
-  .gist {
-    .gist-file {
-      border-bottom: none;
-
-      .gist-data {
-
-        .line-data {
-          padding: ($base / 1.5) $base !important;
-        }
-
-        .line-pre {
-          font-family: $font-Code;
-          font-size: 16px;
-        }
-      }
-    }
-  }
-
-  .line-pre {
-    color: $gray;
-  }
-}
-
-.code-block {
-  font-family: "source-code-pro", Monaco, monospace;
-  font-size: 16px;
-	border-radius:3px;
-	border:1px solid #ddd;
-	background-color:#f8f8ff;
-	overflow:auto;
-	word-wrap:normal;
-  padding: $base;
 }
 
 table.code-params {
+  margin-bottom: $base * 2;
   width: 100%;
   overflow: auto;
-  display: block;
-  margin: 15px 0;
   border-collapse: collapse;
   border-spacing: 0;
-
-  thead {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-  }
+  font-size: 16px;
 
   th {
-    border: 1px solid #ddd;
-    padding: 6px 13px;
+    padding: 9px 13px;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
+    color: $lighter-gray;
+    font-size: 13px;
+    text-transform: uppercase;
+    // background-color: $subtle-gray;
+    border: 1px solid $subtle-gray;
   }
 
   tbody {
     vertical-align: middle;
-    border-color: inherit;
+    border-color: $subtle-gray;
   }
 
   tr {
-    border-top: 1px solid #ccc;
-    background-color: #fff;
+    border-top: 1px solid $subtle-gray;
     vertical-align: inherit;
   }
 
   td {
-    border: 1px solid #ddd;
+    border: 1px solid $subtle-gray;
     padding: 6px 13px;
   }
 }
-

@@ -10,8 +10,12 @@
   border-radius: $radius + 1px;
 
   &:hover {
-    color: $addendum;
+    color: shade($addendum, 15%);
 
     background-color: $white;
   }
+}
+
+.btn ~ .btn {
+  margin-left: $base;
 }

@@ -6,6 +6,7 @@
       <h2>Add smart notifications, digests, and read-receipts to your app in minutes.</h2>
 
       <a href="#get-started" class="btn">Get Started</a>
+      <a href="http://assemblymade.com/readraptor" class="btn btn-assembly">Contribute on Assembly</a>
     </hgroup>
     <div class="raptored">
       <div class="deal-with-it"></div>
@@ -17,7 +18,7 @@
       <p>
         <strong>Increase engagement by sending your customers relevant content once, and once only.</strong> Read Raptor's simple API lets you schedule webhooks for a user so you are notified when they haven't seen something.
       </p>
-      <p><br/>Read Raptor is built collaboratively by a community of awesome hackers.</p>
+      <p>Read Raptor is built collaboratively by a community of awesome hackers.</p>
     </div>
   </div>
 </div>
@@ -95,8 +96,8 @@
       </div>
     </div>
 
-    <p class="center-gray">Unique monthly recipients are the number of unique users that you can track reads for.<br/>
-    If you have more than a million recipients, <a href="mailto:admin@readraptor.com">contact us.</a></p>
+    <center>Unique monthly recipients are the number of unique users that you can track reads for.<br />
+      If you have more than a million recipients, <a href="mailto:admin@readraptor.com">contact us.</a></center>
 
   </div><!-- .billing-group -->
 </section>
@@ -123,7 +124,7 @@
     <div class="code-feature">
       <h4>Create Article</h4>
       <pre class="code-block"><code>POST /articles</code></pre>
-      <p>Registering an article allows Read Raptor to track read receipts for expected readers. You can also set up webhooks to receive calls at specified times in the future notifying you of the expected users that <strong>haven't</strong> seen the article</p>
+      <p>Registering an article allows Read Raptor to track read receipts for expected readers. You can also set up webhooks to receive calls at specified times in the future notifying you of the expected users that <strong>haven't</strong> seen the article.</p>
 
       <h5>Parameters</h5>
       <table class="code-params">
@@ -200,10 +201,8 @@
     <div class="code-feature">
       <h4>Track Read</h4>
       <pre class="code-block"><code>GET /t/:public_key/:article_key/:user_id/:signature.gif</code></pre>
-      <p>Embed as a in img tag to track reads. The <code>signature</code> is a <code>sha1</code> hash of the <code>private_key</code> + <code>args</code> in the same order</p>
+      <p>Embed as a in img tag to track reads. The <code>signature</code> is a <code>sha1</code> hash of the <code>private_key</code> + <code>args</code> in the same order.</p>
     </div>
 
   </div>
 </section>
-
-

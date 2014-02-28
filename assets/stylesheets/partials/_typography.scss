@@ -40,19 +40,19 @@ h3, .gamma {
   line-height: 1.4;
   text-align: center;
   // text-transform: uppercase;
-  // letter-spacing: 0.7pt;  
-  
+  // letter-spacing: 0.7pt;
+
   color: $lighter-gray;
-  
+
   &:after {
     margin: 0 auto;
     margin-top: $base * 2;
     width: 12%;
     height: 3px;
     content: "";
-    
+
     display: block;
-    
+
     background-color: lighten($lighter-gray, 5%);
   }
 }
@@ -63,6 +63,11 @@ h4, .delta {
   font-size: 21px;
   font-weight: 700;
   line-height: $baseline;
+}
+
+h5 {
+  margin-bottom: $base - 5px;
+  font-size: 18px;
 }
 
 a, [data-href] {
@@ -144,7 +149,7 @@ blockquote {
 p {
   margin-bottom: $base;
   font-family: $font-Sans;
-  
+
   &:last-of-type {
     margin-bottom: $base * 1.5;
   }

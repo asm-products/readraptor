@@ -48,6 +48,7 @@
 
     p {
       margin-bottom: 0;
+      line-height: 1.5;
     }
   }
 
@@ -60,7 +61,7 @@
       }
     }
 
-    p {
+    .billing-tier-bottom {
       border-color: tint($free, 50%);
     }
   }
@@ -74,7 +75,7 @@
       }
     }
 
-    p {
+    .billing-tier-bottom {
       border-color: tint($triassic, 50%);
     }
   }
@@ -88,7 +89,7 @@
       }
     }
 
-    p {
+    .billing-tier-bottom {
       border-color: tint($jurassic, 50%);
     }
   }
@@ -102,16 +103,21 @@
       }
     }
 
-    p {
+    .billing-tier-bottom {
       border-color: tint($cretaceous, 50%);
     }
   }
-}
 
-.center-gray {
-  clear: both;
-  padding-top: $base;
-  text-align: center;
+  center {
+    @include span-columns(12);
+
+    text-align: center;
+    margin-top: $base * 2;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .embedded-form {
