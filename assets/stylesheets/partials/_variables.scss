@@ -35,7 +35,7 @@ $green: #a3be8c;
 $blue: #96b5b4;
 
 $gradient-from: $green;
-$gradient-to: $green; // shade($gradient-from, 20%);
+$gradient-to: shade($green, 20%);
 
 $addendum: desaturate(mix($green, $gradient-to), 10%);
 

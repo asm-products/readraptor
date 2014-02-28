@@ -1,0 +1,38 @@
+.cta-module {
+  $cta-from  : shade($blue, 5%);
+  $cta-to    : shade($blue, 30%);
+
+  @include background(linear-gradient(45deg, $cta-from, $cta-to));
+
+  // FIXME: Negative margin is a shitty way to compensate for the border above.
+  margin-top: -1px;
+  padding-top: $base * 2.5;
+  padding-bottom: $base * 2.5;
+
+  border: 0;
+
+  p {
+    margin-bottom: 0;
+
+    font-size: 21px;
+
+    color: $white;
+
+    &:before {
+      @include background(image-url("/assets/images/asm-logotype.png"));
+
+      margin: 0 auto;
+      margin-right: $base;
+      top: $base / 1.5;
+
+      float: left;
+      width: 52px;
+      height: 46px;
+
+      background-position: 0 0;
+      background-repeat: no-repeat;
+
+      content: "";
+    }
+  }
+}

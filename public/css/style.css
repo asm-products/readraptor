@@ -360,7 +360,7 @@ section {
 }
 /* line 12, ../../assets/stylesheets/modules/_buttons.scss */
 .btn:hover {
-  color: #8b997e;
+  color: #7c8874;
   background-color: white;
 }
 
@@ -373,10 +373,10 @@ section {
 /* Jumbotron */
 /* line 4, ../../assets/stylesheets/modules/_jumbotron.scss */
 .jumbotron {
-  background: url('/assets/images/jumbotron-bg.png'), -webkit-linear-gradient(-45deg, #a3be8c, #a3be8c);
-  background: url('/assets/images/jumbotron-bg.png'), -moz-linear-gradient(-45deg, #a3be8c, #a3be8c);
-  background: url('/assets/images/jumbotron-bg.png'), -o-linear-gradient(-45deg, #a3be8c, #a3be8c);
-  background: url('/assets/images/jumbotron-bg.png'), linear-gradient(-45deg, #a3be8c, #a3be8c);
+  background: url('/assets/images/jumbotron-bg.png'), -webkit-linear-gradient(-45deg, #a3be8c, #829870);
+  background: url('/assets/images/jumbotron-bg.png'), -moz-linear-gradient(-45deg, #a3be8c, #829870);
+  background: url('/assets/images/jumbotron-bg.png'), -o-linear-gradient(-45deg, #a3be8c, #829870);
+  background: url('/assets/images/jumbotron-bg.png'), linear-gradient(-45deg, #a3be8c, #829870);
   color: white;
   position: relative;
   overflow: hidden;
@@ -455,7 +455,7 @@ section {
 .jumbotron .addendum {
   padding: 30px 0;
   font-size: 21px;
-  background-color: rgba(112, 134, 94, 0.6);
+  background-color: rgba(84, 94, 75, 0.6);
 }
 /* line 79, ../../assets/stylesheets/modules/_jumbotron.scss */
 .jumbotron .addendum p {
@@ -464,6 +464,37 @@ section {
 /* line 82, ../../assets/stylesheets/modules/_jumbotron.scss */
 .jumbotron .addendum p + p {
   margin-top: 18px;
+}
+
+/* line 1, ../../assets/stylesheets/modules/_call-to-action.scss */
+.cta-module {
+  background: -webkit-linear-gradient(45deg, #8eabab, #697e7d);
+  background: -moz-linear-gradient(45deg, #8eabab, #697e7d);
+  background: -o-linear-gradient(45deg, #8eabab, #697e7d);
+  background: linear-gradient(45deg, #8eabab, #697e7d);
+  margin-top: -1px;
+  padding-top: 45px;
+  padding-bottom: 45px;
+  border: 0;
+}
+/* line 14, ../../assets/stylesheets/modules/_call-to-action.scss */
+.cta-module p {
+  margin-bottom: 0;
+  font-size: 21px;
+  color: white;
+}
+/* line 21, ../../assets/stylesheets/modules/_call-to-action.scss */
+.cta-module p:before {
+  background: url('/assets/images/asm-logotype.png');
+  margin: 0 auto;
+  margin-right: 18px;
+  top: 12px;
+  float: left;
+  width: 52px;
+  height: 46px;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  content: "";
 }
 
 /* -------------------------------------------------------------------------*/
