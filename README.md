@@ -1,5 +1,4 @@
-Read Raptor is a mutual product, built and owned by the people who use it. It uses [Assembly](https://assemblymade.com/readraptor) to
-share its profit between the partners and ensure openness and transparency.
+Read Raptor is a mutual product, built and owned by the people who use it. It uses [Assembly](https://assemblymade.com/) to share its profit between the partners and ensure openness and transparency. Everyone is invited to come and help us build it. [You can get started here](https://assemblymade.com/readraptor).
 
 ## Why would I use this on my app?
 
