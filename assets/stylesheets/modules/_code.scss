@@ -39,6 +39,7 @@ table.code-params {
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 16px;
+  line-height: 1.8;
 
   th {
     padding: 9px 13px;
@@ -47,22 +48,21 @@ table.code-params {
     color: $lighter-gray;
     font-size: 13px;
     text-transform: uppercase;
-    // background-color: $subtle-gray;
-    border: 1px solid $subtle-gray;
+    border: 1px solid $lightest-gray;
   }
 
   tbody {
     vertical-align: middle;
-    border-color: $subtle-gray;
+    border-color: $lightest-gray;
   }
 
   tr {
-    border-top: 1px solid $subtle-gray;
+    border-top: 1px solid $lightest-gray;
     vertical-align: inherit;
   }
 
   td {
-    border: 1px solid $subtle-gray;
+    border: 1px solid $lightest-gray;
     padding: 6px 13px;
   }
 }

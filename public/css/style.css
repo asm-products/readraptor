@@ -555,8 +555,9 @@ table.code-params {
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 16px;
+  line-height: 1.8;
 }
-/* line 43, ../../assets/stylesheets/modules/_code.scss */
+/* line 44, ../../assets/stylesheets/modules/_code.scss */
 table.code-params th {
   padding: 9px 13px;
   font-weight: bold;
@@ -564,21 +565,21 @@ table.code-params th {
   color: #bdc4ca;
   font-size: 13px;
   text-transform: uppercase;
-  border: 1px solid #d8dce0;
+  border: 1px solid #eff1f5;
 }
 /* line 54, ../../assets/stylesheets/modules/_code.scss */
 table.code-params tbody {
   vertical-align: middle;
-  border-color: #d8dce0;
+  border-color: #eff1f5;
 }
 /* line 59, ../../assets/stylesheets/modules/_code.scss */
 table.code-params tr {
-  border-top: 1px solid #d8dce0;
+  border-top: 1px solid #eff1f5;
   vertical-align: inherit;
 }
 /* line 64, ../../assets/stylesheets/modules/_code.scss */
 table.code-params td {
-  border: 1px solid #d8dce0;
+  border: 1px solid #eff1f5;
   padding: 6px 13px;
 }
 
