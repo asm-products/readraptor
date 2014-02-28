@@ -1,10 +1,5 @@
-# Read Raptor
-
-Read Raptor intelligently notifies your users about new content.
-
-## Community Built
-Read Raptor is a mutual product, built and owned by the people who use it. We're radically transparent and encourage anybody to [get involved and become a partner.](https://assemblymade.com/readraptor/welcome)</p>
-
+Read Raptor is a mutual product, built and owned by the people who use it. It uses [Assembly](https://assemblymade.com/readraptor) to
+share its profit between the partners and ensure openness and transparency.
 
 ## Why would I use this on my app?
 
