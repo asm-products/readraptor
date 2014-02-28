@@ -1,12 +1,14 @@
 package readraptor
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/base64"
-	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/codegangsta/martini"
@@ -29,7 +31,7 @@ func GetAccount(r render.Render, user sessionauth.User) {
 	r.HTML(200, "account", data)
 }
 
-func PostAccounts(client *gokiq.ClientConfig, req *http.Request) (string, int) {
+func PostAccounts(client *gokiq.ClientConfig, rw http.ResponseWriter, req *http.Request) {
 	if err := req.ParseForm(); err != nil {
 		panic(err)
 	}
@@ -39,22 +41,27 @@ func PostAccounts(client *gokiq.ClientConfig, req *http.Request) (string, int) {
 	if err != nil {
 		if _, ok := err.(*pq.Error); ok {
 			if strings.Index(err.Error(), `duplicate key value violates unique constraint "accounts_email_key"`) > -1 {
-				return "Email is already taken", http.StatusBadRequest
+				rw.Write([]byte("Email is already taken"))
+				return
 			}
 		}
 		panic(err)
 	}
 
-	json, err := json.Marshal(map[string]interface{}{
-		"account": account,
-	})
+	account.SendNewAccountEmail(client)
+
+	template, err := template.ParseFiles("templates/welcome.txt.tmpl")
 	if err != nil {
 		panic(err)
 	}
 
-	account.SendNewAccountEmail(client)
+	var buf bytes.Buffer
+	err = template.Execute(&buf, nil)
+	if err != nil {
+		panic(err)
+	}
 
-	return string(json), http.StatusCreated
+	fmt.Fprintln(rw, buf.String())
 }
 
 func PostAccountBilling(rw http.ResponseWriter, req *http.Request, user sessionauth.User) {
