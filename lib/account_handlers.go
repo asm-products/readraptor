@@ -13,7 +13,7 @@ import (
 
 	"github.com/codegangsta/martini"
 	"github.com/cupcake/gokiq"
-	pq "github.com/lib/pq"
+	"github.com/lib/pq"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
@@ -36,7 +36,14 @@ func PostAccounts(client *gokiq.ClientConfig, rw http.ResponseWriter, req *http.
 		panic(err)
 	}
 
-	account := NewAccount(req.PostForm["email"][0])
+	email := strings.Replace(req.PostForm["email"][0], " ", "", -1)
+
+	if strings.Index(email, "@") == -1 {
+		rw.Write([]byte("Email is invalid"))
+		return
+	}
+
+	account := NewAccount(email)
 	err := dbmap.Insert(account)
 	if err != nil {
 		if _, ok := err.(*pq.Error); ok {
