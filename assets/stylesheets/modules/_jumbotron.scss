@@ -7,6 +7,7 @@
   color: $white;
 
   position: relative;
+  overflow: hidden;
 
   .raptored {
     @include background(image-url("/assets/images/raptor.png"));
@@ -16,9 +17,14 @@
     width: 421px;
     height: 356px;
     position: absolute;
-    right: -50px;
-    top: 67px;
+    right: -280px;
+    top: 27px;
     z-index: 10;
+
+    @include at-breakpoint($break) {
+      right: -50px;
+      top: 67px;
+    }
 
     .deal-with-it {
       @include deal-with-it-animation;
@@ -37,7 +43,11 @@
   }
 
   hgroup {
-    @include span-columns(7,12);
+    @include at-breakpoint($break) {
+      @include span-columns(7,12);
+    }
+
+    @include span-columns(10,12);
     padding: ($base * 4) 0;
   }
 

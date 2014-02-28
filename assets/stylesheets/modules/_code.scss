@@ -18,7 +18,7 @@
       padding: ($base / 1.5) $base;
 
       font-family: $font-Code;
-      font-size: 16px;
+      font-size: 14px;
 
       border-radius: $radius;
       border: 1px solid $subtle-gray;
@@ -28,18 +28,27 @@
       word-wrap: normal;
 
       margin-bottom: $base;
+
+      @include at-breakpoint($break) {
+        font-size: 16px;
+      }
     }
   }
 }
 
 table.code-params {
+  overflow-x: scroll;
   margin-bottom: $base * 2;
   width: 100%;
   overflow: auto;
   border-collapse: collapse;
   border-spacing: 0;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.8;
+
+  @include at-breakpoint($break) {
+    font-size: 16px;
+  }
 
   th {
     padding: 9px 13px;

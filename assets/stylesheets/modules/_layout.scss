@@ -2,8 +2,8 @@
 /* Layout */
 
 .container {
-  @include container;
   @include susy-grid-background;
+  @include container($total-columns, $break);
 }
 
 section {

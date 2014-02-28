@@ -2,23 +2,29 @@
 /* Features */
 
 .feature-set {
+  padding-top: $base * 3;
+  padding-bottom: $base * 3;
 
   .feature {
-    @include span-columns(4,12);
-    @include fade-slide-animation;
+    @include at-breakpoint($break) {
+      @include span-columns(4,12);
+      @include fade-slide-animation;
+      margin-bottom: 0;
+
+      &:nth-child(3n) {
+        @include omega;
+      }
+    }
 
     // 80px = icon size
     padding-top: 80px + $base;
+    margin-bottom: $base * 2;
 
     background-repeat: no-repeat;
     background-position: top center;
 
     text-align: center;
     font-size: 16px;
-    
-    &:nth-child(3n) {
-      @include omega;
-    }
 
     h4 {
       color: $dark-gray;

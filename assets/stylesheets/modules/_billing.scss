@@ -1,12 +1,17 @@
 .billing-group {
 
   .billing-tier {
-    @include span-columns(3,12);
-
+    margin-bottom: $base * 2;
     text-align: center;
 
-    &:nth-child(4n) {
-      @include omega;
+    @include at-breakpoint($break) {
+      @include span-columns(3,12);
+
+      &:nth-child(4n) {
+        @include omega;
+      }
+
+      margin-bottom: 0;
     }
 
     header {
@@ -30,6 +35,7 @@
       h5 {
         text-transform: uppercase;
         letter-spacing: 0.7pt;
+        margin-bottom: 0;
       }
     }
 

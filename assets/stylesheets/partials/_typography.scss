@@ -17,10 +17,6 @@ h1, .alpha {
   line-height: 1.25;
 
   color: $dark-gray;
-
-  @media (max-width: $breakpoint-small) {
-    font-size: $baseline*1.2;
-  }
 }
 
 h2, .beta {
@@ -97,7 +93,6 @@ em, .em {
 
 hr {
   border: none;
-  // @include bg-image("tristar", auto $baseline);
   height: $baseline;
   margin-bottom: $baseline;
 }
@@ -136,10 +131,6 @@ blockquote {
   border-left: 2px solid $blue;
   margin-left: -$baseline;
   color: $gray;
-
-  @media (max-width: $breakpoint-small) {
-    margin-left: 0;
-  }
 
   em {
     font-style: normal;
