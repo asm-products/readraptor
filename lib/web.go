@@ -1,6 +1,7 @@
 package readraptor
 
 import (
+	"net/http"
 	"os"
 
 	"github.com/codegangsta/martini"
@@ -72,6 +73,8 @@ func setupMartini(root string) *martini.Martini {
 	})
 	r.Get("/workers/stats", workers.Stats)
 
+	r.Get("/favicon.ico", serveFile("./public/favicon.ico"))
+
 	// Inject database
 	m.Map(dbmap)
 
@@ -91,4 +94,10 @@ func setupMartini(root string) *martini.Martini {
 func RunWeb(root string) {
 	m := setupMartini(root)
 	m.Run()
+}
+
+func serveFile(filename string) martini.Handler {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, filename)
+	}
 }
