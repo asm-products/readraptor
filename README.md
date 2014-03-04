@@ -33,8 +33,12 @@ Make sure Postgres is installed.
     # Run database migrations
     forego run goose up
 
+    # Retrieve dependencies
+    go get github.com/kr/godep
+    $GOPATH/bin/godep restore ./...
+
     # Start up the server (or use something like gin to auto-reload)
-    go get ./... && forego run
+    forego run
 
 
 ### Editing html/css
@@ -52,7 +56,7 @@ Make sure the test database exists:
 
 Run the tests:
 
-    go test ./...
+    $GOPATH/bin/godep go test ./...
 
 
 ## Get Started
