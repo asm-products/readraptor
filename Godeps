@@ -5,15 +5,19 @@
 		"./..."
 	],
 	"Deps": [
+    {
+      "ImportPath": "bitbucket.org/liamstask/goose/cmd/goose",
+      "Rev": "e868d71621dc286d07dc8323f8285bd542d628d5"
+    },
 		{
 			"ImportPath": "github.com/bitly/go-simplejson",
 			"Comment": "v0.4.3-12-g408ce0b",
 			"Rev": "408ce0b284fa7ad36e3856fcde50022e885474b2"
 		},
-		{
-			"ImportPath": "github.com/bradrydzewski/go.stripe",
-			"Rev": "a73d511558ee8008ccee8adbf7af645b1db5427d"
-		},
+    {
+      "ImportPath": "github.com/bradrydzewski/go.stripe",
+      "Rev": "a73d511558ee8008ccee8adbf7af645b1db5427d"
+    },
 		{
 			"ImportPath": "github.com/codegangsta/inject",
 			"Rev": "9aea7a2fa5b79ef7fc00f63a575e72df33b4e886"
