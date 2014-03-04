@@ -245,7 +245,7 @@ p:last-of-type {
   margin-left: auto;
   margin-right: auto;
 }
-/* line 38, ../../../../../../../../.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .container:after {
   content: "";
   display: table;
@@ -657,53 +657,57 @@ table.code-params td {
   padding: 6px 13px;
 }
 
-/* line 3, ../../assets/stylesheets/modules/_billing.scss */
+/* line 1, ../../assets/stylesheets/modules/_billing.scss */
+.billing-group {
+  margin-bottom: 25px;
+}
+/* line 5, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier {
   margin-bottom: 36px;
   text-align: center;
 }
 @media (min-width: 53.4375em) {
-  /* line 3, ../../assets/stylesheets/modules/_billing.scss */
+  /* line 5, ../../assets/stylesheets/modules/_billing.scss */
   .billing-group .billing-tier {
     width: 22.69939%;
     float: left;
     margin-right: 3.06748%;
     margin-bottom: 0;
   }
-  /* line 10, ../../assets/stylesheets/modules/_billing.scss */
+  /* line 12, ../../assets/stylesheets/modules/_billing.scss */
   .billing-group .billing-tier:nth-child(4n) {
     float: right;
     margin-right: 0;
   }
 }
-/* line 17, ../../assets/stylesheets/modules/_billing.scss */
+/* line 19, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier header {
   padding: 18px 0;
   background-color: #a3be8c;
   color: white;
   border-radius: 5px 5px 0 0;
 }
-/* line 25, ../../assets/stylesheets/modules/_billing.scss */
+/* line 27, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier header h4 {
   margin-bottom: 0;
   font-size: 28px;
 }
-/* line 29, ../../assets/stylesheets/modules/_billing.scss */
+/* line 31, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier header h4 .per-month {
   font-size: 61%;
   font-weight: 400;
 }
-/* line 35, ../../assets/stylesheets/modules/_billing.scss */
+/* line 37, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier header h5 {
   text-transform: uppercase;
   letter-spacing: 0.7pt;
   margin-bottom: 0;
 }
-/* line 42, ../../assets/stylesheets/modules/_billing.scss */
+/* line 44, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier p {
   font-size: 16px;
 }
-/* line 47, ../../assets/stylesheets/modules/_billing.scss */
+/* line 49, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-bottom {
   padding: 18px;
   margin-bottom: 0;
@@ -711,60 +715,60 @@ table.code-params td {
   border-top: none;
   border-radius: 0 0 5px 5px;
 }
-/* line 55, ../../assets/stylesheets/modules/_billing.scss */
+/* line 57, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-bottom p {
   margin-bottom: 0;
   line-height: 1.5;
 }
-/* line 62, ../../assets/stylesheets/modules/_billing.scss */
+/* line 64, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free header {
   background-color: #a3be8c;
 }
-/* line 65, ../../assets/stylesheets/modules/_billing.scss */
+/* line 67, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free header h5 {
   color: #617254;
 }
-/* line 70, ../../assets/stylesheets/modules/_billing.scss */
+/* line 72, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-free .billing-tier-bottom {
   border-color: #d1dec5;
 }
-/* line 76, ../../assets/stylesheets/modules/_billing.scss */
+/* line 78, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic header {
   background-color: #ddbd7d;
 }
-/* line 79, ../../assets/stylesheets/modules/_billing.scss */
+/* line 81, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic header h5 {
   color: #84714b;
 }
-/* line 84, ../../assets/stylesheets/modules/_billing.scss */
+/* line 86, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-triassic .billing-tier-bottom {
   border-color: #eedebe;
 }
-/* line 90, ../../assets/stylesheets/modules/_billing.scss */
+/* line 92, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic header {
   background-color: #dc937c;
 }
-/* line 93, ../../assets/stylesheets/modules/_billing.scss */
+/* line 95, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic header h5 {
   color: #84584a;
 }
-/* line 98, ../../assets/stylesheets/modules/_billing.scss */
+/* line 100, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-jurassic .billing-tier-bottom {
   border-color: #edc9bd;
 }
-/* line 104, ../../assets/stylesheets/modules/_billing.scss */
+/* line 106, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous header {
   background-color: #ab7967;
 }
-/* line 107, ../../assets/stylesheets/modules/_billing.scss */
+/* line 109, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous header h5 {
   color: #66483d;
 }
-/* line 112, ../../assets/stylesheets/modules/_billing.scss */
+/* line 114, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group .billing-tier-cretaceous .billing-tier-bottom {
   border-color: #d5bcb3;
 }
-/* line 117, ../../assets/stylesheets/modules/_billing.scss */
+/* line 119, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group center {
   width: 100%;
   float: left;
@@ -773,12 +777,12 @@ table.code-params td {
   text-align: center;
   margin-top: 36px;
 }
-/* line 123, ../../assets/stylesheets/modules/_billing.scss */
+/* line 125, ../../assets/stylesheets/modules/_billing.scss */
 .billing-group center p {
   margin-bottom: 0;
 }
 
-/* line 129, ../../assets/stylesheets/modules/_billing.scss */
+/* line 131, ../../assets/stylesheets/modules/_billing.scss */
 .embedded-form {
   padding-top: 18px;
 }
