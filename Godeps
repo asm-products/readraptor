@@ -20,8 +20,8 @@
 		},
 		{
 			"ImportPath": "github.com/codegangsta/martini",
-			"Comment": "v0.1-127-g7ad4037",
-			"Rev": "7ad4037049c4fcc195f8fbc1aff05025be7553bc"
+			"Comment": "v0.1-105-gcab2ee6",
+			"Rev": "cab2ee60a6dfb2ab2cd742fbc0ba35b135b1205d"
 		},
 		{
 			"ImportPath": "github.com/coopernurse/gorp",
@@ -34,7 +34,7 @@
 		},
 		{
 			"ImportPath": "github.com/garyburd/redigo/redis",
-			"Rev": "a470367e65a4a6986739b387f0e0aaa034d55466"
+			"Rev": "ed54f4ed86a815cf09870e4bd1a10a2ee39a4308"
 		},
 		{
 			"ImportPath": "github.com/gorilla/context",
@@ -54,7 +54,7 @@
 		},
 		{
 			"ImportPath": "github.com/lib/pq",
-			"Rev": "61a77393e5a111ed4838f0fe24c0bf81361fd517"
+			"Rev": "6577a6a8a8b66cc558ebe37f51ca07833bfa433b"
 		},
 		{
 			"ImportPath": "github.com/martini-contrib/render",
