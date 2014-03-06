@@ -3,10 +3,12 @@ package readraptor
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/codegangsta/martini"
 	"github.com/cupcake/gokiq"
+	"github.com/lib/pq"
 )
 
 type ArticleParams struct {
@@ -47,8 +49,10 @@ func PostArticles(client *gokiq.ClientConfig, req *http.Request, account *Accoun
 	}
 
 	cid, err := InsertArticle(dbmap, account.Id, p.Key)
-	if err != nil {
-		panic(err)
+	if _, ok := err.(*pq.Error); ok {
+		if strings.Index(err.Error(), `duplicate key value violates unique constraint "articles_key_key"`) == -1 {
+			panic(err)
+		}
 	}
 
 	rids, err := AddArticleReaders(dbmap, account.Id, cid, p.Recipients)
