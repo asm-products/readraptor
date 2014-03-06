@@ -57,15 +57,20 @@ func FindAccountBy(column string, value interface{}) (*Account, error) {
 	return &account, err
 }
 
-func (a *Account) SendNewAccountEmail(client *gokiq.ClientConfig) {
-	client.QueueJob(&NewAccountEmailJob{
+func (a *Account) SendNewAccountEmail(client *gokiq.ClientConfig) error {
+	err := client.QueueJob(&NewAccountEmailJob{
 		AccountId: a.Id,
 	})
+	if err != nil {
+		return err
+	}
 
 	grohl.Log(grohl.Data{
 		"queue":   "NewAccountEmailJob",
 		"account": a.Id,
 	})
+
+	return nil
 }
 
 // Session

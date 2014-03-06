@@ -55,7 +55,10 @@ func PostAccounts(client *gokiq.ClientConfig, rw http.ResponseWriter, req *http.
 		panic(err)
 	}
 
-	account.SendNewAccountEmail(client)
+	err = account.SendNewAccountEmail(client)
+	if err != nil {
+		panic(err)
+	}
 
 	template, err := template.ParseFiles("templates/welcome.txt.tmpl")
 	if err != nil {
