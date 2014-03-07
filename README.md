@@ -38,7 +38,7 @@ Make sure Postgres is installed.
     $GOPATH/bin/godep restore ./...
 
     # Start up the server (or use something like gin to auto-reload)
-    forego run
+    forego start
 
 
 ### Editing html/css
