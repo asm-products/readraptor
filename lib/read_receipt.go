@@ -7,10 +7,10 @@ import (
 )
 
 type ReadReceipt struct {
-	Id            int64     `db:"id"`
-	Created       time.Time `db:"created_at"`
+	Id        int64     `db:"id"`
+	Created   time.Time `db:"created_at"`
 	ArticleId int64     `db:"article_id"`
-	ReaderId      int64     `db:"reader_id"`
+	ReaderId  int64     `db:"reader_id"`
 }
 
 func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) error {
@@ -25,9 +25,6 @@ func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) e
 	}
 
 	_, err = InsertReadReceipt(dbmap, cid, vid)
-	if err != nil {
-		return err
-	}
 
 	return err
 }
@@ -63,6 +60,42 @@ func UnreadArticles(dbmap *gorp.DbMap, readerId int64) (keys []Article, err erro
                 except all
              select article_id from read_receipts where reader_id = $1) unread_articles
         inner join articles on articles.id = unread_articles.article_id;`, readerId)
+
+	return
+}
+
+func UnreadArticlesMarkRead(dbmap *gorp.DbMap, readerId int64) (keys []string, err error) {
+	t, err := dbmap.Begin()
+	if err != nil {
+		return
+	}
+
+	articles, err := UnreadArticles(dbmap, readerId)
+	if err != nil {
+		return
+	}
+
+	keys = make([]string, 0)
+	for _, a := range articles {
+		keys = append(keys, a.Key)
+	}
+
+	_, err = dbmap.Select(&keys, `
+        select articles.* from
+            (select article_id from expected_readers where reader_id = $1
+                except all
+             select article_id from read_receipts where reader_id = $1) unread_articles
+        inner join articles on articles.id = unread_articles.article_id;`, readerId)
+
+	// Mark articles as read
+	for _, ci := range articles {
+		_, err = InsertReadReceipt(dbmap, ci.Id, readerId)
+		if err != nil {
+			return
+		}
+	}
+
+	err = t.Commit()
 
 	return
 }

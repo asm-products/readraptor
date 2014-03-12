@@ -21,19 +21,11 @@ type UserCallback struct {
 }
 
 func (j *UserCallbackJob) Perform() error {
-	articles, err := UnreadArticles(dbmap, j.ReaderId)
-	if err != nil {
-		panic(err)
-	}
+	keys, err := UnreadArticlesMarkRead(dbmap, j.ReaderId)
 
 	distinctId, err := dbmap.SelectStr("select distinct_id from readers where id = $1;", j.ReaderId)
 	if err != nil {
-		panic(err)
-	}
-
-	keys := make([]string, 0)
-	for _, a := range articles {
-		keys = append(keys, a.Key)
+		return err
 	}
 
 	callback := UserCallback{
@@ -51,14 +43,6 @@ func (j *UserCallbackJob) Perform() error {
 	resp, err := http.Post(j.Url, "application/json", &buf)
 	if err != nil {
 		panic(err)
-	}
-
-	// Mark articles as read
-	for _, ci := range articles {
-		_, err := InsertReadReceipt(dbmap, ci.Id, j.ReaderId)
-		if err != nil {
-			panic(err)
-		}
 	}
 
 	grohl.Log(grohl.Data{
