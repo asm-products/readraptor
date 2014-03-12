@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/cupcake/gokiq"
+	"github.com/garyburd/redigo/redis"
 	"github.com/technoweenie/grohl"
 )
 
@@ -18,6 +19,11 @@ type UserCallbackJob struct {
 type UserCallback struct {
 	User    string   `json:"user"`
 	Pending []string `json:"pending"`
+}
+
+type UserCallbackJobEntry struct {
+	Class string          `json:"class"`
+	Args  UserCallbackJob `json:"args"`
 }
 
 func (j *UserCallbackJob) Perform() error {
@@ -55,16 +61,43 @@ func (j *UserCallbackJob) Perform() error {
 	return nil
 }
 
-func ScheduleCallbacks(client *gokiq.ClientConfig, readerIds []int64, at time.Time, url string) {
+func ScheduleCallbacks(client *gokiq.ClientConfig, readerIds []int64, at time.Time, url string) error {
+	conn := client.RedisPool.Get()
+	defer conn.Close()
+
 	config := gokiq.JobConfig{
 		At: at,
 	}
 
+	// Don't queue up job within 6 seconds of an existing job
+	minScore := at.Add(-3 * time.Second).Unix()
+	maxScore := at.Add(3 * time.Second).Unix()
+
+	jobs, err := redis.Strings(conn.Do("ZRANGEBYSCORE", client.RedisNamespace+":schedule", minScore, maxScore))
+	userJobs := make(map[int64]int64)
+	for _, job := range jobs {
+		var entry UserCallbackJobEntry
+
+		if err = json.Unmarshal([]byte(job), &entry); err != nil {
+			return err
+		}
+
+		userJobs[entry.Args.ReaderId] += 1
+	}
+
 	for _, rid := range readerIds {
-		client.QueueJobConfig(&UserCallbackJob{
+		if userJobs[rid] > 0 {
+			continue
+		}
+
+		err = client.QueueJobConfig(&UserCallbackJob{
 			Url:      url,
 			ReaderId: rid,
 		}, config)
+
+		if err != nil {
+			return err
+		}
 
 		grohl.Log(grohl.Data{
 			"schedule_callback": at,
@@ -72,4 +105,11 @@ func ScheduleCallbacks(client *gokiq.ClientConfig, readerIds []int64, at time.Ti
 			"reader":            rid,
 		})
 	}
+
+	return nil
+}
+
+// Cribbed from https://github.com/cupcake/gokiq/blob/master/worker.go
+func timeScore(t time.Time) float64 {
+	return float64(t.UnixNano()) / float64(time.Second)
 }

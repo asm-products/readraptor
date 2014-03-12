@@ -3,6 +3,8 @@ package readraptor
 import (
 	"database/sql"
 	"net/url"
+	"path"
+	"strconv"
 
 	"github.com/coopernurse/gorp"
 	"github.com/garyburd/redigo/redis"
@@ -48,6 +50,13 @@ func RedisConnect(connection string) func() (redis.Conn, error) {
 				}
 			}
 		}
+
+		db, _ := strconv.Atoi(path.Base(url.Path))
+		if _, err := c.Do("SELECT", db); err != nil {
+			c.Close()
+			return nil, err
+		}
+
 		return c, err
 	}
 }

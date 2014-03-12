@@ -69,7 +69,7 @@ func setupMartini(root string) *martini.Martini {
 	// go-workers stats
 	workers.Configure(map[string]string{
 		"process": "web",
-		"server":  "localhost:6379",
+		"server":  os.Getenv("REDIS_URL"),
 	})
 	r.Get("/workers/stats", workers.Stats)
 
