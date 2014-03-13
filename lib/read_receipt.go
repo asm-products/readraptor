@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/coopernurse/gorp"
+	"github.com/technoweenie/grohl"
 )
 
 type ReadReceipt struct {
@@ -25,8 +26,18 @@ func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) e
 	}
 
 	_, err = InsertReadReceipt(dbmap, cid, vid)
+	if err != nil {
+		return err
+	}
 
-	return err
+	grohl.Log(grohl.Data{
+		"account": account.Id,
+		"reader":  reader,
+		"article": key,
+		"track":   "read",
+	})
+
+	return nil
 }
 
 func InsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, error) {
