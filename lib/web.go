@@ -66,7 +66,7 @@ func setupMartini(root string) *martini.Martini {
 	r.Get("/articles/:article_id", AuthAccount, GetArticles)
 	r.Post("/articles", AuthAccount, PostArticles)
 
-	r.Get("/readers/:reader_id", AuthAccount, GetReader)
+	r.Get("/readers/:distinct_id", AuthAccount, GetReader)
 
 	// go-workers stats
 	workers.Configure(map[string]string{
