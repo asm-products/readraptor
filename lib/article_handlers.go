@@ -9,6 +9,7 @@ import (
 	"github.com/codegangsta/martini"
 	"github.com/cupcake/gokiq"
 	"github.com/lib/pq"
+	"github.com/technoweenie/grohl"
 )
 
 type ArticleParams struct {
@@ -54,6 +55,12 @@ func PostArticles(client *gokiq.ClientConfig, req *http.Request, account *Accoun
 			panic(err)
 		}
 	}
+
+	grohl.Log(grohl.Data{
+		"account":  account.Id,
+		"register": p.Key,
+		"readers":  p.Recipients,
+	})
 
 	rids, err := AddArticleReaders(dbmap, account.Id, cid, p.Recipients)
 	for _, callback := range p.Callbacks {
