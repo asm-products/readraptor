@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/asm-products/readraptor",
-	"GoVersion": "go1.2",
+	"GoVersion": "go1.2.2",
 	"Packages": [
 		"./..."
 	],
@@ -68,6 +68,10 @@
 		{
 			"ImportPath": "github.com/lib/pq",
 			"Rev": "6577a6a8a8b66cc558ebe37f51ca07833bfa433b"
+		},
+		{
+			"ImportPath": "github.com/martini-contrib/cors",
+			"Rev": "a88ecdc4d47e8263f8b4383068edd82aa44800c3"
 		},
 		{
 			"ImportPath": "github.com/martini-contrib/render",
