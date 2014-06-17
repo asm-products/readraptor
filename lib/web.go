@@ -8,6 +8,7 @@ import (
 	"github.com/cupcake/gokiq"
 	"github.com/garyburd/redigo/redis"
 	workers "github.com/jrallison/go-workers"
+	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/secure"
 	"github.com/martini-contrib/sessionauth"
@@ -45,6 +46,13 @@ func setupMartini(root string) *martini.Martini {
 	}))
 	m.Use(render.Renderer(render.Options{
 		Layout: "layout.html",
+	}))
+	m.Use(cors.Allow(&cors.Options{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
 	}))
 
 	// routes
