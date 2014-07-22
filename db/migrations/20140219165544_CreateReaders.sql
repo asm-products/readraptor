@@ -10,4 +10,3 @@ CREATE TABLE readers (
 
 -- +goose Down
 DROP TABLE readers;
-

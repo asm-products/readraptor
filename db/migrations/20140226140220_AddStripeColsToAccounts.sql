@@ -5,4 +5,3 @@ ALTER TABLE accounts
 -- +goose Down
 ALTER TABLE accounts
   DROP COLUMN customer_id;
-

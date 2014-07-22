@@ -10,4 +10,3 @@ CREATE TABLE articles (
 
 -- +goose Down
 DROP TABLE articles;
-

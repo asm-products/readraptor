@@ -9,4 +9,3 @@ ALTER TABLE accounts
   DROP COLUMN confirmation_token,
   DROP COLUMN confirmation_sent_at,
   DROP COLUMN confirmed_at;
-
