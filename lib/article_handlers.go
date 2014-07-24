@@ -2,7 +2,9 @@ package readraptor
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -34,6 +36,41 @@ func GetArticles(params martini.Params) (string, int) {
 	}
 
 	json, err := json.Marshal(ci)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(json), http.StatusOK
+}
+
+// TODO: (whatupdave) this is currently unsecured to allow reading from javascript
+// We should implement a secure key mechanism
+func GetReaderArticles(req *http.Request, params martini.Params) (string, int) {
+	var keys = req.URL.Query()["key"]
+
+	readerId, err := dbmap.SelectInt(`
+        select id
+        from readers
+        where distinct_id = $1;`, params["distinct_id"])
+
+	readerQuery := fmt.Sprintf(`
+        select articles.*,
+               read_receipts.created_at as read_at
+        from articles
+          left join read_receipts on read_receipts.article_id = articles.id and read_receipts.reader_id = %d
+        where
+          key in $1`, readerId)
+
+	query, args := GenerateInQuery(readerQuery, keys)
+
+	var articles []Article
+	_, err = dbmap.Select(&articles, query, args...)
+
+	if err != nil {
+		panic(err)
+	}
+
+	json, err := json.Marshal(articles)
 	if err != nil {
 		panic(err)
 	}
@@ -84,4 +121,18 @@ func PostArticles(client *gokiq.ClientConfig, req *http.Request, account *Accoun
 		panic(err)
 	}
 	return string(json), http.StatusCreated
+}
+
+func GenerateInQuery(query string, args []string) (string, []interface{}) {
+	clauseArgs := make([]string, len(args))
+	iArgs := make([]interface{}, len(args))
+
+	for i, v := range args {
+		iArgs[i] = interface{}(v)
+		clauseArgs[i] = "$" + strconv.Itoa(i+1)
+	}
+
+	clause := "(" + strings.Join(clauseArgs, ",") + ")"
+
+	return strings.Replace(query, "$1", clause, 1), iArgs
 }

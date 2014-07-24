@@ -7,10 +7,11 @@ import (
 )
 
 type Article struct {
-	Id        int64     `db:"id"         json:"id"`
-	AccountId int64     `db:"account_id" json:"-"`
-	Created   time.Time `db:"created_at" json:"created"`
-	Key       string    `db:"key"        json:"key"`
+	Id        int64      `db:"id"         json:"id"`
+	AccountId int64      `db:"account_id" json:"-"`
+	Created   time.Time  `db:"created_at" json:"created"`
+	Key       string     `db:"key"        json:"key"`
+	ReadAt    *time.Time `db:"read_at"    json:"readAt,omitempty"`
 
 	Delivered []string `json:"delivered,omitempty"`
 	Pending   []string `json:"pending,omitempty"`
