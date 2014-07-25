@@ -48,26 +48,27 @@ func GetArticles(params martini.Params) (string, int) {
 func GetReaderArticles(req *http.Request, params martini.Params) (string, int) {
 	var keys = req.URL.Query()["key"]
 
-	readerId, err := dbmap.SelectInt(`
-        select id
-        from readers
-        where distinct_id = $1;`, params["distinct_id"])
+	articles := make([]Article, 0)
 
-	readerQuery := fmt.Sprintf(`
-        select articles.*,
-               read_receipts.created_at as read_at
-        from articles
-          left join read_receipts on read_receipts.article_id = articles.id and read_receipts.reader_id = %d
-        where
-          key in $1`, readerId)
+	if len(keys) > 0 {
+		readerId, err := dbmap.SelectInt(`
+				select id
+				from readers
+				where distinct_id = $1;`, params["distinct_id"])
 
-	query, args := GenerateInQuery(readerQuery, keys)
+		readerQuery := fmt.Sprintf(`
+				select articles.*,
+							read_receipts.created_at as read_at
+				from articles
+					left join read_receipts on read_receipts.article_id = articles.id and read_receipts.reader_id = %d
+				where
+					key in $1`, readerId)
 
-	var articles []Article
-	_, err = dbmap.Select(&articles, query, args...)
-
-	if err != nil {
-		panic(err)
+		query, args := GenerateInQuery(readerQuery, keys)
+		_, err = dbmap.Select(&articles, query, args...)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	json, err := json.Marshal(articles)
