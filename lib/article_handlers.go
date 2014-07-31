@@ -58,7 +58,8 @@ func GetReaderArticles(req *http.Request, params martini.Params) (string, int) {
 
 		readerQuery := fmt.Sprintf(`
 				select articles.*,
-							read_receipts.created_at as read_at
+							read_receipts.created_at as first_read_at,
+							read_receipts.last_read_at
 				from articles
 					left join read_receipts on read_receipts.article_id = articles.id and read_receipts.reader_id = %d
 				where

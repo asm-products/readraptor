@@ -25,7 +25,7 @@ func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) e
 		return err
 	}
 
-	_, err = InsertReadReceipt(dbmap, cid, vid)
+	_, err = UpsertReadReceipt(dbmap, cid, vid)
 	if err != nil {
 		return err
 	}
@@ -40,13 +40,26 @@ func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) e
 	return nil
 }
 
-func InsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, error) {
+func UpsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, error) {
 	id, err := dbmap.SelectNullInt(`
+        update read_receipts set last_read_at = $1 where article_id=$2 and reader_id=$3 returning id;
+    `, time.Now(),
+		articleId,
+		readerId,
+	)
+	if err != nil {
+		return -1, err
+	}
+	if id.Valid {
+		return id.Int64, nil
+	}
+
+	id, err = dbmap.SelectNullInt(`
         with s as (
             select id from read_receipts where article_id = $1 and reader_id = $2
         ), i as (
-            insert into read_receipts ("article_id", "reader_id", "created_at")
-            select $1, $2, $3
+            insert into read_receipts ("article_id", "reader_id", "created_at", "last_read_at")
+            select $1, $2, $3, $3
             where not exists (select 1 from s)
             returning id
         )
@@ -100,7 +113,7 @@ func UnreadArticlesMarkRead(dbmap *gorp.DbMap, readerId int64) (keys []string, e
 
 	// Mark articles as read
 	for _, ci := range articles {
-		_, err = InsertReadReceipt(dbmap, ci.Id, readerId)
+		_, err = UpsertReadReceipt(dbmap, ci.Id, readerId)
 		if err != nil {
 			return
 		}
