@@ -43,7 +43,7 @@ func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) e
 func UpsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, error) {
 	id, err := dbmap.SelectNullInt(`
         update read_receipts set last_read_at = $1 where article_id=$2 and reader_id=$3 returning id;
-    `, time.Now(),
+    `, time.Now().UTC(),
 		articleId,
 		readerId,
 	)
@@ -66,7 +66,7 @@ func UpsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, err
         select id from i union all select id from s;
     `, articleId,
 		readerId,
-		time.Now(),
+		time.Now().UTC(),
 	)
 	if err != nil {
 		return -1, err

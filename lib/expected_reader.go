@@ -7,7 +7,7 @@ import (
 )
 
 type ExpectedReader struct {
-    Reader
+	Reader
 }
 
 func InsertExpectedReader(dbmap *gorp.DbMap, articleId, readerId int64) (int64, error) {
@@ -23,7 +23,7 @@ func InsertExpectedReader(dbmap *gorp.DbMap, articleId, readerId int64) (int64, 
         select id from i union all select id from s;
     `, articleId,
 		readerId,
-		time.Now(),
+		time.Now().UTC(),
 	)
 	if err != nil {
 		return -1, err

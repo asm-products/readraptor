@@ -48,7 +48,7 @@ func GetArticles(params martini.Params) (string, int) {
 func GetReaderArticles(req *http.Request, params martini.Params) (string, int) {
 	var keys = req.URL.Query()["key"]
 
-	articles := make([]Article, 0)
+	articles := make([]ArticleResponse, 0)
 
 	if len(keys) > 0 {
 		readerId, err := dbmap.SelectInt(`
@@ -57,13 +57,13 @@ func GetReaderArticles(req *http.Request, params martini.Params) (string, int) {
 				where distinct_id = $1;`, params["distinct_id"])
 
 		readerQuery := fmt.Sprintf(`
-				select articles.*,
-							read_receipts.created_at as first_read_at,
-							read_receipts.last_read_at
+				select articles.key,
+                       articles.created_at as created_at,
+					   read_receipts.created_at as first_read_at,
+					   read_receipts.last_read_at
 				from articles
-					left join read_receipts on read_receipts.article_id = articles.id and read_receipts.reader_id = %d
-				where
-					key in $1`, readerId)
+					 left join read_receipts on read_receipts.article_id = articles.id and read_receipts.reader_id = %d
+				where key in $1`, readerId)
 
 		query, args := GenerateInQuery(readerQuery, keys)
 		_, err = dbmap.Select(&articles, query, args...)

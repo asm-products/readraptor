@@ -19,11 +19,11 @@ func Test_ScheduleCallbacks(t *testing.T) {
 	conn.Do("del", "test:schedule")
 
 	rids := []int64{1, 2}
-	err := ScheduleCallbacks(gokiq.Client, rids, time.Now(), "http://example.com/webhook")
+	err := ScheduleCallbacks(gokiq.Client, rids, time.Now().UTC(), "http://example.com/webhook")
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = ScheduleCallbacks(gokiq.Client, rids, time.Now(), "http://example.com/webhook")
+	err = ScheduleCallbacks(gokiq.Client, rids, time.Now().UTC(), "http://example.com/webhook")
 	if err != nil {
 		t.Fatal(err)
 	}

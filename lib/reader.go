@@ -26,7 +26,7 @@ func InsertReader(dbmap *gorp.DbMap, accountId int64, distinctId string) (int64,
         select id from i union all select id from s;
     `, accountId,
 		distinctId,
-		time.Now(),
+		time.Now().UTC(),
 	)
 	if err != nil {
 		return -1, err

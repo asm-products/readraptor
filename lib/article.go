@@ -12,8 +12,8 @@ type Article struct {
 	Created   time.Time `db:"created_at"       json:"created"`
 	Key       string    `db:"key"              json:"key"`
 
-	FirstReadAt *time.Time `db:"first_read_at" json:"first_read_at,omitempty"`
-	LastReadAt  *time.Time `db:"last_read_at"  json:"last_read_at,omitempty"`
+	FirstReadAt Timestamp `db:"first_read_at" json:"first_read_at,omitempty"`
+	LastReadAt  Timestamp `db:"last_read_at"  json:"last_read_at,omitempty"`
 
 	Delivered []string `json:"delivered,omitempty"`
 	Pending   []string `json:"pending,omitempty"`
@@ -86,7 +86,7 @@ func InsertArticle(dbmap *gorp.DbMap, accountId int64, key string) (int64, error
         select id from i union all select id from s;
     `, accountId,
 		key,
-		time.Now(),
+		time.Now().UTC(),
 	)
 	if err != nil {
 		return -1, err

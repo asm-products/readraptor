@@ -32,7 +32,7 @@ type Account struct {
 
 func NewAccount(email string) *Account {
 	return &Account{
-		Created:    time.Now(),
+		Created:    time.Now().UTC(),
 		Email:      email,
 		PublicKey:  genKey("public" + email),
 		PrivateKey: genKey("private" + email),

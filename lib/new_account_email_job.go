@@ -31,7 +31,7 @@ func (j *NewAccountEmailJob) Perform() error {
 	_, err = dbmap.Exec(
 		"update accounts set confirmation_token = $1, confirmation_sent_at = $2 where id = $3",
 		token,
-		time.Now(),
+		time.Now().UTC(),
 		j.AccountId,
 	)
 	if err != nil {
