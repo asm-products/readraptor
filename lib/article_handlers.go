@@ -26,7 +26,7 @@ type CallbackParams struct {
 	Url        string   `json:"url"`
 }
 
-func GetArticles(params martini.Params) (string, int) {
+func GetArticles(params martini.Params, w http.ResponseWriter) (string, int) {
 	var ci Article
 	err := dbmap.SelectOne(&ci, "select * from articles where key = $1", params["article_id"])
 	ci.AddReadReceipts(dbmap)
@@ -40,12 +40,13 @@ func GetArticles(params martini.Params) (string, int) {
 		panic(err)
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	return string(json), http.StatusOK
 }
 
 // TODO: (whatupdave) this is currently unsecured to allow reading from javascript
 // We should implement a secure key mechanism
-func GetReaderArticles(req *http.Request, params martini.Params) (string, int) {
+func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.Params) (string, int) {
 	var keys = req.URL.Query()["key"]
 
 	articles := make([]ArticleResponse, 0)
@@ -77,10 +78,11 @@ func GetReaderArticles(req *http.Request, params martini.Params) (string, int) {
 		panic(err)
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	return string(json), http.StatusOK
 }
 
-func PostArticles(client *gokiq.ClientConfig, req *http.Request, account *Account) (string, int) {
+func PostArticles(client *gokiq.ClientConfig, req *http.Request, w http.ResponseWriter, account *Account) (string, int) {
 	decoder := json.NewDecoder(req.Body)
 	var p ArticleParams
 	err := decoder.Decode(&p)
@@ -122,6 +124,8 @@ func PostArticles(client *gokiq.ClientConfig, req *http.Request, account *Accoun
 	if err != nil {
 		panic(err)
 	}
+
+	w.Header().Set("Content-Type", "application/json")
 	return string(json), http.StatusCreated
 }
 
