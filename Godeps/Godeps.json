@@ -6,6 +6,14 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "bitbucket.org/liamstask/goose/cmd/goose",
+			"Rev": "a72c5a598e6d2460e918893e48e24e4d5f27c981"
+		},
+		{
+			"ImportPath": "bitbucket.org/liamstask/goose/lib/goose",
+			"Rev": "a72c5a598e6d2460e918893e48e24e4d5f27c981"
+		},
+		{
 			"ImportPath": "github.com/bitly/go-simplejson",
 			"Comment": "v0.4.3-28-g3378bdc",
 			"Rev": "3378bdcb5cebedcbf8b5750edee28010f128fe24"
@@ -63,6 +71,11 @@
 			"Rev": "2aae4d367bfac8d2c9267d3212300df400599717"
 		},
 		{
+			"ImportPath": "github.com/kylelemons/go-gypsy/yaml",
+			"Comment": "go.weekly.2011-11-02-17-g0ddb27c",
+			"Rev": "0ddb27ce74ade2ca988ec85587d636e10312dfc6"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Rev": "7175accbed18058468c07811f76440d6e8d7cf19"
 		},
@@ -87,6 +100,10 @@
 			"Rev": "fa13114fbcf036dff8185d728651d85fcef772db"
 		},
 		{
+			"ImportPath": "github.com/mattn/go-sqlite3",
+			"Rev": "e5819757da0824da7e9140b1a862cafecf88159c"
+		},
+		{
 			"ImportPath": "github.com/oxtoacart/bpool",
 			"Rev": "0f78ff9152c03745d1a47c9023af1b424e202c07"
 		},
@@ -97,6 +114,21 @@
 		{
 			"ImportPath": "github.com/technoweenie/grohl",
 			"Rev": "f4613feb389efa6e147b705e2671ad4e42bb7ac3"
+		},
+		{
+			"ImportPath": "github.com/ziutek/mymysql/godrv",
+			"Comment": "v1.5.3-21-g261574e",
+			"Rev": "261574e2f4a9d9d2d81a8f996105c8c835bfe19b"
+		},
+		{
+			"ImportPath": "github.com/ziutek/mymysql/mysql",
+			"Comment": "v1.5.3-21-g261574e",
+			"Rev": "261574e2f4a9d9d2d81a8f996105c8c835bfe19b"
+		},
+		{
+			"ImportPath": "github.com/ziutek/mymysql/native",
+			"Comment": "v1.5.3-21-g261574e",
+			"Rev": "261574e2f4a9d9d2d81a8f996105c8c835bfe19b"
 		}
 	]
 }
