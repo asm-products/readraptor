@@ -10,12 +10,12 @@ import (
 func ManagerSpec(c gospec.Context) {
 	processed := make(chan *Args)
 
-	testJob := (func(args *Args) {
-		processed <- args
+	testJob := (func(message *Msg) {
+		processed <- message.Args()
 	})
 
-	was := Config.namespace
-	Config.namespace = "prod:"
+	was := Config.Namespace
+	Config.Namespace = "prod:"
 
 	c.Specify("newManager", func() {
 		c.Specify("sets queue with namespace", func() {
@@ -75,5 +75,5 @@ func ManagerSpec(c gospec.Context) {
 		})
 	})
 
-	Config.namespace = was
+	Config.Namespace = was
 }

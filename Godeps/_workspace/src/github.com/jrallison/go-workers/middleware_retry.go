@@ -13,7 +13,7 @@ const (
 
 type MiddlewareRetry struct{}
 
-func (r *MiddlewareRetry) Call(queue string, message *Msg, next func()) {
+func (r *MiddlewareRetry) Call(queue string, message *Msg, next func() bool) (acknowledge bool) {
 	defer func() {
 		if e := recover(); e != nil {
 			conn := Config.Pool.Get()
@@ -24,19 +24,28 @@ func (r *MiddlewareRetry) Call(queue string, message *Msg, next func()) {
 				message.Set("error_message", e)
 				retryCount := incrementRetry(message)
 
-				conn.Do(
+				_, err := conn.Do(
 					"zadd",
-					Config.namespace+RETRY_KEY,
+					Config.Namespace+RETRY_KEY,
 					time.Now().Unix()+int64(secondsToDelay(retryCount)),
 					message.ToJson(),
 				)
+
+				// If we can't add the job to the retry queue,
+				// then we shouldn't acknowledge the job, otherwise
+				// it'll disappear into the void.
+				if err != nil {
+					acknowledge = false
+				}
 			}
 
 			panic(e)
 		}
 	}()
 
-	next()
+	acknowledge = next()
+
+	return
 }
 
 func retry(message *Msg) bool {

@@ -17,13 +17,22 @@ package redis
 import (
 	"bufio"
 	"net"
+	"time"
 )
 
-type dummyClose struct{ net.Conn }
+func SetNowFunc(f func() time.Time) {
+	nowFunc = f
+}
 
-func (dummyClose) Close() error { return nil }
+type nopCloser struct{ net.Conn }
+
+func (nopCloser) Close() error { return nil }
 
 // NewConnBufio is a hook for tests.
 func NewConnBufio(rw bufio.ReadWriter) Conn {
-	return &conn{br: rw.Reader, bw: rw.Writer, conn: dummyClose{}}
+	return &conn{br: rw.Reader, bw: rw.Writer, conn: nopCloser{}}
 }
+
+var (
+	ErrNegativeInt = errNegativeInt
+)

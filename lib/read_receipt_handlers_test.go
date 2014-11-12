@@ -9,8 +9,8 @@ import (
 
 	"github.com/asm-products/readraptor/fake"
 
-	"github.com/codegangsta/martini"
 	"github.com/coopernurse/gorp"
+	"github.com/go-martini/martini"
 	_ "github.com/lib/pq"
 )
 

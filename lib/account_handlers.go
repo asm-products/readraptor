@@ -11,8 +11,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/codegangsta/martini"
 	"github.com/cupcake/gokiq"
+	"github.com/go-martini/martini"
 	"github.com/lib/pq"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"

@@ -2,29 +2,50 @@ package workers
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/garyburd/redigo/redis"
 )
 
 type Fetcher interface {
+	Queue() string
 	Fetch()
 	Acknowledge(*Msg)
+	Ready() chan bool
 	Messages() chan *Msg
 	Close()
 	Closed() bool
 }
 
 type fetch struct {
-	manager  *manager
+	queue    string
+	ready    chan bool
 	messages chan *Msg
 	stop     chan bool
 	exit     chan bool
 	closed   bool
 }
 
+func NewFetch(queue string, messages chan *Msg, ready chan bool) Fetcher {
+	return &fetch{
+		queue,
+		ready,
+		messages,
+		make(chan bool),
+		make(chan bool),
+		false,
+	}
+}
+
+func (f *fetch) Queue() string {
+	return f.queue
+}
+
 func (f *fetch) processOldMessages() {
 	messages := f.inprogressMessages()
 
 	for _, message := range messages {
+		<-f.Ready()
 		f.sendMessage(message)
 	}
 }
@@ -35,24 +56,29 @@ func (f *fetch) Fetch() {
 	f.processOldMessages()
 
 	go (func(c chan string) {
-		conn := Config.Pool.Get()
-		defer conn.Close()
-
 		for {
 			if f.Closed() {
 				break
 			}
 
-			message, err := redis.String(conn.Do("brpoplpush", f.manager.queue, f.inprogressQueue(), 1))
+			<-f.Ready()
 
-			if err != nil {
-				// If redis returns null, the queue is empty. Just ignore the error.
-				if err.Error() != "redigo: nil returned" {
-					Logger.Println("ERR: ", err)
+			(func() {
+				conn := Config.Pool.Get()
+				defer conn.Close()
+
+				message, err := redis.String(conn.Do("brpoplpush", f.queue, f.inprogressQueue(), 1))
+
+				if err != nil {
+					// If redis returns null, the queue is empty. Just ignore the error.
+					if err.Error() != "redigo: nil returned" {
+						Logger.Println("ERR: ", err)
+						time.Sleep(1 * time.Second)
+					}
+				} else {
+					c <- message
 				}
-			} else {
-				c <- message
-			}
+			})()
 		}
 	})(messages)
 
@@ -89,6 +115,10 @@ func (f *fetch) Messages() chan *Msg {
 	return f.messages
 }
 
+func (f *fetch) Ready() chan bool {
+	return f.ready
+}
+
 func (f *fetch) Close() {
 	f.stop <- true
 	<-f.exit
@@ -111,15 +141,5 @@ func (f *fetch) inprogressMessages() []string {
 }
 
 func (f *fetch) inprogressQueue() string {
-	return fmt.Sprint(f.manager.queue, ":", Config.processId, ":inprogress")
-}
-
-func newFetch(m *manager) Fetcher {
-	return &fetch{
-		m,
-		make(chan *Msg),
-		make(chan bool),
-		make(chan bool),
-		false,
-	}
+	return fmt.Sprint(f.queue, ":", Config.processId, ":inprogress")
 }

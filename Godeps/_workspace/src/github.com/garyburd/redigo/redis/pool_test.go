@@ -12,53 +12,61 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package redis
+package redis_test
 
 import (
 	"io"
+	"net/textproto"
+	"reflect"
+	"sync"
 	"testing"
 	"time"
+
+	"github.com/garyburd/redigo/internal/redistest"
+	"github.com/garyburd/redigo/redis"
 )
 
-type fakeConn struct {
-	open *int
-	err  error
+type poolTestConn struct {
+	d   *poolDialer
+	err error
+	redis.Conn
 }
 
-func (c *fakeConn) Close() error { *c.open -= 1; return nil }
-func (c *fakeConn) Err() error   { return c.err }
+func (c *poolTestConn) Close() error { c.d.open -= 1; return nil }
+func (c *poolTestConn) Err() error   { return c.err }
 
-func (c *fakeConn) Do(commandName string, args ...interface{}) (reply interface{}, err error) {
+func (c *poolTestConn) Do(commandName string, args ...interface{}) (reply interface{}, err error) {
 	if commandName == "ERR" {
 		c.err = args[0].(error)
 	}
-	return nil, nil
+	if commandName != "" {
+		c.d.commands = append(c.d.commands, commandName)
+	}
+	return c.Conn.Do(commandName, args...)
 }
 
-func (c *fakeConn) Send(commandName string, args ...interface{}) error {
-	return nil
+func (c *poolTestConn) Send(commandName string, args ...interface{}) error {
+	c.d.commands = append(c.d.commands, commandName)
+	return c.Conn.Send(commandName, args...)
 }
 
-func (c *fakeConn) Flush() error {
-	return nil
-}
-
-func (c *fakeConn) Receive() (reply interface{}, err error) {
-	return nil, nil
-}
-
-type dialer struct {
+type poolDialer struct {
 	t            *testing.T
 	dialed, open int
+	commands     []string
 }
 
-func (d *dialer) dial() (Conn, error) {
+func (d *poolDialer) dial() (redis.Conn, error) {
 	d.open += 1
 	d.dialed += 1
-	return &fakeConn{open: &d.open}, nil
+	c, err := redistest.Dial()
+	if err != nil {
+		return nil, err
+	}
+	return &poolTestConn{d: d, Conn: c}, nil
 }
 
-func (d *dialer) check(message string, p *Pool, dialed, open int) {
+func (d *poolDialer) check(message string, p *redis.Pool, dialed, open int) {
 	if d.dialed != dialed {
 		d.t.Errorf("%s: dialed=%d, want %d", message, d.dialed, dialed)
 	}
@@ -71,8 +79,8 @@ func (d *dialer) check(message string, p *Pool, dialed, open int) {
 }
 
 func TestPoolReuse(t *testing.T) {
-	d := dialer{t: t}
-	p := &Pool{
+	d := poolDialer{t: t}
+	p := &redis.Pool{
 		MaxIdle: 2,
 		Dial:    d.dial,
 	}
@@ -92,8 +100,8 @@ func TestPoolReuse(t *testing.T) {
 }
 
 func TestPoolMaxIdle(t *testing.T) {
-	d := dialer{t: t}
-	p := &Pool{
+	d := poolDialer{t: t}
+	p := &redis.Pool{
 		MaxIdle: 2,
 		Dial:    d.dial,
 	}
@@ -114,8 +122,8 @@ func TestPoolMaxIdle(t *testing.T) {
 }
 
 func TestPoolError(t *testing.T) {
-	d := dialer{t: t}
-	p := &Pool{
+	d := poolDialer{t: t}
+	p := &redis.Pool{
 		MaxIdle: 2,
 		Dial:    d.dial,
 	}
@@ -135,8 +143,8 @@ func TestPoolError(t *testing.T) {
 }
 
 func TestPoolClose(t *testing.T) {
-	d := dialer{t: t}
-	p := &Pool{
+	d := poolDialer{t: t}
+	p := &redis.Pool{
 		MaxIdle: 2,
 		Dial:    d.dial,
 	}
@@ -154,6 +162,7 @@ func TestPoolClose(t *testing.T) {
 	}
 
 	c2.Close()
+	c2.Close()
 
 	p.Close()
 
@@ -165,7 +174,7 @@ func TestPoolClose(t *testing.T) {
 
 	c3.Close()
 
-	d.check("after channel close", p, 3, 0)
+	d.check("after conn close", p, 3, 0)
 
 	c1 = p.Get()
 	if _, err := c1.Do("PING"); err == nil {
@@ -174,16 +183,16 @@ func TestPoolClose(t *testing.T) {
 }
 
 func TestPoolTimeout(t *testing.T) {
-	d := dialer{t: t}
-	p := &Pool{
+	d := poolDialer{t: t}
+	p := &redis.Pool{
 		MaxIdle:     2,
 		IdleTimeout: 300 * time.Second,
 		Dial:        d.dial,
 	}
 
 	now := time.Now()
-	nowFunc = func() time.Time { return now }
-	defer func() { nowFunc = time.Now }()
+	redis.SetNowFunc(func() time.Time { return now })
+	defer redis.SetNowFunc(time.Now)
 
 	c := p.Get()
 	c.Do("PING")
@@ -198,14 +207,40 @@ func TestPoolTimeout(t *testing.T) {
 	c.Close()
 
 	d.check("2", p, 2, 1)
+
+	p.Close()
 }
 
-func TestBorrowCheck(t *testing.T) {
-	d := dialer{t: t}
-	p := &Pool{
+func TestPoolConcurrenSendReceive(t *testing.T) {
+	p := &redis.Pool{
+		Dial: redistest.Dial,
+	}
+	c := p.Get()
+	done := make(chan error, 1)
+	go func() {
+		_, err := c.Receive()
+		done <- err
+	}()
+	c.Send("PING")
+	c.Flush()
+	err := <-done
+	if err != nil {
+		t.Fatalf("Receive() returned error %v", err)
+	}
+	_, err = c.Do("")
+	if err != nil {
+		t.Fatalf("Do() returned error %v", err)
+	}
+	c.Close()
+	p.Close()
+}
+
+func TestPoolBorrowCheck(t *testing.T) {
+	d := poolDialer{t: t}
+	p := &redis.Pool{
 		MaxIdle:      2,
 		Dial:         d.dial,
-		TestOnBorrow: func(Conn, time.Time) error { return Error("BLAH") },
+		TestOnBorrow: func(redis.Conn, time.Time) error { return redis.Error("BLAH") },
 	}
 
 	for i := 0; i < 10; i++ {
@@ -214,11 +249,12 @@ func TestBorrowCheck(t *testing.T) {
 		c.Close()
 	}
 	d.check("1", p, 10, 1)
+	p.Close()
 }
 
-func TestMaxActive(t *testing.T) {
-	d := dialer{t: t}
-	p := &Pool{
+func TestPoolMaxActive(t *testing.T) {
+	d := poolDialer{t: t}
+	p := &redis.Pool{
 		MaxIdle:   2,
 		MaxActive: 2,
 		Dial:      d.dial,
@@ -231,14 +267,14 @@ func TestMaxActive(t *testing.T) {
 	d.check("1", p, 2, 2)
 
 	c3 := p.Get()
-	if _, err := c3.Do("PING"); err != ErrPoolExhausted {
+	if _, err := c3.Do("PING"); err != redis.ErrPoolExhausted {
 		t.Errorf("expected pool exhausted")
 	}
 
 	c3.Close()
 	d.check("2", p, 2, 2)
 	c2.Close()
-	d.check("2", p, 2, 2)
+	d.check("3", p, 2, 2)
 
 	c3 = p.Get()
 	if _, err := c3.Do("PING"); err != nil {
@@ -246,5 +282,178 @@ func TestMaxActive(t *testing.T) {
 	}
 	c3.Close()
 
-	d.check("2", p, 2, 2)
+	d.check("4", p, 2, 2)
+	p.Close()
+}
+
+func TestPoolMonitorCleanup(t *testing.T) {
+	d := poolDialer{t: t}
+	p := &redis.Pool{
+		MaxIdle:   2,
+		MaxActive: 2,
+		Dial:      d.dial,
+	}
+	c := p.Get()
+	c.Send("MONITOR")
+	c.Close()
+
+	d.check("", p, 1, 0)
+	p.Close()
+}
+
+func TestPoolPubSubCleanup(t *testing.T) {
+	d := poolDialer{t: t}
+	p := &redis.Pool{
+		MaxIdle:   2,
+		MaxActive: 2,
+		Dial:      d.dial,
+	}
+
+	c := p.Get()
+	c.Send("SUBSCRIBE", "x")
+	c.Close()
+
+	want := []string{"SUBSCRIBE", "UNSUBSCRIBE", "PUNSUBSCRIBE", "ECHO"}
+	if !reflect.DeepEqual(d.commands, want) {
+		t.Errorf("got commands %v, want %v", d.commands, want)
+	}
+	d.commands = nil
+
+	c = p.Get()
+	c.Send("PSUBSCRIBE", "x*")
+	c.Close()
+
+	want = []string{"PSUBSCRIBE", "UNSUBSCRIBE", "PUNSUBSCRIBE", "ECHO"}
+	if !reflect.DeepEqual(d.commands, want) {
+		t.Errorf("got commands %v, want %v", d.commands, want)
+	}
+	d.commands = nil
+
+	p.Close()
+}
+
+func TestPoolTransactionCleanup(t *testing.T) {
+	d := poolDialer{t: t}
+	p := &redis.Pool{
+		MaxIdle:   2,
+		MaxActive: 2,
+		Dial:      d.dial,
+	}
+
+	c := p.Get()
+	c.Do("WATCH", "key")
+	c.Do("PING")
+	c.Close()
+
+	want := []string{"WATCH", "PING", "UNWATCH"}
+	if !reflect.DeepEqual(d.commands, want) {
+		t.Errorf("got commands %v, want %v", d.commands, want)
+	}
+	d.commands = nil
+
+	c = p.Get()
+	c.Do("WATCH", "key")
+	c.Do("UNWATCH")
+	c.Do("PING")
+	c.Close()
+
+	want = []string{"WATCH", "UNWATCH", "PING"}
+	if !reflect.DeepEqual(d.commands, want) {
+		t.Errorf("got commands %v, want %v", d.commands, want)
+	}
+	d.commands = nil
+
+	c = p.Get()
+	c.Do("WATCH", "key")
+	c.Do("MULTI")
+	c.Do("PING")
+	c.Close()
+
+	want = []string{"WATCH", "MULTI", "PING", "DISCARD"}
+	if !reflect.DeepEqual(d.commands, want) {
+		t.Errorf("got commands %v, want %v", d.commands, want)
+	}
+	d.commands = nil
+
+	c = p.Get()
+	c.Do("WATCH", "key")
+	c.Do("MULTI")
+	c.Do("DISCARD")
+	c.Do("PING")
+	c.Close()
+
+	want = []string{"WATCH", "MULTI", "DISCARD", "PING"}
+	if !reflect.DeepEqual(d.commands, want) {
+		t.Errorf("got commands %v, want %v", d.commands, want)
+	}
+	d.commands = nil
+
+	c = p.Get()
+	c.Do("WATCH", "key")
+	c.Do("MULTI")
+	c.Do("EXEC")
+	c.Do("PING")
+	c.Close()
+
+	want = []string{"WATCH", "MULTI", "EXEC", "PING"}
+	if !reflect.DeepEqual(d.commands, want) {
+		t.Errorf("got commands %v, want %v", d.commands, want)
+	}
+	d.commands = nil
+
+	p.Close()
+}
+
+func BenchmarkPoolGet(b *testing.B) {
+	b.StopTimer()
+	p := redis.Pool{Dial: redistest.Dial, MaxIdle: 2}
+	c := p.Get()
+	if err := c.Err(); err != nil {
+		b.Fatal(err)
+	}
+	c.Close()
+	defer p.Close()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		c = p.Get()
+		c.Close()
+	}
+}
+
+func BenchmarkPoolGetErr(b *testing.B) {
+	b.StopTimer()
+	p := redis.Pool{Dial: redistest.Dial, MaxIdle: 2}
+	c := p.Get()
+	if err := c.Err(); err != nil {
+		b.Fatal(err)
+	}
+	c.Close()
+	defer p.Close()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		c = p.Get()
+		if err := c.Err(); err != nil {
+			b.Fatal(err)
+		}
+		c.Close()
+	}
+}
+
+func BenchmarkPoolGetPing(b *testing.B) {
+	b.StopTimer()
+	p := redis.Pool{Dial: redistest.Dial, MaxIdle: 2}
+	c := p.Get()
+	if err := c.Err(); err != nil {
+		b.Fatal(err)
+	}
+	c.Close()
+	defer p.Close()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		c = p.Get()
+		if _, err := c.Do("PING"); err != nil {
+			b.Fatal(err)
+		}
+		c.Close()
+	}
 }

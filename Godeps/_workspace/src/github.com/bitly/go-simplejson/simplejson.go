@@ -26,9 +26,26 @@ func NewJson(body []byte) (*Json, error) {
 	return j, nil
 }
 
+// New returns a pointer to a new, empty `Json` object
+func New() *Json {
+	return &Json{
+		data: make(map[string]interface{}),
+	}
+}
+
+// Interface returns the underlying data
+func (j *Json) Interface() interface{} {
+	return j.data
+}
+
 // Encode returns its marshaled data as `[]byte`
 func (j *Json) Encode() ([]byte, error) {
 	return j.MarshalJSON()
+}
+
+// EncodePretty returns its marshaled data as `[]byte` with indentation
+func (j *Json) EncodePretty() ([]byte, error) {
+	return json.MarshalIndent(&j.data, "", "  ")
 }
 
 // Implements the json.Marshaler interface.
@@ -44,6 +61,54 @@ func (j *Json) Set(key string, val interface{}) {
 		return
 	}
 	m[key] = val
+}
+
+// SetPath modifies `Json`, recursively checking/creating map keys for the supplied path,
+// and then finally writing in the value
+func (j *Json) SetPath(branch []string, val interface{}) {
+	if len(branch) == 0 {
+		j.data = val
+		return
+	}
+
+	// in order to insert our branch, we need map[string]interface{}
+	if _, ok := (j.data).(map[string]interface{}); !ok {
+		// have to replace with something suitable
+		j.data = make(map[string]interface{})
+	}
+	curr := j.data.(map[string]interface{})
+
+	for i := 0; i < len(branch)-1; i++ {
+		b := branch[i]
+		// key exists?
+		if _, ok := curr[b]; !ok {
+			n := make(map[string]interface{})
+			curr[b] = n
+			curr = n
+			continue
+		}
+
+		// make sure the value is the right sort of thing
+		if _, ok := curr[b].(map[string]interface{}); !ok {
+			// have to replace with something suitable
+			n := make(map[string]interface{})
+			curr[b] = n
+		}
+
+		curr = curr[b].(map[string]interface{})
+	}
+
+	// add remaining k/v
+	curr[branch[len(branch)-1]] = val
+}
+
+// Del modifies `Json` map by deleting `key` if it is present.
+func (j *Json) Del(key string) {
+	m, err := j.Map()
+	if err != nil {
+		return
+	}
+	delete(m, key)
 }
 
 // Get returns a pointer to a new `Json` object
@@ -67,16 +132,8 @@ func (j *Json) Get(key string) *Json {
 //   js.GetPath("top_level", "dict")
 func (j *Json) GetPath(branch ...string) *Json {
 	jin := j
-	for i := range branch {
-		m, err := jin.Map()
-		if err != nil {
-			return &Json{nil}
-		}
-		if val, ok := m[branch[i]]; ok {
-			jin = &Json{val}
-		} else {
-			return &Json{nil}
-		}
+	for _, p := range branch {
+		jin = jin.Get(p)
 	}
 	return jin
 }
@@ -162,6 +219,10 @@ func (j *Json) StringArray() ([]string, error) {
 	}
 	retArr := make([]string, 0, len(arr))
 	for _, a := range arr {
+		if a == nil {
+			retArr = append(retArr, "")
+			continue
+		}
 		s, ok := a.(string)
 		if !ok {
 			return nil, err
@@ -329,6 +390,29 @@ func (j *Json) MustInt64(args ...int64) int64 {
 	}
 
 	i, err := j.Int64()
+	if err == nil {
+		return i
+	}
+
+	return def
+}
+
+// MustUInt64 guarantees the return of an `uint64` (with optional default)
+//
+// useful when you explicitly want an `uint64` in a single value return context:
+//     myFunc(js.Get("param1").MustUint64(), js.Get("optional_param").MustUint64(5150))
+func (j *Json) MustUint64(args ...uint64) uint64 {
+	var def uint64
+
+	switch len(args) {
+	case 0:
+	case 1:
+		def = args[0]
+	default:
+		log.Panicf("MustUint64() received too many arguments %d", len(args))
+	}
+
+	i, err := j.Uint64()
 	if err == nil {
 		return i
 	}

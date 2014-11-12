@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/codegangsta/martini"
 	"github.com/cupcake/gokiq"
 	"github.com/garyburd/redigo/redis"
+	"github.com/go-martini/martini"
 	workers "github.com/jrallison/go-workers"
 	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"

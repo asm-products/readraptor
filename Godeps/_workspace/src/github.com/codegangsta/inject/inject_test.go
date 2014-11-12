@@ -1,6 +1,7 @@
 package inject_test
 
 import (
+	"fmt"
 	"github.com/codegangsta/inject"
 	"reflect"
 	"testing"
@@ -10,9 +11,17 @@ type SpecialString interface {
 }
 
 type TestStruct struct {
-	Dep1 string        `inject`
+	Dep1 string        `inject:"t" json:"-"`
 	Dep2 SpecialString `inject`
 	Dep3 string
+}
+
+type Greeter struct {
+	Name string
+}
+
+func (g *Greeter) String() string {
+	return "Hello, My name is" + g.Name
 }
 
 /* Test Helpers */
@@ -85,6 +94,7 @@ func Test_InjectorApply(t *testing.T) {
 
 	expect(t, s.Dep1, "a dep")
 	expect(t, s.Dep2, "another dep")
+	expect(t, s.Dep3, "")
 }
 
 func Test_InterfaceOf(t *testing.T) {
@@ -138,4 +148,12 @@ func Test_InjectorSetParent(t *testing.T) {
 	injector2.SetParent(injector)
 
 	expect(t, injector2.Get(inject.InterfaceOf((*SpecialString)(nil))).IsValid(), true)
+}
+
+func TestInjectImplementors(t *testing.T) {
+	injector := inject.New()
+	g := &Greeter{"Jeremy"}
+	injector.Map(g)
+
+	expect(t, injector.Get(inject.InterfaceOf((*fmt.Stringer)(nil))).IsValid(), true)
 }

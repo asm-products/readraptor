@@ -1,4 +1,7 @@
+readraptor
+
 gin-bin
 .sass-cache
 .env
 .anvil
+db/latest.dump

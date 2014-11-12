@@ -16,12 +16,14 @@ package redis_test
 
 import (
 	"fmt"
-	"github.com/garyburd/redigo/redis"
 	"net"
 	"reflect"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/garyburd/redigo/internal/redistest"
+	"github.com/garyburd/redigo/redis"
 )
 
 func publish(channel, value interface{}) {
@@ -109,7 +111,10 @@ func expectPushed(t *testing.T, c redis.PubSubConn, message string, expected int
 }
 
 func TestPushed(t *testing.T) {
-	pc := dialt(t)
+	pc, err := redistest.Dial()
+	if err != nil {
+		t.Fatalf("error connection to database, %v", err)
+	}
 	defer pc.Close()
 
 	nc, err := net.Dial("tcp", ":6379")

@@ -1,7 +1,7 @@
 package readraptor
 
 import (
-	"github.com/codegangsta/martini"
+	"github.com/go-martini/martini"
 	"github.com/technoweenie/grohl"
 	"log"
 	"net/http"

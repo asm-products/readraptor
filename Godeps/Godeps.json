@@ -1,22 +1,19 @@
 {
 	"ImportPath": "github.com/asm-products/readraptor",
-	"GoVersion": "go1.2.2",
+	"GoVersion": "go1.3.3",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
-			"ImportPath": "bitbucket.org/liamstask/goose/cmd/goose",
-			"Rev": "c7df92cbac83b28f2b46271eb1ccffb20c426b07"
-		},
-		{
-			"ImportPath": "bitbucket.org/liamstask/goose/lib/goose",
-			"Rev": "c7df92cbac83b28f2b46271eb1ccffb20c426b07"
-		},
-		{
 			"ImportPath": "github.com/bitly/go-simplejson",
-			"Comment": "v0.4.3-12-g408ce0b",
-			"Rev": "408ce0b284fa7ad36e3856fcde50022e885474b2"
+			"Comment": "v0.4.3-28-g3378bdc",
+			"Rev": "3378bdcb5cebedcbf8b5750edee28010f128fe24"
+		},
+		{
+			"ImportPath": "github.com/boj/redistore",
+			"Comment": "v1",
+			"Rev": "9d1554b400d726c7aa54b6e4a836f273b72b97f7"
 		},
 		{
 			"ImportPath": "github.com/bradrydzewski/go.stripe",
@@ -24,70 +21,74 @@
 		},
 		{
 			"ImportPath": "github.com/codegangsta/inject",
-			"Rev": "9aea7a2fa5b79ef7fc00f63a575e72df33b4e886"
-		},
-		{
-			"ImportPath": "github.com/codegangsta/martini",
-			"Comment": "v0.1-105-gcab2ee6",
-			"Rev": "cab2ee60a6dfb2ab2cd742fbc0ba35b135b1205d"
+			"Comment": "v1.0-rc1-4-g4b81725",
+			"Rev": "4b8172520a03fa190f427bbd284db01b459bfce7"
 		},
 		{
 			"ImportPath": "github.com/coopernurse/gorp",
-			"Comment": "v1.4",
-			"Rev": "08e1d8ca19c74cb69e01ff7a8f332a2e46448c47"
+			"Comment": "v1.7",
+			"Rev": "5d19ebd22fdcf3b9fb1c8cbfcf1d4e78e102f1e0"
 		},
 		{
 			"ImportPath": "github.com/cupcake/gokiq",
-			"Rev": "ee83fc2d36e42a60665a1181206bacddcd5fd329"
+			"Rev": "ebbb02812f6826798d779fbda06921d45b2c4446"
+		},
+		{
+			"ImportPath": "github.com/garyburd/redigo/internal",
+			"Rev": "cdedc64e277b174e6b8e3bfc31f839817bbba684"
 		},
 		{
 			"ImportPath": "github.com/garyburd/redigo/redis",
-			"Rev": "ed54f4ed86a815cf09870e4bd1a10a2ee39a4308"
+			"Rev": "cdedc64e277b174e6b8e3bfc31f839817bbba684"
+		},
+		{
+			"ImportPath": "github.com/go-martini/martini",
+			"Comment": "v1.0-58-gbd8578f",
+			"Rev": "bd8578f41c9b53278c4ada731fe5beac03f80d77"
 		},
 		{
 			"ImportPath": "github.com/gorilla/context",
-			"Rev": "a08edd30ad9e104612741163dc087a613829a23c"
+			"Rev": "14f550f51af52180c2eefed15e5fd18d63c0a64a"
 		},
 		{
 			"ImportPath": "github.com/gorilla/securecookie",
-			"Rev": "972f32923fd3555b7f0ea39acdc4e3d4d5412ee8"
+			"Rev": "1b0c7f6e9ab3d7f500fd7d50c7ad835ff428139b"
 		},
 		{
 			"ImportPath": "github.com/gorilla/sessions",
-			"Rev": "aaa7e50fe124565b8ad00e2837b51c418fa90739"
+			"Rev": "aa5e036e6c44aec69a32eb41097001978b29ad31"
 		},
 		{
 			"ImportPath": "github.com/jrallison/go-workers",
-			"Rev": "c1568434fc032d0b6a9df91e35bb7b9e89cec4a6"
-		},
-		{
-			"ImportPath": "github.com/kylelemons/go-gypsy/yaml",
-			"Comment": "go.weekly.2011-11-02-17-g0ddb27c",
-			"Rev": "0ddb27ce74ade2ca988ec85587d636e10312dfc6"
+			"Rev": "2aae4d367bfac8d2c9267d3212300df400599717"
 		},
 		{
 			"ImportPath": "github.com/lib/pq",
-			"Rev": "6577a6a8a8b66cc558ebe37f51ca07833bfa433b"
+			"Rev": "7175accbed18058468c07811f76440d6e8d7cf19"
 		},
 		{
 			"ImportPath": "github.com/martini-contrib/cors",
-			"Rev": "a88ecdc4d47e8263f8b4383068edd82aa44800c3"
+			"Rev": "553b9208d353a39b0850c02355f478ba020c86d7"
 		},
 		{
 			"ImportPath": "github.com/martini-contrib/render",
-			"Rev": "68eb61a5313c3eff5625a16f6eee8f29b4835ff7"
+			"Rev": "b65063311fac6cbf84d3538f5715f7847e648322"
 		},
 		{
 			"ImportPath": "github.com/martini-contrib/secure",
-			"Rev": "dfa700e1a87ea0811003652c75c862f21acdbc3e"
+			"Rev": "56b905eb8ab2eb124d2f4acfa3ea893df45b7d79"
 		},
 		{
 			"ImportPath": "github.com/martini-contrib/sessionauth",
-			"Rev": "5aeb19195f3f3a6aa703b60134ed3b651e412d2e"
+			"Rev": "3c15d8cae6c39a8feb3d3f72750084bd50bd52cc"
 		},
 		{
 			"ImportPath": "github.com/martini-contrib/sessions",
-			"Rev": "15d5893a85aef24034ebc59546992326ec797574"
+			"Rev": "fa13114fbcf036dff8185d728651d85fcef772db"
+		},
+		{
+			"ImportPath": "github.com/oxtoacart/bpool",
+			"Rev": "0f78ff9152c03745d1a47c9023af1b424e202c07"
 		},
 		{
 			"ImportPath": "github.com/sirsean/go-mailgun/mailgun",
@@ -95,22 +96,7 @@
 		},
 		{
 			"ImportPath": "github.com/technoweenie/grohl",
-			"Rev": "91868e10032390c992d419d10b17cc8bfdc35808"
-		},
-		{
-			"ImportPath": "github.com/ziutek/mymysql/godrv",
-			"Comment": "v1.5.3-8-g872ab67",
-			"Rev": "872ab6792fdbbc715def065b0bbd2a7d91715b97"
-		},
-		{
-			"ImportPath": "github.com/ziutek/mymysql/mysql",
-			"Comment": "v1.5.3-8-g872ab67",
-			"Rev": "872ab6792fdbbc715def065b0bbd2a7d91715b97"
-		},
-		{
-			"ImportPath": "github.com/ziutek/mymysql/native",
-			"Comment": "v1.5.3-8-g872ab67",
-			"Rev": "872ab6792fdbbc715def065b0bbd2a7d91715b97"
+			"Rev": "f4613feb389efa6e147b705e2671ad4e42bb7ac3"
 		}
 	]
 }

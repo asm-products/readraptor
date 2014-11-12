@@ -1,42 +1,48 @@
 package workers
 
 type Action interface {
-	Call(queue string, message *Msg, next func())
+	Call(queue string, message *Msg, next func() bool) bool
 }
 
-type middleware struct {
+type Middlewares struct {
 	actions []Action
 }
 
-func (m *middleware) Append(action Action) {
+func (m *Middlewares) Append(action Action) {
 	m.actions = append(m.actions, action)
 }
 
-func (m *middleware) Prepend(action Action) {
+func (m *Middlewares) Prepend(action Action) {
 	actions := make([]Action, len(m.actions)+1)
 	actions[0] = action
 	copy(actions[1:], m.actions)
 	m.actions = actions
 }
 
-func (m *middleware) call(queue string, message *Msg, final func()) {
-	continuation(m.actions, queue, message, final)()
+func (m *Middlewares) call(queue string, message *Msg, final func()) bool {
+	return continuation(m.actions, queue, message, final)()
 }
 
-func continuation(actions []Action, queue string, message *Msg, final func()) func() {
-	return func() {
+func continuation(actions []Action, queue string, message *Msg, final func()) func() bool {
+	return func() (acknowledge bool) {
 		if len(actions) > 0 {
-			actions[0].Call(
+			acknowledge = actions[0].Call(
 				queue,
 				message,
 				continuation(actions[1:], queue, message, final),
 			)
+
+			if !acknowledge {
+				return
+			}
 		} else {
 			final()
 		}
+
+		return true
 	}
 }
 
-func newMiddleware(actions ...Action) *middleware {
-	return &middleware{actions}
+func NewMiddleware(actions ...Action) *Middlewares {
+	return &Middlewares{actions}
 }

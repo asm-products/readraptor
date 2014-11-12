@@ -3,7 +3,7 @@
 //  package main
 //
 //  import (
-//    "github.com/codegangsta/martini"
+//    "github.com/go-martini/martini"
 //    "github.com/martini-contrib/secure"
 //  )
 //
@@ -25,9 +25,10 @@ package secure
 
 import (
 	"fmt"
-	"github.com/codegangsta/martini"
 	"net/http"
 	"strings"
+
+	"github.com/go-martini/martini"
 )
 
 const (
@@ -66,8 +67,8 @@ type Options struct {
 	BrowserXssFilter bool
 	// ContentSecurityPolicy allows the Content-Security-Policy header value to be set with a custom value. Default is "".
 	ContentSecurityPolicy string
-	// When developing, the SSL and STS options can cause some unwanted effects. Usually testing happens on http, not https... we check `if martini.Env == martini.Prod`.
-	// If you would like your development environment to mimic production with complete SSL redirects and STS headers, set this to true. Default if false.
+	// When developing, the AllowedHosts, SSL, and STS options can cause some unwanted effects. Usually testing happens on http, not https, and one localhost, not your production domain... we check `if martini.Env == martini.Prod`.
+	// If you would like your development environment to mimic production with complete Host blocking, SSL redirects, and STS headers, set this to true. Default if false.
 	DisableProdCheck bool
 }
 
@@ -99,7 +100,7 @@ func Secure(opt Options) martini.Handler {
 }
 
 func applyAllowedHosts(opt Options, res http.ResponseWriter, req *http.Request) {
-	if len(opt.AllowedHosts) > 0 {
+	if len(opt.AllowedHosts) > 0 && (martini.Env == martini.Prod || opt.DisableProdCheck == true) {
 		isGoodHost := false
 		for _, allowedHost := range opt.AllowedHosts {
 			if strings.EqualFold(allowedHost, req.Host) {

@@ -17,7 +17,6 @@ package redis_test
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"math"
 	"net"
 	"reflect"
@@ -25,6 +24,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/garyburd/redigo/internal/redistest"
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -160,53 +160,6 @@ func TestRead(t *testing.T) {
 	}
 }
 
-type testConn struct {
-	redis.Conn
-}
-
-func (t testConn) Close() error {
-	_, err := t.Conn.Do("SELECT", "9")
-	if err != nil {
-		return nil
-	}
-	_, err = t.Conn.Do("FLUSHDB")
-	if err != nil {
-		return err
-	}
-	return t.Conn.Close()
-}
-
-func dial() (redis.Conn, error) {
-	c, err := redis.DialTimeout("tcp", ":6379", 0, 1*time.Second, 1*time.Second)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = c.Do("SELECT", "9")
-	if err != nil {
-		return nil, err
-	}
-
-	n, err := redis.Int(c.Do("DBSIZE"))
-	if err != nil {
-		return nil, err
-	}
-
-	if n != 0 {
-		return nil, errors.New("database #9 is not empty, test can not continue")
-	}
-
-	return testConn{c}, nil
-}
-
-func dialt(t *testing.T) redis.Conn {
-	c, err := dial()
-	if err != nil {
-		t.Fatalf("error connection to database, %v", err)
-	}
-	return c
-}
-
 var testCommands = []struct {
 	args     []interface{}
 	expected interface{}
@@ -269,7 +222,10 @@ var testCommands = []struct {
 }
 
 func TestDoCommands(t *testing.T) {
-	c := dialt(t)
+	c, err := redistest.Dial()
+	if err != nil {
+		t.Fatalf("error connection to database, %v", err)
+	}
 	defer c.Close()
 
 	for _, cmd := range testCommands {
@@ -285,7 +241,10 @@ func TestDoCommands(t *testing.T) {
 }
 
 func TestPipelineCommands(t *testing.T) {
-	c := dialt(t)
+	c, err := redistest.Dial()
+	if err != nil {
+		t.Fatalf("error connection to database, %v", err)
+	}
 	defer c.Close()
 
 	for _, cmd := range testCommands {
@@ -308,7 +267,10 @@ func TestPipelineCommands(t *testing.T) {
 }
 
 func TestBlankCommmand(t *testing.T) {
-	c := dialt(t)
+	c, err := redistest.Dial()
+	if err != nil {
+		t.Fatalf("error connection to database, %v", err)
+	}
 	defer c.Close()
 
 	for _, cmd := range testCommands {
@@ -331,12 +293,36 @@ func TestBlankCommmand(t *testing.T) {
 	}
 }
 
+func TestRecvBeforeSend(t *testing.T) {
+	c, err := redistest.Dial()
+	if err != nil {
+		t.Fatalf("error connection to database, %v", err)
+	}
+	defer c.Close()
+	done := make(chan struct{})
+	go func() {
+		c.Receive()
+		close(done)
+	}()
+	time.Sleep(time.Millisecond)
+	c.Send("PING")
+	c.Flush()
+	<-done
+	_, err = c.Do("")
+	if err != nil {
+		t.Fatalf("error=%v", err)
+	}
+}
+
 func TestError(t *testing.T) {
-	c := dialt(t)
+	c, err := redistest.Dial()
+	if err != nil {
+		t.Fatalf("error connection to database, %v", err)
+	}
 	defer c.Close()
 
 	c.Do("SET", "key", "val")
-	_, err := c.Do("HSET", "key", "fld", "val")
+	_, err = c.Do("HSET", "key", "fld", "val")
 	if err == nil {
 		t.Errorf("Expected err for HSET on string key.")
 	}
@@ -408,4 +394,114 @@ func ExampleDial(x int) {
 		// handle error
 	}
 	defer c.Close()
+}
+
+// TextExecError tests handling of errors in a transaction. See
+// http://redis.io/topics/transactions for information on how Redis handles
+// errors in a transaction.
+func TestExecError(t *testing.T) {
+	c, err := redistest.Dial()
+	if err != nil {
+		t.Fatalf("error connection to database, %v", err)
+	}
+	defer c.Close()
+
+	// Execute commands that fail before EXEC is called.
+
+	c.Do("ZADD", "k0", 0, 0)
+	c.Send("MULTI")
+	c.Send("NOTACOMMAND", "k0", 0, 0)
+	c.Send("ZINCRBY", "k0", 0, 0)
+	v, err := c.Do("EXEC")
+	if err == nil {
+		t.Fatalf("EXEC returned values %v, expected error", v)
+	}
+
+	// Execute commands that fail after EXEC is called. The first command
+	// returns an error.
+
+	c.Do("ZADD", "k1", 0, 0)
+	c.Send("MULTI")
+	c.Send("HSET", "k1", 0, 0)
+	c.Send("ZINCRBY", "k1", 0, 0)
+	v, err = c.Do("EXEC")
+	if err != nil {
+		t.Fatalf("EXEC returned error %v", err)
+	}
+
+	vs, err := redis.Values(v, nil)
+	if err != nil {
+		t.Fatalf("Values(v) returned error %v", err)
+	}
+
+	if len(vs) != 2 {
+		t.Fatalf("len(vs) == %d, want 2", len(vs))
+	}
+
+	if _, ok := vs[0].(error); !ok {
+		t.Fatalf("first result is type %T, expected error", vs[0])
+	}
+
+	if _, ok := vs[1].([]byte); !ok {
+		t.Fatalf("second result is type %T, expected []byte", vs[2])
+	}
+
+	// Execute commands that fail after EXEC is called. The second command
+	// returns an error.
+
+	c.Do("ZADD", "k2", 0, 0)
+	c.Send("MULTI")
+	c.Send("ZINCRBY", "k2", 0, 0)
+	c.Send("HSET", "k2", 0, 0)
+	v, err = c.Do("EXEC")
+	if err != nil {
+		t.Fatalf("EXEC returned error %v", err)
+	}
+
+	vs, err = redis.Values(v, nil)
+	if err != nil {
+		t.Fatalf("Values(v) returned error %v", err)
+	}
+
+	if len(vs) != 2 {
+		t.Fatalf("len(vs) == %d, want 2", len(vs))
+	}
+
+	if _, ok := vs[0].([]byte); !ok {
+		t.Fatalf("first result is type %T, expected []byte", vs[0])
+	}
+
+	if _, ok := vs[1].(error); !ok {
+		t.Fatalf("second result is type %T, expected error", vs[2])
+	}
+}
+
+func BenchmarkDoEmpty(b *testing.B) {
+	b.StopTimer()
+	c, err := redistest.Dial()
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer c.Close()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := c.Do(""); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkDoPing(b *testing.B) {
+	b.StopTimer()
+	c, err := redistest.Dial()
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer c.Close()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := c.Do("PING"); err != nil {
+			b.Fatal(err)
+		}
+	}
 }

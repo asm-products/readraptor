@@ -2,24 +2,27 @@ package simplejson
 
 import (
 	"encoding/json"
-	"github.com/bmizerany/assert"
 	"testing"
+
+	"github.com/bmizerany/assert"
 )
 
 func TestSimplejson(t *testing.T) {
 	var ok bool
 	var err error
 
-	js, err := NewJson([]byte(`{ 
-		"test": { 
+	js, err := NewJson([]byte(`{
+		"test": {
 			"string_array": ["asdf", "ghjk", "zxcv"],
+			"string_array_null": ["abc", null, "efg"],
 			"array": [1, "2", 3],
 			"arraywithsubs": [{"subkeyone": 1},
 			{"subkeytwo": 2, "subkeythree": 3}],
 			"int": 10,
 			"float": 5.150,
 			"string": "simplejson",
-			"bool": true 
+			"bool": true,
+			"sub_obj": {"a": 1}
 		}
 	}`))
 
@@ -78,6 +81,12 @@ func TestSimplejson(t *testing.T) {
 	assert.Equal(t, strs[1], "ghjk")
 	assert.Equal(t, strs[2], "zxcv")
 
+	strs2, err := js.Get("test").Get("string_array_null").StringArray()
+	assert.Equal(t, err, nil)
+	assert.Equal(t, strs2[0], "abc")
+	assert.Equal(t, strs2[1], "")
+	assert.Equal(t, strs2[2], "efg")
+
 	gp, _ := js.GetPath("test", "string").String()
 	assert.Equal(t, "simplejson", gp)
 
@@ -91,6 +100,15 @@ func TestSimplejson(t *testing.T) {
 
 	js.Set("test2", "setTest")
 	assert.Equal(t, "setTest", js.Get("test2").MustString())
+
+	js.Del("test2")
+	assert.NotEqual(t, "setTest", js.Get("test2").MustString())
+
+	js.Get("test").Get("sub_obj").Set("a", 2)
+	assert.Equal(t, 2, js.Get("test").Get("sub_obj").Get("a").MustInt())
+
+	js.GetPath("test", "sub_obj").Set("a", 3)
+	assert.Equal(t, 3, js.GetPath("test", "sub_obj", "a").MustInt())
 }
 
 func TestStdlibInterfaces(t *testing.T) {
@@ -116,4 +134,102 @@ func TestStdlibInterfaces(t *testing.T) {
 	assert.Equal(t, nil, err)
 	assert.Equal(t, nil, json.Unmarshal(p, val2))
 	assert.Equal(t, val, val2) // stable
+}
+
+func TestSet(t *testing.T) {
+	js, err := NewJson([]byte(`{}`))
+	assert.Equal(t, nil, err)
+
+	js.Set("baz", "bing")
+
+	s, err := js.GetPath("baz").String()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "bing", s)
+}
+
+func TestReplace(t *testing.T) {
+	js, err := NewJson([]byte(`{}`))
+	assert.Equal(t, nil, err)
+
+	err = js.UnmarshalJSON([]byte(`{"baz":"bing"}`))
+	assert.Equal(t, nil, err)
+
+	s, err := js.GetPath("baz").String()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "bing", s)
+}
+
+func TestSetPath(t *testing.T) {
+	js, err := NewJson([]byte(`{}`))
+	assert.Equal(t, nil, err)
+
+	js.SetPath([]string{"foo", "bar"}, "baz")
+
+	s, err := js.GetPath("foo", "bar").String()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "baz", s)
+}
+
+func TestSetPathNoPath(t *testing.T) {
+	js, err := NewJson([]byte(`{"some":"data","some_number":1.0,"some_bool":false}`))
+	assert.Equal(t, nil, err)
+
+	f := js.GetPath("some_number").MustFloat64(99.0)
+	assert.Equal(t, f, 1.0)
+
+	js.SetPath([]string{}, map[string]interface{}{"foo": "bar"})
+
+	s, err := js.GetPath("foo").String()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "bar", s)
+
+	f = js.GetPath("some_number").MustFloat64(99.0)
+	assert.Equal(t, f, 99.0)
+}
+
+func TestPathWillAugmentExisting(t *testing.T) {
+	js, err := NewJson([]byte(`{"this":{"a":"aa","b":"bb","c":"cc"}}`))
+	assert.Equal(t, nil, err)
+
+	js.SetPath([]string{"this", "d"}, "dd")
+
+	cases := []struct {
+		path    []string
+		outcome string
+	}{
+		{
+			path:    []string{"this", "a"},
+			outcome: "aa",
+		},
+		{
+			path:    []string{"this", "b"},
+			outcome: "bb",
+		},
+		{
+			path:    []string{"this", "c"},
+			outcome: "cc",
+		},
+		{
+			path:    []string{"this", "d"},
+			outcome: "dd",
+		},
+	}
+
+	for _, tc := range cases {
+		s, err := js.GetPath(tc.path...).String()
+		assert.Equal(t, nil, err)
+		assert.Equal(t, tc.outcome, s)
+	}
+}
+
+func TestPathWillOverwriteExisting(t *testing.T) {
+	// notice how "a" is 0.1 - but then we'll try to set at path a, foo
+	js, err := NewJson([]byte(`{"this":{"a":0.1,"b":"bb","c":"cc"}}`))
+	assert.Equal(t, nil, err)
+
+	js.SetPath([]string{"this", "a", "foo"}, "bar")
+
+	s, err := js.GetPath("this", "a", "foo").String()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "bar", s)
 }

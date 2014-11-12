@@ -2,6 +2,7 @@ package gokiq
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"testing"
@@ -22,12 +23,14 @@ var workChan = make(chan struct{})
 
 type TestWorker struct {
 	Data []string `json:"args"`
-	Job  *Job     `json:"-"`
+	Job  *Job     `inject`
 }
 
-func (w *TestWorker) Perform() error {
-	if w.Data[0] == "foo" && w.Job != nil {
+func (w *TestWorker) Perform(job *Job) error {
+	if w.Data[0] == "foo" && job != nil && w.Job != nil && job == w.Job {
 		workChan <- struct{}{}
+	} else {
+		fmt.Printf("error: %#v %#v %#v\n", w.Data, job, w.Job)
 	}
 	return nil
 }
@@ -43,6 +46,9 @@ func MaybeFail(c *C, err error) {
 
 func (s *WorkerSuite) SetUpSuite(c *C) {
 	Workers.Register(&TestWorker{})
+	Workers.ReportError = func(err error, job *Job) {
+		fmt.Printf("%#v\n", err)
+	}
 }
 
 func (s *WorkerSuite) TestWorkerLoop(c *C) {

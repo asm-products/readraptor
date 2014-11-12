@@ -125,10 +125,11 @@ func (l *ListenerConn) setState(newState int32) bool {
 // away or should be discarded because we couldn't agree on the state with the
 // server backend.
 func (l *ListenerConn) listenerConnLoop() (err error) {
-	defer errRecover(&err)
+	defer l.cn.errRecover(&err)
 
+	r := &readBuf{}
 	for {
-		t, r, err := l.cn.recvMessage()
+		t, err := l.cn.recvMessage(r)
 		if err != nil {
 			return err
 		}
@@ -239,7 +240,7 @@ func (l *ListenerConn) Ping() error {
 // The caller must be holding senderLock (see acquireSenderLock and
 // releaseSenderLock).
 func (l *ListenerConn) sendSimpleQuery(q string) (err error) {
-	defer errRecover(&err)
+	defer l.cn.errRecover(&err)
 
 	// must set connection state before sending the query
 	if !l.setState(connStateExpectResponse) {
@@ -524,8 +525,8 @@ func (l *Listener) Unlisten(channel string) error {
 
 // UnlistenAll removes all channels from the Listener's channel list.  Returns
 // immediately with no error if there is no connection.  Note that you might
-// still get notifications for any of the deleted channels even after Unlisten
-// has returned.
+// still get notifications for any of the deleted channels even after
+// UnlistenAll has returned.
 func (l *Listener) UnlistenAll() error {
 	l.lock.Lock()
 	defer l.lock.Unlock()

@@ -27,11 +27,16 @@ type UserCallbackJobEntry struct {
 }
 
 func (j *UserCallbackJob) Perform() error {
-	keys, err := UnreadArticlesMarkRead(dbmap, j.ReaderId)
+	articles, err := UnreadArticles(dbmap, j.ReaderId)
 
 	distinctId, err := dbmap.SelectStr("select distinct_id from readers where id = $1;", j.ReaderId)
 	if err != nil {
 		return err
+	}
+
+	keys := make([]string, 0)
+	for _, a := range articles {
+		keys = append(keys, a.Key)
 	}
 
 	callback := UserCallback{

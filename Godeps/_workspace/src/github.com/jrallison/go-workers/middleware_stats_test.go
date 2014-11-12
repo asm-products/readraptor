@@ -8,7 +8,7 @@ import (
 )
 
 func MiddlewareStatsSpec(c gospec.Context) {
-	var job = (func(args *Args) {
+	var job = (func(message *Msg) {
 		// noop
 	})
 
@@ -17,8 +17,8 @@ func MiddlewareStatsSpec(c gospec.Context) {
 	worker := newWorker(manager)
 	message, _ := NewMsg("{\"jid\":\"2\",\"retry\":true}")
 
-	was := Config.namespace
-	Config.namespace = "prod:"
+	was := Config.Namespace
+	Config.Namespace = "prod:"
 
 	c.Specify("increments processed stats", func() {
 		conn := Config.Pool.Get()
@@ -40,7 +40,7 @@ func MiddlewareStatsSpec(c gospec.Context) {
 	})
 
 	c.Specify("failed job", func() {
-		var job = (func(args *Args) {
+		var job = (func(message *Msg) {
 			panic("AHHHH")
 		})
 
@@ -67,5 +67,5 @@ func MiddlewareStatsSpec(c gospec.Context) {
 		})
 	})
 
-	Config.namespace = was
+	Config.Namespace = was
 }

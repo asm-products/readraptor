@@ -16,10 +16,12 @@ package redis_test
 
 import (
 	"fmt"
-	"github.com/garyburd/redigo/redis"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/garyburd/redigo/internal/redistest"
+	"github.com/garyburd/redigo/redis"
 )
 
 func ExampleScript(c redis.Conn, reply interface{}, err error) {
@@ -33,7 +35,10 @@ func ExampleScript(c redis.Conn, reply interface{}, err error) {
 }
 
 func TestScript(t *testing.T) {
-	c := dialt(t)
+	c, err := redistest.Dial()
+	if err != nil {
+		t.Fatalf("error connection to database, %v", err)
+	}
 	defer c.Close()
 
 	// To test fall back in Do, we make script unique by adding comment with current time.

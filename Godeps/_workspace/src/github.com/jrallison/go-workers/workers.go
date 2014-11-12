@@ -5,21 +5,20 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
 )
 
 const (
-	RETRY_KEY = "goretry"
+	RETRY_KEY          = "goretry"
+	SCHEDULED_JOBS_KEY = "schedule"
 )
 
-var Logger = log.New(os.Stdout, "workers: ", log.Ldate|log.Lmicroseconds)
+var Logger WorkersLogger = log.New(os.Stdout, "workers: ", log.Ldate|log.Lmicroseconds)
 
 var managers = make(map[string]*manager)
-var schedule = newScheduled(RETRY_KEY)
+var schedule = newScheduled(RETRY_KEY, SCHEDULED_JOBS_KEY)
 var control = make(map[string]chan string)
 
-var Middleware = newMiddleware(
+var Middleware = NewMiddleware(
 	&MiddlewareLogging{},
 	&MiddlewareRetry{},
 	&MiddlewareStats{},
@@ -30,15 +29,20 @@ func Process(queue string, job jobFunc, concurrency int) {
 }
 
 func Run() {
-	schedule.start()
-	startManagers()
+	Start()
 	go handleSignals()
 	waitForExit()
+}
+
+func Start() {
+	schedule.start()
+	startManagers()
 }
 
 func Quit() {
 	quitManagers()
 	schedule.quit()
+	waitForExit()
 }
 
 func StatsServer(port int) {
@@ -48,18 +52,6 @@ func StatsServer(port int) {
 
 	if err := http.ListenAndServe(fmt.Sprint(":", port), nil); err != nil {
 		Logger.Println(err)
-	}
-}
-
-func handleSignals() {
-	signals := make(chan os.Signal, 1)
-	signal.Notify(signals, syscall.SIGUSR1, syscall.SIGINT, syscall.SIGTERM)
-
-	for sig := range signals {
-		switch sig {
-		case syscall.SIGINT, syscall.SIGUSR1, syscall.SIGTERM:
-			Quit()
-		}
 	}
 }
 
