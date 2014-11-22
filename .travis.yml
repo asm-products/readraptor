@@ -13,7 +13,6 @@ services:
 
 before_install:
   - go get github.com/kr/godep
-  - go get github.com/asm-products/readraptor
 
 before_script:
   - psql -c 'create database rr_test;' -U postgres
