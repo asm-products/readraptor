@@ -13,8 +13,11 @@ addons:
 services:
   - redis-server
 
+before_install:
+  - go get github.com/kr/godep
+
 before_script:
   - psql -c 'create database rr_test;' -U postgres
 
 script:
-  $GOPATH/bin/godep go test ./...
+  - $GOPATH/bin/godep go test ./...
