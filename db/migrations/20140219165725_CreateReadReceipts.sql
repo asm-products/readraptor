@@ -4,6 +4,7 @@ CREATE TABLE read_receipts (
   article_id int       NOT NULL,
   reader_id       int       NOT NULL,
   created_at      timestamp NOT NULL,
+  last_read_at      timestamp NOT NULL,
 
   CONSTRAINT fk_read_receipts_articles FOREIGN KEY (article_id) REFERENCES articles (id),
   CONSTRAINT fk_read_receipts_readers FOREIGN KEY (reader_id) REFERENCES readers (id),

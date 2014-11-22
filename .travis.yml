@@ -1,0 +1,20 @@
+language go
+
+go:
+  - 1.1
+  - 1.2
+  - 1.3
+  - release
+  - tip
+
+addons:
+  postgresql: "9.3"
+
+services:
+  - redis-server
+
+before_script:
+  - psql -c 'create database rr_test;' -U postgres
+
+script:
+  $GOPATH/bin/godep go test ./...
