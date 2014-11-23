@@ -8,10 +8,11 @@ import (
 )
 
 type ReadReceipt struct {
-	Id        int64     `db:"id"`
-	Created   time.Time `db:"created_at"`
-	ArticleId int64     `db:"article_id"`
-	ReaderId  int64     `db:"reader_id"`
+	Id         int64     `db:"id"`
+	Created    time.Time `db:"created_at"`
+	LastReadAt time.Time `db:"last_read_at"`
+	ArticleId  int64     `db:"article_id"`
+	ReaderId   int64     `db:"reader_id"`
 }
 
 func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) error {
