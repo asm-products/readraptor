@@ -44,8 +44,9 @@ func setupMartini(root string) *martini.Martini {
 		Prefix:      "assets",
 		SkipLogging: true,
 	}))
+
 	m.Use(render.Renderer(render.Options{
-		Layout: "layout.html",
+		Layout: "layout",
 	}))
 	m.Use(cors.Allow(&cors.Options{
 		AllowOrigins:     []string{"*"},
