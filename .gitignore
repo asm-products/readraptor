@@ -5,3 +5,4 @@ gin-bin
 .env
 .anvil
 db/latest.dump
+Procfile.dev
