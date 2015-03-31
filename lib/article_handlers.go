@@ -58,7 +58,7 @@ func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.
 				where distinct_id = $1;`, params["distinct_id"])
 
 		readerQuery := fmt.Sprintf(`
-				select articles.key,
+				select distinct articles.key,
                        articles.created_at as created_at,
 					   read_receipts.created_at as first_read_at,
 					   read_receipts.last_read_at

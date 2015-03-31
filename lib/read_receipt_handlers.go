@@ -4,6 +4,8 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/go-martini/martini"
 	_ "github.com/lib/pq"
@@ -22,7 +24,13 @@ func GetTrackReadReceipts(root string) func(params martini.Params, w http.Respon
 				panic(err)
 			}
 
-			http.ServeFile(w, r, root+"/public/tracking.gif")
+			f, err := os.Open(root + "/public/tracking.gif")
+			if err != nil {
+				panic(err)
+			}
+			defer f.Close()
+
+			http.ServeContent(w, r, "tracking.gif", time.Time{}, f)
 		}
 	}
 }
