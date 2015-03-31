@@ -80,7 +80,7 @@ func UpsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, err
 
 func UnreadArticles(dbmap *gorp.DbMap, readerId int64) (keys []Article, err error) {
 	_, err = dbmap.Select(&keys, `
-        select articles.*, read_receipts.created_at as first_read_at, last_read_at from
+        select distinct articles.*, read_receipts.created_at as first_read_at, last_read_at from
             (select article_id from expected_readers where reader_id = $1
                 except all
              select article_id from read_receipts
