@@ -63,7 +63,9 @@ func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.
 					   read_receipts.created_at as first_read_at,
 					   read_receipts.last_read_at
 				from articles
-					 left join read_receipts on read_receipts.article_id = articles.id and read_receipts.reader_id = %d
+					 left join read_receipts on read_receipts.article_id = articles.id
+											 and articles.updated_at < read_receipts.last_read_at
+					             and read_receipts.reader_id = %d
 				where key in $1`, readerId)
 
 		query, args := GenerateInQuery(readerQuery, keys)

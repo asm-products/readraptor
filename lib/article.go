@@ -10,6 +10,7 @@ type Article struct {
 	Id        int64     `db:"id"               json:"id"`
 	AccountId int64     `db:"account_id"       json:"-"`
 	Created   time.Time `db:"created_at"       json:"created"`
+	Updated   time.Time `db:"updated_at"       json:"updated"`
 	Key       string    `db:"key"              json:"key"`
 
 	FirstReadAt Timestamp `db:"first_read_at" json:"first_read_at,omitempty"`
@@ -76,10 +77,10 @@ func AddArticleReaders(dbmap *gorp.DbMap, accountId, articleId int64, expected [
 func InsertArticle(dbmap *gorp.DbMap, accountId int64, key string) (int64, error) {
 	id, err := dbmap.SelectNullInt(`
         with s as (
-            select id from articles where account_id = $1 and key = $2
+            update articles set updated_at = $3 where account_id = $1 and key = $2 returning id
         ), i as (
-            insert into articles ("account_id", "key", "created_at")
-            select $1, $2, $3
+            insert into articles ("account_id", "key", "created_at", "updated_at")
+            select $1, $2, $3, $3
             where not exists (select 1 from s)
             returning id
         )
