@@ -59,14 +59,14 @@ func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.
 
 		readerQuery := fmt.Sprintf(`
 				select distinct articles.key,
-                       articles.created_at as created_at,
-					   read_receipts.created_at as first_read_at,
-					   read_receipts.last_read_at
+          articles.created_at,
+					articles.updated_at,
+					read_receipts.created_at as first_read_at,
+					read_receipts.last_read_at
 				from articles
-					 left join read_receipts on read_receipts.article_id = articles.id
-					             and read_receipts.reader_id = %d
-				where key in $1
-							and articles.updated_at > read_receipts.last_read_at`, readerId)
+				  left join read_receipts on read_receipts.article_id = articles.id
+					  and read_receipts.reader_id = %d
+				where key in $1`, readerId)
 
 		query, args := GenerateInQuery(readerQuery, keys)
 		_, err = dbmap.Select(&articles, query, args...)
