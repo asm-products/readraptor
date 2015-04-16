@@ -87,7 +87,8 @@ func UnreadArticles(dbmap *gorp.DbMap, readerId int64) (keys []Article, err erro
 						   inner join articles on articles.id = read_receipts.article_id
 						 where reader_id = $1 and articles.updated_at < read_receipts.last_read_at) unread_articles
         inner join articles on articles.id = unread_articles.article_id
-				 left join read_receipts on read_receipts.article_id = unread_articles.article_id;`, readerId)
+				left join read_receipts on read_receipts.article_id = unread_articles.article_id
+					and read_receipts.reader_id = $1;`, readerId)
 
 	return
 }
