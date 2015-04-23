@@ -16,7 +16,7 @@ type ReadReceipt struct {
 }
 
 func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) error {
-	cid, err := InsertArticle(dbmap, account.Id, key)
+	cid, err := FindArticleId(dbmap, account.Id, key)
 	if err != nil {
 		return err
 	}

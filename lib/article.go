@@ -20,6 +20,10 @@ type Article struct {
 	Pending   []string `json:"pending,omitempty"`
 }
 
+func FindArticleId(dbmap *gorp.DbMap, accountId int64, key string) (int64, error) {
+	return dbmap.SelectInt(`select id from articles where account_id = $1 and key = $2`, accountId, key)
+}
+
 func FindArticleWithReadReceipts(dbmap *gorp.DbMap, id int64) (*Article, error) {
 	var a Article
 	err := dbmap.SelectOne(&a, "select * from articles where id = $1", id)
