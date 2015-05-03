@@ -11,6 +11,18 @@ import (
 	_ "github.com/lib/pq"
 )
 
+/**
+ * @api {get} /t/:username/:article_id/:user_id/:signature Read article
+ * @apiName GetTrack
+ * @apiGroup Reading
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "firstname": "John",
+ *       "lastname": "Doe"
+ *     }
+ */
 func GetTrackReadReceipts(root string) func(params martini.Params, w http.ResponseWriter, r *http.Request) {
 	return func(params martini.Params, w http.ResponseWriter, r *http.Request) {
 		if ensureSignatureMatch(params, w, r) {
@@ -42,14 +54,14 @@ func ensureSignatureMatch(params martini.Params, w http.ResponseWriter, r *http.
 		panic(err)
 	}
 
-	if params["signature"] != signature(privateKey, params["public_key"], params["article_id"], params["user_id"]) {
+	if params["signature"] != Signature(privateKey, params["public_key"], params["article_id"], params["user_id"]) {
 		http.NotFound(w, r)
 		return false
 	}
 	return true
 }
 
-func signature(key, public_key, articleId, userId string) string {
+func Signature(key, public_key, articleId, userId string) string {
 	hasher := sha1.New()
 	hasher.Write([]byte(key + public_key + articleId + userId))
 	return fmt.Sprintf("%x", hasher.Sum(nil))

@@ -13,6 +13,8 @@ type Article struct {
 	Updated   time.Time `db:"updated_at"       json:"updated"`
 	Key       string    `db:"key"              json:"key"`
 
+	// TODO these fields shouldn't be in this struct, they're not in the articles
+	// table
 	FirstReadAt Timestamp `db:"first_read_at" json:"first_read_at,omitempty"`
 	LastReadAt  Timestamp `db:"last_read_at"  json:"last_read_at,omitempty"`
 
@@ -20,7 +22,8 @@ type Article struct {
 	Pending   []string `json:"pending,omitempty"`
 }
 
-func FindArticleId(dbmap *gorp.DbMap, accountId int64, key string) (int64, error) {
+// Returns 0 if not found
+func FindArticleIdByKey(dbmap *gorp.DbMap, accountId int64, key string) (id int64, err error) {
 	return dbmap.SelectInt(`select id from articles where account_id = $1 and key = $2`, accountId, key)
 }
 
@@ -34,14 +37,13 @@ func FindArticleWithReadReceipts(dbmap *gorp.DbMap, id int64) (*Article, error) 
 
 func (c *Article) AddReadReceipts(dbmap *gorp.DbMap) {
 	var delivered []string
-	selectReaders := `
+	_, err := dbmap.Select(&delivered, `
         select readers.distinct_id
         from articles
            inner join read_receipts on read_receipts.article_id = articles.id
            inner join readers on read_receipts.reader_id = readers.id
-        where articles.id = $1`
-
-	_, err := dbmap.Select(&delivered, selectReaders, c.Id)
+        where articles.id = $1
+				  and last_read_at > articles.updated_at`, c.Id)
 	if err != nil {
 		panic(err)
 	}
@@ -51,10 +53,11 @@ func (c *Article) AddReadReceipts(dbmap *gorp.DbMap) {
 	_, err = dbmap.Select(&pending, `
         select readers.distinct_id
         from articles
-           inner join expected_readers on expected_readers.article_id = articles.id
-           inner join readers on expected_readers.reader_id = readers.id
+           inner join read_receipts on read_receipts.article_id = articles.id
+           inner join readers on read_receipts.reader_id = readers.id
         where articles.id = $1
-        except all `+selectReaders, c.Id)
+				  and (last_read_at is null or
+						   last_read_at < articles.updated_at)`, c.Id)
 	if err != nil {
 		panic(err)
 	}
@@ -78,7 +81,7 @@ func AddArticleReaders(dbmap *gorp.DbMap, accountId, articleId int64, expected [
 	return
 }
 
-func InsertArticle(dbmap *gorp.DbMap, accountId int64, key string) (int64, error) {
+func UpsertArticle(dbmap *gorp.DbMap, accountId int64, key string) (int64, error) {
 	id, err := dbmap.SelectNullInt(`
         with s as (
             update articles set updated_at = $3 where account_id = $1 and key = $2 returning id

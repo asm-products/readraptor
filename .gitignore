@@ -2,8 +2,7 @@ readraptor
 
 gin-bin
 .sass-cache
-.env
-.env.production
+.env*
 .anvil
 db/latest.dump
 Procfile.dev

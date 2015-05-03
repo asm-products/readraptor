@@ -124,7 +124,7 @@ func GetSetup(r render.Render, user sessionauth.User, rw http.ResponseWriter, re
 			Signature string
 		}{
 			user.(*Account),
-			signature(account.PrivateKey, account.PublicKey, "article_1", "user_1"),
+			Signature(account.PrivateKey, account.PublicKey, "article_1", "user_1"),
 		}
 		r.HTML(200, "setup", data)
 	}

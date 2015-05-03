@@ -27,15 +27,15 @@ type CallbackParams struct {
 }
 
 func GetArticles(params martini.Params, w http.ResponseWriter) (string, int) {
-	var ci Article
-	err := dbmap.SelectOne(&ci, "select * from articles where key = $1", params["article_id"])
-	ci.AddReadReceipts(dbmap)
+	var a Article
+	err := dbmap.SelectOne(&a, "select * from articles where key = $1", params["article_id"])
+	a.AddReadReceipts(dbmap)
 
 	if err != nil {
 		panic(err)
 	}
 
-	json, err := json.Marshal(ci)
+	json, err := json.Marshal(a)
 	if err != nil {
 		panic(err)
 	}
@@ -58,13 +58,13 @@ func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.
 				where distinct_id = $1;`, params["distinct_id"])
 
 		readerQuery := fmt.Sprintf(`
-				select distinct articles.key,
+				select articles.key,
           articles.created_at,
 					articles.updated_at,
-					read_receipts.created_at as first_read_at,
+					read_receipts.first_read_at,
 					read_receipts.last_read_at
 				from articles
-				  left join read_receipts on read_receipts.article_id = articles.id
+				  inner join read_receipts on read_receipts.article_id = articles.id
 					  and read_receipts.reader_id = %d
 				where key in $1`, readerId)
 
@@ -92,7 +92,7 @@ func PostArticles(client *gokiq.ClientConfig, req *http.Request, w http.Response
 		panic(err)
 	}
 
-	cid, err := InsertArticle(dbmap, account.Id, p.Key)
+	cid, err := UpsertArticle(dbmap, account.Id, p.Key)
 	if _, ok := err.(*pq.Error); ok {
 		if strings.Index(err.Error(), `duplicate key value violates unique constraint "articles_key_key"`) == -1 {
 			panic(err)

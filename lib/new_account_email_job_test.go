@@ -1,42 +1,31 @@
-package readraptor
+package readraptor_test
 
 import (
 	"os"
-	"strings"
 	"testing"
 
+	rr "github.com/asm-products/readraptor/lib"
 	_ "github.com/lib/pq"
 )
 
 func Test_NewAccountEmailJob(t *testing.T) {
-	// initialize the DbMap
 	dbmap := initTestDb(t)
 	defer dbmap.Db.Close()
 
-	// delete any existing rows
-	err := dbmap.TruncateTables()
-	checkErr(t, err, "TruncateTables failed")
-
 	os.Setenv("RR_ROOT", "..")
 
-	account := NewAccount("joe@crabshack.com")
+	account := rr.NewAccount("joe@crabshack.com")
 	token := "confirm1234"
 	account.ConfirmationToken = &token
-	err = dbmap.Insert(account)
-	checkErr(t, err, "Insert failed")
+	err := dbmap.Insert(account)
+	ok(t, err)
 
-	job := NewAccountEmailJob{
+	job := rr.NewAccountEmailJob{
 		AccountId: account.Id,
 	}
 
 	message, err := job.CreateMessage(account)
-	checkErr(t, err, "Job failed")
+	ok(t, err)
 
 	expectInclude(t, message.Body, "/confirm/confirm1234")
-}
-
-func expectInclude(t *testing.T, a, b string) {
-	if strings.Index(a, b) == -1 {
-		t.Errorf("Expected '%v' to include '%v'", a, b)
-	}
 }
