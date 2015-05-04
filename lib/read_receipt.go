@@ -75,6 +75,7 @@ func TrackReadReceipt(dbmap *gorp.DbMap, account *Account, key, reader string) e
 }
 
 func UpsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, error) {
+	defer UpdateArticleCounts(dbmap, articleId)
 	at := time.Now().UTC()
 	_, err := dbmap.SelectNullInt(`
 				update read_receipts set first_read_at = $1
@@ -85,7 +86,7 @@ func UpsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, err
 	)
 
 	id, err := dbmap.SelectNullInt(`
-        update read_receipts set last_read_at = $1
+        update read_receipts set last_read_at = $1, read_count = read_count + 1
 				where article_id=$2 and reader_id=$3
 				returning id;
     `, at,
@@ -107,7 +108,7 @@ func UpsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, err
 							"article_id", "reader_id",
 							"created_at", "first_read_at", "last_read_at",
 							"read_count")
-            select $1, $2, $3, $3, $3, 0
+            select $1, $2, $3, $3, $3, 1
             where not exists (select 1 from s)
             returning id
         )
@@ -125,18 +126,28 @@ func UpsertReadReceipt(dbmap *gorp.DbMap, articleId, readerId int64) (int64, err
 		return 0, err
 	}
 
-	dbmap.Db.Exec(`update read_receipts set read_count = read_count + 1 where id = $1`, iid.(int64))
-
 	return iid.(int64), err
 }
 
 func UnreadArticles(dbmap *gorp.DbMap, readerId int64) (keys []Article, err error) {
 	_, err = dbmap.Select(&keys, `
-		select articles.*, first_read_at, last_read_at
+		select articles.*, first_read_at, last_read_at, read_count
 		from articles
 		  inner join read_receipts on read_receipts.article_id = articles.id
 		where (first_read_at is null or articles.updated_at < read_receipts.last_read_at)
 		  and read_receipts.reader_id = $1`, readerId)
 
 	return
+}
+
+func UpdateArticleCounts(dbmap *gorp.DbMap, artID int64) error {
+	_, err := dbmap.Db.Exec(`
+		update articles
+		set total_read_count = counts.total, unique_read_count = counts.unique
+		from (select sum(read_count) as total, count(*) as unique
+		      from read_receipts
+					where article_id = $1
+		) counts
+		where id = $1`, artID)
+	return err
 }

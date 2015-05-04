@@ -13,6 +13,9 @@ type Article struct {
 	Updated   time.Time `db:"updated_at"       json:"updated"`
 	Key       string    `db:"key"              json:"key"`
 
+	TotalReadCount  int64 `db:"total_read_count"  json:"total_read_count"`
+	UniqueReadCount int64 `db:"unique_read_count"  json:"unique_read_count"`
+
 	// TODO these fields shouldn't be in this struct, they're not in the articles
 	// table
 	FirstReadAt Timestamp `db:"first_read_at" json:"first_read_at,omitempty"`
@@ -20,6 +23,16 @@ type Article struct {
 
 	Delivered []string `json:"delivered,omitempty"`
 	Pending   []string `json:"pending,omitempty"`
+}
+
+type ArticleResponse struct {
+	Created         *Timestamp `db:"created_at"       json:"created"`
+	Updated         *Timestamp `db:"updated_at"       json:"updated"`
+	Key             string     `db:"key"              json:"key"`
+	FirstReadAt     *Timestamp `db:"first_read_at" json:"first_read_at,omitempty"`
+	LastReadAt      *Timestamp `db:"last_read_at"  json:"last_read_at,omitempty"`
+	TotalReadCount  int64      `db:"total_read_count"  json:"total_read_count"`
+	UniqueReadCount int64      `db:"unique_read_count"  json:"unique_read_count"`
 }
 
 // Returns 0 if not found

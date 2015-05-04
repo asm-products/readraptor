@@ -12,16 +12,10 @@ import (
 )
 
 /**
- * @api {get} /t/:username/:article_id/:user_id/:signature Read article
+ * @api {get} /t/:username/:article_id/:user_id/:signature.gif Read article
  * @apiName GetTrack
  * @apiGroup Reading
  *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "firstname": "John",
- *       "lastname": "Doe"
- *     }
  */
 func GetTrackReadReceipts(root string) func(params martini.Params, w http.ResponseWriter, r *http.Request) {
 	return func(params martini.Params, w http.ResponseWriter, r *http.Request) {

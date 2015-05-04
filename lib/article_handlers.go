@@ -61,8 +61,10 @@ func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.
 				select articles.key,
           articles.created_at,
 					articles.updated_at,
-					read_receipts.first_read_at,
-					read_receipts.last_read_at
+					first_read_at,
+					last_read_at,
+					total_read_count,
+					unique_read_count
 				from articles
 				  inner join read_receipts on read_receipts.article_id = articles.id
 					  and read_receipts.reader_id = %d
