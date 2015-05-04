@@ -2,9 +2,7 @@ package readraptor
 
 import (
 	"database/sql"
-	"log"
 	"net/url"
-	"os"
 	"path"
 	"strconv"
 
@@ -27,7 +25,7 @@ func InitDb(connection string) *gorp.DbMap {
 	dbmap.AddTableWithName(Reader{}, "readers").SetKeys(true, "Id")
 	dbmap.AddTableWithName(ReadReceipt{}, "read_receipts").SetKeys(true, "Id")
 
-	dbmap.TraceOn("[gorp]", log.New(os.Stdout, "sql:", log.Lmicroseconds))
+	// dbmap.TraceOn("[gorp]", log.New(os.Stdout, "sql:", log.Lmicroseconds))
 
 	return dbmap
 }
