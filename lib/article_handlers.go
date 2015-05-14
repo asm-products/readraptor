@@ -86,6 +86,36 @@ func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.
 	return string(json), http.StatusOK
 }
 
+func GetReaderArticlesAll(req *http.Request, w http.ResponseWriter, account *Account, params martini.Params) (string, int) {
+	page, _ := strconv.ParseInt(params["page"], 10, 64)
+	limit := int64(25)
+	offset := page * limit
+	var articles []ArticleResponse
+	_, err := dbmap.Select(&articles, `
+		select articles.created_at,
+		       articles.updated_at,
+					 key,
+   				 total_read_count,
+					 first_read_at,
+					 last_read_at
+		from articles
+		  inner join read_receipts on read_receipts.article_id = articles.id
+			inner join readers on read_receipts.reader_id = read_receipts.reader_id
+		where articles.account_id = $1 and readers.account_id = $1
+			and readers.distinct_id = $2 limit $3 offset $4`, account.Id, params["distinct_id"], limit, offset)
+	if err != nil {
+		panic(err)
+	}
+
+	json, err := json.Marshal(articles)
+	if err != nil {
+		panic(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	return string(json), http.StatusOK
+}
+
 func PostArticles(client *gokiq.ClientConfig, req *http.Request, w http.ResponseWriter, account *Account) (string, int) {
 	decoder := json.NewDecoder(req.Body)
 	var p ArticleParams
