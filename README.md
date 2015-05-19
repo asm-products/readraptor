@@ -18,7 +18,11 @@ Here's 3 fun things she can help you with:
 
 ### Local Setup
 
-Make sure Postgres is installed.
+Make sure Postgres is installed, go is installed, and GOPATH is set.
+
+    # clone this repo
+    git clone https://github.com/asm-products/readraptor.git
+    pushd ./readraptor
 
     # Create a local development database
     psql -c "create database rr_development"
