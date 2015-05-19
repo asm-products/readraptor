@@ -26,8 +26,10 @@ Make sure Postgres is installed.
     # Install goose for running migrations
     go get bitbucket.org/liamstask/goose/cmd/goose
 
-    # Copy sample env file
+    # Copy sample env file (from github.com/assemblymade/meta)
+    pushd ./meta
     cp .env.sample .env
+    popd
 
     # Install forego (or use foreman)
     go get github.com/ddollar/forego
