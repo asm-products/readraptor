@@ -87,8 +87,14 @@ func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.
 }
 
 func GetReaderArticlesAll(req *http.Request, w http.ResponseWriter, account *Account, params martini.Params) (string, int) {
-	page, _ := strconv.ParseInt(params["page"], 10, 64)
-	limit := int64(25)
+	qs := req.URL.Query()
+	pageS, perS := qs.Get("page"), qs.Get("per")
+	page, _ := strconv.Atoi(pageS)
+	limit, _ := strconv.Atoi(perS)
+
+	if limit == 0 {
+		limit = 25
+	}
 	offset := page * limit
 	var articles []ArticleResponse
 	_, err := dbmap.Select(&articles, `
