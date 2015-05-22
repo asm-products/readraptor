@@ -100,7 +100,7 @@ func GetReaderArticlesAll(req *http.Request, w http.ResponseWriter, account *Acc
 					 last_read_at
 		from articles
 		  inner join read_receipts on read_receipts.article_id = articles.id
-			inner join readers on read_receipts.reader_id = read_receipts.reader_id
+			inner join readers on read_receipts.reader_id = readers.id
 		where articles.account_id = $1
 		  and readers.account_id = $1
 			and readers.distinct_id = $2
