@@ -72,6 +72,7 @@ func setupMartini(root string) *martini.Martini {
 
 	r.Get("/confirm/:confirmation_token", GetConfirmAccount)
 	r.Get("/t/:public_key/:article_id/:user_id/:signature.gif", GetTrackReadReceipts(root))
+	r.Post("/read_receipts", PostReadReceipts)
 	r.Get("/articles/:article_id", GetArticles)
 	r.Post("/articles", AuthAccount, PostArticles)
 

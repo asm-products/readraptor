@@ -2,6 +2,7 @@ package readraptor
 
 import (
 	"crypto/sha1"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -11,6 +12,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type ReadReceiptParams struct {
+	Key        string `json:"key"`
+	PublicKey  string `json:"public_key"`
+	DistinctId string `json:"distinct_id"`
+	Signature  string `json:"signature"`
+}
+
 /**
  * @api {get} /t/:username/:article_id/:user_id/:signature.gif Read article
  * @apiName GetTrack
@@ -19,36 +27,54 @@ import (
  */
 func GetTrackReadReceipts(root string) func(params martini.Params, w http.ResponseWriter, r *http.Request) {
 	return func(params martini.Params, w http.ResponseWriter, r *http.Request) {
-		if ensureSignatureMatch(params, w, r) {
-			account, err := FindAccountByPublicKey(params["public_key"])
-			if err != nil {
-				panic(err)
-			}
+		trackRead(params["public_key"], params["article_id"], params["user_id"], params["signature"], w, r)
 
-			err = TrackReadReceipt(dbmap, account, params["article_id"], params["user_id"])
-			if err != nil {
-				panic(err)
-			}
-
-			f, err := os.Open(root + "/public/tracking.gif")
-			if err != nil {
-				panic(err)
-			}
-			defer f.Close()
-
-			http.ServeContent(w, r, "tracking.gif", time.Time{}, f)
+		f, err := os.Open(root + "/public/tracking.gif")
+		if err != nil {
+			panic(err)
 		}
+		defer f.Close()
+
+		http.ServeContent(w, r, "tracking.gif", time.Time{}, f)
 	}
 }
 
-func ensureSignatureMatch(params martini.Params, w http.ResponseWriter, r *http.Request) bool {
-	var privateKey string
-	err := dbmap.SelectOne(&privateKey, `SELECT private_key FROM accounts WHERE public_key = $1`, params["public_key"])
+func PostReadReceipts(params martini.Params, w http.ResponseWriter, r *http.Request) (string, int) {
+	decoder := json.NewDecoder(r.Body)
+	var p ReadReceiptParams
+	err := decoder.Decode(&p)
 	if err != nil {
 		panic(err)
 	}
 
-	if params["signature"] != Signature(privateKey, params["public_key"], params["article_id"], params["user_id"]) {
+	trackRead(p.PublicKey, p.Key, p.DistinctId, p.Signature, w, r)
+
+	return "", http.StatusOK
+}
+
+func trackRead(publicKey, articleId, distinctId, signature string, w http.ResponseWriter, r *http.Request) {
+	if ensureSignatureMatch(publicKey, articleId, distinctId, signature, w, r) {
+		account, err := FindAccountByPublicKey(publicKey)
+		if err != nil {
+			panic(err)
+		}
+
+		err = TrackReadReceipt(dbmap, account, articleId, distinctId)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+}
+
+func ensureSignatureMatch(publicKey, articleId, distinctId, signature string, w http.ResponseWriter, r *http.Request) bool {
+	var privateKey string
+	err := dbmap.SelectOne(&privateKey, `SELECT private_key FROM accounts WHERE public_key = $1`, publicKey)
+	if err != nil {
+		panic(err)
+	}
+
+	if signature != Signature(privateKey, publicKey, articleId, distinctId) {
 		http.NotFound(w, r)
 		return false
 	}
