@@ -28,7 +28,7 @@ type CallbackParams struct {
 
 func GetArticles(params martini.Params, w http.ResponseWriter) (string, int) {
 	var a Article
-	err := dbmap.SelectOne(&a, "select * from articles where key = $1", params["article_id"])
+	err := dbmap.SelectOne(&a, "select * from articles where key = $1", params["_1"])
 	a.AddReadReceipts(dbmap)
 
 	if err != nil {
