@@ -101,8 +101,11 @@ func GetReaderArticlesAll(req *http.Request, w http.ResponseWriter, account *Acc
 		from articles
 		  inner join read_receipts on read_receipts.article_id = articles.id
 			inner join readers on read_receipts.reader_id = read_receipts.reader_id
-		where articles.account_id = $1 and readers.account_id = $1
-			and readers.distinct_id = $2 limit $3 offset $4`, account.Id, params["distinct_id"], limit, offset)
+		where articles.account_id = $1
+		  and readers.account_id = $1
+			and readers.distinct_id = $2
+		order by articles.updated_at desc
+		limit $3 offset $4`, account.Id, params["distinct_id"], limit, offset)
 	if err != nil {
 		panic(err)
 	}
