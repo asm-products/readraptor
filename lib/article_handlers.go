@@ -168,6 +168,10 @@ func PostArticles(client *gokiq.ClientConfig, req *http.Request, w http.Response
 		panic(err)
 	}
 
+	go func() {
+		hub.broadcast <- &Broadcast{rids, json}
+	}()
+
 	w.Header().Set("Content-Type", "application/json")
 	return string(json), http.StatusCreated
 }

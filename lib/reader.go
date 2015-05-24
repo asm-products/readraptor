@@ -36,3 +36,10 @@ func InsertReader(dbmap *gorp.DbMap, accountId int64, distinctId string) (int64,
 
 	return iid.(int64), err
 }
+
+func FindReaderByAccountIdDistinctId(aid int64, distinctId string) (*Reader, error) {
+	var reader Reader
+	err := dbmap.SelectOne(&reader,
+		"select * from readers where account_id = $1 and distinct_id = $2", aid, distinctId)
+	return &reader, err
+}

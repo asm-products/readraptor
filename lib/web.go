@@ -88,6 +88,10 @@ func setupMartini(root string) *martini.Martini {
 	r.Get("/workers/stats", workers.Stats)
 
 	r.Get("/favicon.ico", serveFile("./public/favicon.ico"))
+	r.Get("/ws/:public_key", WebsocketHandler)
+
+	// start websocket hub
+	go hub.run()
 
 	// Inject database
 	m.Map(dbmap)
