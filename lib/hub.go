@@ -55,15 +55,22 @@ func (h *Hub) run() {
 			if _, ok := h.connections[c]; ok {
 				delete(h.connections, c)
 				close(c.send)
+
+				for k, v := range h.subscriptions {
+					if v == c {
+						fmt.Println("removing", k)
+						delete(h.subscriptions, k)
+					}
+				}
 			}
 		case c := <-h.subscribe:
 			h.subscriptions[c.Id] = c.Conn
 		case c := <-h.unsubscribe:
 			if _, ok := h.subscriptions[c.Id]; ok {
+				fmt.Println("unsubscribe", c.Id)
 				delete(h.subscriptions, c.Id)
 			}
 		case b := <-h.broadcast:
-			fmt.Println("broadcasting to", b.ConnIds)
 			for _, id := range b.ConnIds {
 				if c, ok := h.subscriptions[id]; ok {
 					select {
