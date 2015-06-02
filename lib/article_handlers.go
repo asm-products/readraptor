@@ -1,6 +1,7 @@
 package readraptor
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -31,7 +32,7 @@ func GetArticles(params martini.Params, w http.ResponseWriter) (string, int) {
 	err := dbmap.SelectOne(&a, "select * from articles where key = $1", params["_1"])
 	a.AddReadReceipts(dbmap)
 
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		panic(err)
 	}
 
@@ -47,7 +48,10 @@ func GetArticles(params martini.Params, w http.ResponseWriter) (string, int) {
 // TODO: (whatupdave) this is currently unsecured to allow reading from javascript
 // We should implement a secure key mechanism
 func GetReaderArticles(req *http.Request, w http.ResponseWriter, params martini.Params) (string, int) {
-	var keys = req.URL.Query()["key"]
+	keys := req.URL.Query()["key"]
+	if len(keys) == 0 {
+		keys = req.URL.Query()["key[]"]
+	}
 
 	articles := make([]ArticleResponse, 0)
 
